@@ -1,0 +1,79 @@
+<!doctype html>
+<html><!-- InstanceBegin template="/Templates/OneColumnPage.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<meta charset="utf-8">
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>ICS-214a Introduction</title>
+<!-- InstanceEndEditable -->
+<!-- InstanceBeginEditable name="head" -->
+<!-- InstanceEndEditable -->
+<link href="App.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+<div class="container">
+<div class="content">
+<!-- InstanceBeginEditable name="Title" -->
+<h1>ICS-214a</h1>
+<!-- InstanceEndEditable -->
+
+<!-- InstanceBeginEditable name="Body" -->
+<h2>Introduction</h2>
+<p>
+An ICS-214 is an Activity Log.  It's original intention was to record the activity of a 
+single event.  Furthermore, the individual activities were only noted at the beginning of
+the activity, that is, the start time was recorded by the end time was not.
+</p>
+<p>
+Clearly, during this pandemic we are constrained to stay within safe boundaries.  This 
+prevents most of us going to some activity with numbers of people in attendance.  So our
+activities become little things over the course of weeks or months.  The purpose of this
+application is to allow capturing the time spent on each of these little activities over the course
+of a long period (e.g. a month).  The application captures the start time, end time and a comment
+on the activity.  During the display of the log, the total time is computed and displayed.
+</p>
+<p>
+The operation is fairly straight forward:
+<ul>
+<li>When the application starts it requests that a file be loaded</li>
+<li>When an activity is to start, the 2nd toolbar icon (<img src="Images/Activity.jpg" width="16" height="15" alt="Activity Icon"> 
+activity or motion symbol) is 
+selected to enter the date, time and acitivity description</li>
+<li>When an activity is to be completed, the 3rd toolbar icon 
+(<img src="Images/StopActivity.jpg" width="16" height="15" alt="Stop Activity Icon"> 
+stop activity icon) is selected to add an end 
+time to one of the unfinished activities (if there are more than one)</li>
+</ul>
+</p>
+
+<p>
+  The first toolbar icon (<img src="Images/Header.jpg" width="16" height="15" alt="Header Icon"> 
+  page with header) allows one to edit the header and footer information. 
+  The fourth toolbar icon 
+  (<img src="Images/EditActivity.jpg" width="16" height="15" alt="Edit Activity Icon"> 
+  activity with astick or star) allows any log entry to be edited. 
+  The fifth toolbar (<img src="Images/NewLog.jpg" width="16" height="15" alt="New Log Icon"> 
+  fresh document) icon allows one 
+  to create a new Activity Log File and supply the header and footer information.  
+  The sixth toolbar icon (<img src="Images/OpenLog.jpg" width="16" height="15" alt="Open Log Icon"> 
+  opening folder) allows another log file to be opened.  The seventh toolbar icon 
+  (<img src="Images/SaveLog.jpg" width="16" height="15" alt="Save Log Icon"> floppy disk)
+  will allow one to store the current log somewhere else.  The eight toolbar icon 
+  (<img src="Images/PrintLog.jpg" width="16" height="15" alt="Printer Icon"> printer) allows
+  one to print the current on screen data (even below the bottom of the window). </p>
+<p>
+Between invocations of the application the last activity log will be presented to the user to
+load when starting the application.  Times and dates will be supplied in the dialog boxes
+when they are started.  The dates and times are editable.  The dates and times are monitored 
+to ensure that they are legal dates and times.  Furthermore they are normalized so no matter how
+they are input they will always have the same form (i.e. 01/02/20 for dates, 01:02 for times).
+Commas and quotes are handled correctly within strings.  End dates most often are on the same day
+as the start time but provisions are made so that they may be on later times.  Long descriptions 
+are wrapped nicely most of the time when printed.
+</p>
+<!-- InstanceEndEditable -->
+</div><!-- end .content -->
+</div><!-- end .container -->
+</body>
+<!-- InstanceEnd --></html>
