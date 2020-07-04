@@ -110,7 +110,6 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\Sources\Library\AboutFiles\About.h" />
     <ClInclude Include="Activity.h" />
     <ClInclude Include="ActvtyNameDlg.h" />
     <ClInclude Include="CSVrecord.h" />
@@ -120,14 +119,16 @@
     <ClInclude Include="ICS_214aDoc.h" />
     <ClInclude Include="ICS_214aView.h" />
     <ClInclude Include="MainFrame.h" />
+    <ClInclude Include="Report.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StopEntryDlg.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Utilities.h" />
+    <ClInclude Include="WrapPrep.h" />
+    <ClInclude Include="..\..\..\Sources\Library\AboutFiles\About.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\Sources\Library\AboutFiles\About.cpp" />
     <ClCompile Include="Activity.cpp" />
     <ClCompile Include="ActvtyNameDlg.cpp" />
     <ClCompile Include="CSVrecord.cpp" />
@@ -137,9 +138,12 @@
     <ClCompile Include="ICS_214aDoc.cpp" />
     <ClCompile Include="ICS_214aView.cpp" />
     <ClCompile Include="MainFrame.cpp" />
+    <ClCompile Include="Report.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="StopEntryDlg.cpp" />
     <ClCompile Include="Utilities.cpp" />
+    <ClCompile Include="WrapPrep.cpp" />
+    <ClCompile Include="..\..\..\Sources\Library\AboutFiles\About.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ICS_214a.rc" />
@@ -148,6 +152,7 @@
     <None Include="..\..\..\Sources\Library\AboutFiles\About.rc2" />
     <None Include="res\ICS_214a.rc2" />
     <None Include="..\README.md" />
+  <None Include="x" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\ICS_214a.ico" />

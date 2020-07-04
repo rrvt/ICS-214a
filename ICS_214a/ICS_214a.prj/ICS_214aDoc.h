@@ -43,4 +43,4 @@ public:
   afx_msg void OnLogEntry();
   afx_msg void OnStopEntry();
   afx_msg void OnEditLogEntry();
-  };
+};

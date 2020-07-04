@@ -99,9 +99,25 @@ CSVfield* fld;
 
 
 void Activity::store(Archive& ar) {
+
   if (storeType == StoreAll && !storeHeader(ar)) return;
 
-  storeLogData(ar);   return;
+  storeLogData(ar);
+
+  if (storeType == StoreAll) {
+    CTimeSpan total = getTotalTime();
+    LONGLONG  secs  = total.GetTotalSeconds();
+    double    ttl;
+    String    t;
+    CSVout    co(ar);
+
+    ttl = (double) secs / 3600.0;   t.format(_T("%0.2f"), ttl);
+    co << vCrlf;
+    co << _T(',') << _T("Total Time:") << _T(',') << _T(',');
+    co << t << _T(',') << _T("hours") << vCrlf;
+    }
+
+  return;
   }
 
 
@@ -135,67 +151,68 @@ int i;
   }
 
 
-void Activity::display() {
+CTimeSpan Activity::getTotalTime() {
 int       n = log.end();
 int       i;
-CTimeSpan totalTime = 0;
-LONGLONG  secs;
-String    t;
+CTimeSpan total = 0;
 
-  notePad.clear();
+  for (i = 0; i < n; i++) {total += log[i].deltaT;}
 
-  notePad << nClrTabs << nSetTab(18) << nSetTab(38) << nSetTab(55);
-
-  notePad << nBold << nFSize(160) << _T("ICS 214a Unit Log") << nFont << nFont;
-  notePad << nTab << nFSize(90) << _T("Incident Name") << nTab << _T("Date Prepared");
-  notePad << nTab << _T("Time Prepared") << nFont;
-  notePad << nCrlf;
-  notePad << nBold << _T("SJ RACES") << nFont;
-  notePad << nTab << name;
-  notePad << nTab << prepDate;
-  notePad << nTab << prepTime;
-  notePad << nCrlf << nCrlf;
-  notePad << nFSize(90) << _T("Unit Name Designator") << nTab << _T("Unit Leader: Name");
-  notePad << nTab << _T("Position") << nTab << _T("Operational Period") << nFont << nCrlf;
-  notePad << _T("San Jose RACES");
-  notePad << nTab << leaderName;
-  notePad << nTab << leaderPosition << nTab;
-  dsplyWrap(operationalPeriod, 24, 3);
-  notePad << nCrlf << nCrlf;
-
-  notePad << nClrTabs << nSetTab(6) << nSetRTab(17) << nSetTab(18);
-  notePad << nFSize(90) << _T("Date") << nTab << _T("Start Time") << nTab << _T("End Time");
-  notePad << nTab << _T("Activity") << nFont << nCrlf;
-
-  notePad << nClrTabs << nSetTab(7) << nSetRTab(17) << nSetTab(18) << nSetTab(24);
-
-  for (i = 0; i < n; i++) totalTime += log[i].display();
-
-  secs  = totalTime.GetTotalSeconds();
-  double ttl = (double) secs / 3600.0;
-  t.format(_T("%0.2f"), ttl);
-
-  notePad << nCrlf << _T("   Total Time:") << nTab << t << nTab << _T("hours") << nCrlf;
+  return total;
   }
 
 
-CTimeSpan LogData::display() {
-bool dateOutPresent = !dateOut.isEmpty();
-int  descLng  = 90 - (dateOutPresent ? 24 : 18);
-int  descTabs = dateOutPresent ? 4 : 3;
 
-  notePad << date << nTab << timeIn;
+int LogData::wrap(Display& dev, CDC* dc) {
+bool dateOutIsPresent;
+int  tab = dateOutTab(dateOutIsPresent);
 
-  if (dateOutPresent) notePad << nTab << dateOut;
+  dev << dCR << dClrTabs << dSetTab(tab) << dTab;
 
-  notePad << nTab << timeOut << nTab;
+  wrp.initialize(dc, dev.remaining(), false);     dev<< dCR << dClrTabs;
 
-  dsplyWrap(desc, descLng, descTabs);
+  return wrp(desc);
+  }
+
+
+CTimeSpan LogData::display(int& noLines) {
+bool dateOutIsPresent;
+int  tab = dateOutTab(dateOutIsPresent);
+
+  notePad << nClrTabs << nSetTab(7) << nSetRTab(tab-1) << nSetTab(tab);
+
+  notePad << date << nTab << timeIn << nTab;
+
+  if (dateOutIsPresent) notePad << dateOut << _T(" ");
+
+  notePad << timeOut << nTab;
+
+  noLines += displayDesc();
 
   notePad << nCrlf;
 
   return deltaT;
   }
+
+
+int LogData::dateOutTab(bool& dateOutIsPresent)
+                            {dateOutIsPresent = !dateOut.isEmpty();   return dateOutIsPresent ? 24 : 18;}
+
+
+int LogData::displayDesc() {
+int i;
+int n = wrp.lines.end();
+
+  for (i = 0; i < n; i++) {
+
+    if (i) notePad << nCrlf << nTab << nTab << nTab;
+
+    notePad << wrp.lines[i];
+    }
+
+  return n;
+  }
+
 
 
 void LogData::set(TCchar* dt, TCchar* tmIn, TCchar* dtOut, TCchar* tmOut, TCchar* dsc) {
@@ -263,4 +280,53 @@ CTimeSpan sp(sec + sc1); return sp;
 
 
 CTimeSpan operator+= (CTimeSpan t, LogData& ld) {return t += ld.deltaT;}
+
+
+
+
+#if 0
+void Activity::display() {
+int       n = log.end();
+int       i;
+CTimeSpan totalTime = 0;
+LONGLONG  secs;
+String    t;
+int       noLines = 0;
+
+  notePad.clear();
+
+  notePad << nClrTabs << nSetTab(18) << nSetTab(38) << nSetTab(55);
+
+  notePad << nBold << nFSize(160) << _T("ICS 214a Unit Log") << nFont << nFont;
+  notePad << nTab << nFSize(90) << _T("Incident Name") << nTab << _T("Date Prepared");
+  notePad << nTab << _T("Time Prepared") << nFont;
+  notePad << nCrlf;
+  notePad << nBold << _T("SJ RACES") << nFont;
+  notePad << nTab << name;
+  notePad << nTab << prepDate;
+  notePad << nTab << prepTime;
+  notePad << nCrlf << nCrlf;
+  notePad << nFSize(90) << _T("Unit Name Designator") << nTab << _T("Unit Leader: Name");
+  notePad << nTab << _T("Position") << nTab << _T("Operational Period") << nFont << nCrlf;
+  notePad << _T("San Jose RACES");
+  notePad << nTab << leaderName;
+  notePad << nTab << leaderPosition << nTab;
+  dsplyWrap(operationalPeriod, 24, 3);
+  notePad << nCrlf << nCrlf;
+
+  notePad << nClrTabs << nSetTab(6) << nSetRTab(17) << nSetTab(18);
+  notePad << nFSize(90) << _T("Date") << nTab << _T("Start Time") << nTab << _T("End Time");
+  notePad << nTab << _T("Activity") << nFont << nCrlf;
+
+  notePad << nClrTabs << nSetTab(7) << nSetRTab(17) << nSetTab(18) << nSetTab(24);
+
+  for (i = 0; i < n; i++) totalTime += log[i].display(noLines);
+
+  secs  = totalTime.GetTotalSeconds();
+  double ttl = (double) secs / 3600.0;
+  t.format(_T("%0.2f"), ttl);
+
+  notePad << nCrlf << _T("   Total Time:") << nTab << t << nTab << _T("hours") << nCrlf;
+  }
+#endif
 

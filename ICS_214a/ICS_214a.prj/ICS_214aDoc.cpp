@@ -14,6 +14,7 @@
 #include "IniFile.h"
 #include "MessageBox.h"
 #include "NotePad.h"
+//#include "Report.h"
 #include "Resource.h"
 #include "StopEntryDlg.h"
 #include "Utilities.h"
@@ -35,7 +36,6 @@ BEGIN_MESSAGE_MAP(ICS_214aDoc, CDocument)
   ON_COMMAND(ID_LogEntry,     &ICS_214aDoc::OnLogEntry)
   ON_COMMAND(ID_StopEntry,    &ICS_214aDoc::OnStopEntry)
   ON_COMMAND(ID_EditLogEntry, &ICS_214aDoc::OnEditLogEntry)
-
 END_MESSAGE_MAP()
 
 
@@ -77,14 +77,13 @@ String path;
 
   notePad.clear();
 
-  if (OnOpenDocument(path)) {activity.display();   backupCopy(path, 10);}
-
-  invalidate();
+  if (OnOpenDocument(path)) {backupCopy(path, 10);   invalidate();}
   }
 
 
 void ICS_214aDoc::OnEditHeader() {
 ActvtyNameDlg dlg;
+
 
   if (activity.prepDate.isEmpty()) {activity.prepDate = getDateNow();}
   if (activity.prepTime.isEmpty()) {activity.prepTime = getTimeNow();}
@@ -111,7 +110,7 @@ ActvtyNameDlg dlg;
     if (!DoFileSave()) OnFileSave();
     }
 
-  activity.display();  invalidate();
+  invalidate();
   }
 
 
@@ -126,7 +125,7 @@ EventLogDlg dlg;
 
     activity.setStoreIncr();   reOpenDocument();
 
-    activity.display();  invalidate();
+    invalidate();
     }
   }
 
@@ -141,7 +140,7 @@ StopEntryDlg dlg;
 
     activity.setStoreAll();   DoFileSave();
 
-    activity.display();  invalidate();
+    invalidate();
     }
   }
 
@@ -153,7 +152,7 @@ EditEntryDlg dlg;
 
     activity.setStoreAll();   DoFileSave();
 
-    activity.display();  invalidate();
+    invalidate();
     }
   }
 
@@ -192,3 +191,4 @@ void ICS_214aDoc::Dump(CDumpContext& dc) const
   CDocument::Dump(dc);
 }
 #endif //_DEBUG
+

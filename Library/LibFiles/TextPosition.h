@@ -19,38 +19,41 @@ bool right;                       // right tab when true;
 
 
 class TextPosition {
+public:
+
+int cursorPos;                    // Current Horizonal Position
+int maxCursorPos;
+
+int width;                        // Width of one character
+int lastWidth;
+
+private:
 
 int leftEdge;                     // X offset from left edge to first output pixel and right
                                   // edge to last output pixel (for printer at least)
 int rightEdge;                    // right edge of output window
 int leftMargin;
 
-int threshold;                    // Used to decide on automatic crlf in line
 
 Expandable<Tab, 0> tabs;         // Tab positions/Left/Right
 
 public:
 
-int cursorPos;                    // Current Horizonal Position
-                                  //
-int width;                        // Width of one character
-int lastWidth;
-int maxCursorPos;
-
   TextPosition() {initialize();}
 
-  void initialize()
-    {width = 1; leftMargin = leftEdge = rightEdge = lastWidth = cursorPos = maxCursorPos = threshold = 0;}
-
-  void iPos(int left, int right) {
-    maxCursorPos = cursorPos = leftEdge = left; rightEdge = right; threshold = (right - left)/2 + left;
+  void initialize() {
+    width = 1; leftEdge = rightEdge = leftMargin = cursorPos = maxCursorPos = lastWidth = 0;
+    tabs.clr();
     }
+
+  void iPos(int left, int right) {maxCursorPos = cursorPos = leftEdge = left; rightEdge = right;}
 
   void pos(int x)  {cursorPos  = x;}         // Change position to x
   bool exceedsRtMargin(int width);           // return true when new position would exceed right margin
+  int  remaining();
+  int  widthCh() {return width;}
   void move(int x) {cursorPos += x;}         // Move Cursor by the number of characters specified
   int  get()       {return cursorPos;}       // Returns the current cursor position in pixels
-  bool pastThreshold() {return cursorPos >= threshold;}
   int  getCharPos(){return width ? (cursorPos - leftEdge)/width - leftMargin: 0;}
                                              // Returns the current cursor position in characters
   void setLeftMargin(int lm) {leftMargin = lm >= 0 ? lm : 0;}
@@ -65,13 +68,20 @@ int maxCursorPos;
   void rightPos(int width)  {pos(rightEdge - width);}
   void rightTabPos(Tab& tab, int width) {pos(tab.pos - width);}
 
-  void crlf() {
+  void doCR() {
     if (cursorPos > maxCursorPos) maxCursorPos = cursorPos;
 
     cursorPos = leftEdge + leftMargin * width; width = lastWidth ? lastWidth : 1;
     }
-
+   int getPortWidth() {return rightEdge - leftEdge;}
 private:
 
   int charsPerLine() {return (rightEdge - leftEdge) / width;}
   };
+
+
+
+#if 0
+int threshold;                    // Used to decide on automatic crlf in line
+  bool pastThreshold() {return cursorPos >= threshold;}
+#endif

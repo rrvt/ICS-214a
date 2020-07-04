@@ -125,6 +125,7 @@
     <ClInclude Include="..\LibFiles\Csv.h" />
     <ClInclude Include="..\LibFiles\Currency.h" />
     <ClInclude Include="..\LibFiles\Date.h" />
+    <ClInclude Include="..\LibFiles\DCdata.h" />
     <ClInclude Include="..\LibFiles\Debug.h" />
     <ClInclude Include="..\LibFiles\Display.h" />
     <ClInclude Include="..\LibFiles\DisplayDev.h" />
@@ -158,6 +159,7 @@
     <ClInclude Include="..\LibFiles\Resources.h" />
     <ClInclude Include="..\LibFiles\SrchFile.h" />
     <ClInclude Include="..\LibFiles\std.h" />
+    <ClInclude Include="..\LibFiles\Wrap.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="..\LibFiles\StringInput.h" />
     <ClInclude Include="..\LibFiles\Strings.h" />
@@ -193,6 +195,7 @@
     <ClCompile Include="..\LibFiles\Csv.cpp" />
     <ClCompile Include="..\LibFiles\Currency.cpp" />
     <ClCompile Include="..\LibFiles\Date.cpp" />
+    <ClCompile Include="..\LibFiles\DCdata.cpp" />
     <ClCompile Include="..\LibFiles\Debug.cpp" />
     <ClCompile Include="..\LibFiles\Display.cpp" />
     <ClCompile Include="..\LibFiles\DisplayDev.cpp" />
@@ -226,6 +229,7 @@
     <ClCompile Include="..\LibFiles\trim.cpp" />
     <ClCompile Include="..\LibFiles\WindowData.cpp" />
     <ClCompile Include="..\LibFiles\WindowPos.cpp" />
+    <ClCompile Include="..\LibFiles\Wrap.cpp" />
     <ClCompile Include="..\LibFiles\XTerm.cpp" />
   </ItemGroup>
 </Project>

@@ -23,23 +23,25 @@ uint        lastPageNo;
   DisplayDev() {initialize();}
  ~DisplayDev() { }
 
-  void preparePrinting(TCchar* font, int fontSize, CDC* pDC, bool doOutput)
-                                                   {dev.preparePrinting(font, fontSize, pDC, doOutput);}
-  void beginPrinting(CPrintInfo* pInfo) {dev.beginPrinting(pInfo);}
-  bool isEndDoc() {return endDoc;}
-  void clrFont()  {dev.clrFont();}
-  void printFooter(int pageNo, String& license, Date& licDate);
+  void     preparePrinting(TCchar* font, int fontSize, CDC* pDC, CPrintInfo* pInfo)
+                                            {dev.preparePrinting(font, fontSize, pDC, pInfo);}
+  void     setNoFooterLns(int n)            {dev.setNoFooterLns(n);}
+  void     suppressOutput()                 {dev.suppressOutput();}
+  bool     isEndDoc()                       {return endDoc;}
+  void     clrFont()                        {dev.clrFont();}
+
+  Display& getDisplay() {return dev;}               // Useful for producing a footer
 
   // Display functions
 
-  void prepareDisplay( TCchar* font, int fontSize, CDC* pDC, bool doOutput)
-                                                    {dev.prepareDisplay(font, fontSize, pDC, doOutput);}
+  void prepareDisplay( TCchar* font, int fontSize, CDC* pDC) {dev.prepareDisplay(font, fontSize, pDC);}
   int  getWidth()  {return dev.getWidth();}
   int  getHeight() {return dev.getHeight();}
+  int  getY()      {return dev.getY();}
   void getMaxPos(long& maxX, long& maxY) {dev.getMaxPos(maxX, maxY);}
 
   void startDev();
-  void toDevice();                  // Output to Device (Display or Printer)
+  void operator() ();                  // Output to Device (Display or Printer)
 
   uint getNoPages()    {return dev.noPages;}
 

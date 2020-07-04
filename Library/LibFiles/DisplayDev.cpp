@@ -11,43 +11,46 @@ void DisplayDev::initialize() {note = 0; lastPageNo = 0; lastLeftMargin = 0; end
 
 
 
-void DisplayDev::startDev()
-                        {note = notePadLp.start(); dev.noPages = 0; lastPageNo = 0; lastLeftMargin = 0;}
+void DisplayDev::startDev() {
+  note = notePadLp.start(); dev.noPages = 0; lastPageNo = 0; lastLeftMargin = 0;
+  endDoc = debugging = false;
+  }
 
 
   // Output to Device (Display or Printer)
 
-void DisplayDev::toDevice() {
-bool endLoopNow = false;
+void DisplayDev::operator() () {
+bool endLoop = false;
 
-  for (; note && !endLoopNow; note = notePadLp.nextNode()) {
+  for ( ; note && !endLoop; note = notePadLp.nextNode()) {
 
-    if (note->beginLine)     dev << dBeginLine;
+    if (note->beginLine)     dev << dBeginLine; if (dev.isEndPage()) break;
     if (note->leftMargin != lastLeftMargin)
                             {dev << dSetLMargin(note->leftMargin); lastLeftMargin = note->leftMargin;}
     if (note->clrTabs)       dev << dClrTabs;
     if (note->tabValue)      dev << dSetTab(note->tabValue);
     if (note->rTabValue)     dev << dSetRTab(note->rTabValue);
 
-    if (note->fSize)         dev << dFSize(note->fSize);
-    if (note->prevFont)      dev << dPrevFont;
-    if (note->bold)          dev << dBoldFont;
-    if (note->italic)        dev << dItalicFont;
-    if (note->underline)     dev << dUnderLineFont;
-    if (note->strikeOut)     dev << dStrikeOutFont;
+    if (note->fSize)         {dev << dFSize(note->fSize);       if (dev.isEndPage()) break;}
+    if (note->prevFont)      {dev << dPrevFont;                 if (dev.isEndPage()) break;}
+    if (note->bold)          {dev << dBoldFont;                 if (dev.isEndPage()) break;}
+    if (note->italic)        {dev << dItalicFont;               if (dev.isEndPage()) break;}
+    if (note->underline)     {dev << dUnderLineFont;            if (dev.isEndPage()) break;}
+    if (note->strikeOut)     {dev << dStrikeOutFont;            if (dev.isEndPage()) break;}
 
-    if (note->tab == true)   dev << dTab;
-    if (note->center)        dev << dCenter;
-    if (note->right)         dev << dRight;
+    if (note->tab == true)   {dev << dTab;                      if (dev.isEndPage()) break;}
+    if (note->center)        {dev << dCenter;                   if (dev.isEndPage()) break;}
+    if (note->right)         {dev << dRight;                    if (dev.isEndPage()) break;}
 
-    if (note->editBoxX >= 0) dev << dEditBox(note->editBoxX);
+    if (note->editBoxX >= 0) {dev << dEditBox(note->editBoxX);  if (dev.isEndPage()) break;}
 
-                             dev << note->line;
-    if (note->endLine)       dev << dEndLine;
+                              dev << note->line;                if (dev.isEndPage()) break;
 
-    if (note->endPage)      {dev << dEndPage; if (dev.isEndPage()) endLoopNow = true;}
+    if (note->endLine)       {dev << dEndLine;                  if (dev.isEndPage()) break;}
 
-    if (note->crlf)         {dev << dCrlf;    if (dev.isEndPage()) endLoopNow = true;}
+    if (note->crlf)          {dev << dCrlf;                     if (dev.isEndPage()) break;}
+
+    if (note->endPage)       {dev << dEndPage;                  endLoop = true;}
 
     if (note->debug)         debugging = true;
     }
@@ -56,19 +59,21 @@ bool endLoopNow = false;
   }
 
 
+#if 0
+void DisplayDev::skipPage() {
+bool endLoopNow = false;
 
-void DisplayDev::printFooter(int pageNo, String& license, Date& licDate) {
-int i;
+  for (; note && !endLoopNow; note = notePadLp.nextNode()) {
+    if (note->fSize)    dev.setFontSize(note->fSize);
 
-  if (dev.withinBounds())
-    for (i = 0; !dev.isEndPage() && i < 65; i++) dev << dCrlf;
+    if (note->prevFont) dev.setPrevFont();
 
-  if (!license.empty()) dev << license;
+    if (note->crlf)     {dev.crlf();    if (dev.isEndPage()) endLoopNow = true;}
 
-  dev << dCenter << toString(pageNo);
+    if (note->endPage)  {if (dev.isEndPage()) endLoopNow = true;}
+    }
 
-  if (!licDate.isEmpty()) {dev << dRight; dev << licDate.getDate();}
-
-  dev << dflushFtr;
+  endDoc = note == 0;
   }
 
+#endif

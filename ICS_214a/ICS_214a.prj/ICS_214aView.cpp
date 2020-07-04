@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "ICS_214aView.h"
 #include "ICS_214aDoc.h"
+#include "Report.h"
 
 
 // ICS_214aView
@@ -13,6 +14,12 @@ IMPLEMENT_DYNCREATE(ICS_214aView, CScrView)
 BEGIN_MESSAGE_MAP(ICS_214aView, CScrView)
 END_MESSAGE_MAP()
 
+
+void ICS_214aView::onPrepareOutput()
+                              {setNoFooterLns(2);  report(isPrinting());   CScrView::onPrepareOutput();}
+
+
+void ICS_214aView::printFooter(Display& dev, int pageNo) {report.footer(dev, pageNo); invalidate();}
 
 
 // ICS_214aView diagnostics

@@ -35,19 +35,23 @@ String getTimeNow() {Date dt;   dt.getToday();   return dt.format(_T("%R"));}
 
 
 static int  findLastWh(String& s, int noChars);
-static void wrap(int i, int noTabs);
+static int wrap(int i, int noTabs);
 
+#if 0
+// Display a string of no more than noChars.  If more, the insert noTabs and no more than noChars until
+// string exhausted.  Returns number of lines output
 
-void dsplyWrap(TCchar* p, int noChars, int noTabs) {
+int dsplyWrap(TCchar* p, int noChars, int noTabs) {
 String s = p;
 int    brkpt;
 int    threshold = noChars * 5 / 8;
 String t;
 int    i;
+int    noLines = 0;
 
   for (i = 0; s.length() > noChars; i++) {
 
-    wrap(i, noTabs);   brkpt = findLastWh(s, noChars);
+    noLines += wrap(i, noTabs);   brkpt = findLastWh(s, noChars);
 
     if (brkpt < threshold) brkpt = noChars;
 
@@ -56,7 +60,9 @@ int    i;
     notePad << t;
     }
 
-  if (!s.isEmpty()) {wrap(i, noTabs); notePad << s;}
+  if (!s.isEmpty()) {noLines += wrap(i, noTabs); notePad << s;}
+
+  return noLines;
   }
 
 
@@ -73,5 +79,10 @@ int   i;
   }
 
 
-void wrap(int i, int noTabs) {if (i) {notePad << nCrlf;   for (i = 0; i < noTabs; i++) notePad << nTab;}}
+int wrap(int i, int noTabs) {
 
+  if (!i) return 0;
+
+  notePad << nCrlf;   for (i = 0; i < noTabs; i++) notePad << nTab;  return 1;
+  }
+#endif

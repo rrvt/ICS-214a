@@ -105,7 +105,7 @@ int          cnt;
       ar.write(note->line); tPos.move(cnt);
       }
 
-    if (note->crlf) {ar.write(_T('\n'));   tPos.crlf();}
+    if (note->crlf) {ar.write(_T('\n'));   tPos.doCR();}
     }
   }
 

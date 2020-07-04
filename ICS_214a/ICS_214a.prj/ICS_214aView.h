@@ -10,7 +10,7 @@ class ICS_214aDoc;
 
 class ICS_214aView : public CScrView {
 
-protected: // create from serialization only
+protected:                                      // create from serialization only
 
   ICS_214aView() noexcept { }
   DECLARE_DYNCREATE(ICS_214aView)
@@ -19,19 +19,18 @@ public:
 
   virtual ~ICS_214aView() { }
 
+  virtual void onPrepareOutput();
+  virtual void printFooter(Display& dev, int pageNo);
+
   ICS_214aDoc* GetDocument() const;
 
 public:
 
-#ifdef _DEBUG
-  virtual void AssertValid() const;
-  virtual void Dump(CDumpContext& dc) const;
-#endif
+  #ifdef _DEBUG
+    virtual void AssertValid() const;
+    virtual void Dump(CDumpContext& dc) const;
+  #endif
 
-protected:
-
-//  DECLARE_MESSAGE_MAP()
-public:
   DECLARE_MESSAGE_MAP()
   };
 

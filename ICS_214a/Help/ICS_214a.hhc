@@ -24,31 +24,11 @@
 		</OBJECT>
 	<UL>
 		<LI> <OBJECT type="text/sitemap">
-			<param name="Name" value="New File">
+			<param name="Name" value="Tool Bar -- Left to Right with Notations of the Corresponding Menu Command">
 			<param name="Local" value="Operations.htm">
 			</OBJECT>
 		<LI> <OBJECT type="text/sitemap">
-			<param name="Name" value="Open File (Toolbar Folder Image)">
-			<param name="Local" value="Operations.htm">
-			</OBJECT>
-		<LI> <OBJECT type="text/sitemap">
-			<param name="Name" value="Save File As (Toolbar Floppy Image)">
-			<param name="Local" value="Operations.htm">
-			</OBJECT>
-		<LI> <OBJECT type="text/sitemap">
-			<param name="Name" value="Print (Toolbar Printer Image)">
-			<param name="Local" value="Operations.htm">
-			</OBJECT>
-		<LI> <OBJECT type="text/sitemap">
-			<param name="Name" value="About (Toolbar Question Mark)">
-			<param name="Local" value="Operations.htm">
-			</OBJECT>
-		<LI> <OBJECT type="text/sitemap">
-			<param name="Name" value="Exit (Toolbar X image)">
-			<param name="Local" value="Operations.htm">
-			</OBJECT>
-		<LI> <OBJECT type="text/sitemap">
-			<param name="Name" value="Menu Test">
+			<param name="Name" value="Menu Items not on ToolBar">
 			<param name="Local" value="Operations.htm">
 			</OBJECT>
 	</UL>

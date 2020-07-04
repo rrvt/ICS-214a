@@ -5,7 +5,10 @@
 #include "Archive.h"
 #include "CSVrecord.h"
 #include "Date.h"
+#include "Display.h"
 #include "Expandable.h"
+#include "Wrap.h"
+#include "WrapPrep.h"
 
 
 class LogData {
@@ -15,10 +18,10 @@ String dateOut;
 String timeOut;
 String desc;
 
-
 public:
 
 CTimeSpan deltaT;
+Wrap      wrp;
 bool      archived;
 
   LogData() : archived(false), deltaT(0) { }
@@ -35,9 +38,14 @@ bool      archived;
   void      store(Archive& ar);
   void      load(CSVrecord& rcd);
 
-  CTimeSpan display();
+  int       wrap(Display& dev, CDC* dc);
+  int       noLines() {return wrp.lines.end();}
+  CTimeSpan display(int& noLines);
 
 private:
+
+  int  displayDesc();
+  int  dateOutTab(bool& dateOutIsPresent);
 
   void copy(LogData& ld) {
     date = ld.date; timeIn = ld.timeIn; dateOut = ld.dateOut; timeOut = ld.timeOut;
@@ -71,6 +79,9 @@ String operationalPeriod;             // Dates any way they want to display them
 String preparedBy;
 String missionNo;
 
+WrapPrep opPeriod;                      // Used during reporting only
+
+
   Activity() : storeType(NilStore) { }
  ~Activity() { }
 
@@ -84,16 +95,16 @@ String missionNo;
   void     add(TCchar* date, TCchar* timeIn, TCchar* timeOut, TCchar* desc);
   LogData* entry(int i) {return i < log.end() ? &log[i] : 0;}
 
-  void     display();
-
 private:
 
-  bool loadHeader(CSVrecord& rcd);
-  void loadLog(   CSVrecord& rcd);
-  bool storeHeader(Archive& ar);
-  bool storeLogData(Archive& ar);
+  bool      loadHeader(CSVrecord& rcd);
+  void      loadLog(   CSVrecord& rcd);
+  bool      storeHeader(Archive& ar);
+  bool      storeLogData(Archive& ar);
+  CTimeSpan getTotalTime();
 
   friend class ActivityIter;
+  friend class Report;
   };
 
 
@@ -107,6 +118,7 @@ public:
 
   LogData* operator() ()    {logX = 0; return logX < activity.log.end() ? &activity.log[logX] : 0;}
   LogData* operator++ (int) {logX++;   return logX < activity.log.end() ? &activity.log[logX] : 0;}
+  bool     last()           {return logX + 1 == activity.log.end();}
 
 private:
 
