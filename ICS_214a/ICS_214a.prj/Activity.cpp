@@ -89,7 +89,7 @@ CSVfield* fld;
     switch (i) {
       case 0: date    = fld->name; break;
       case 1: timeIn  = fld->name; break;
-      case 2: dateOut = fld->name; break;
+      case 2: dateOut = fld->name; if (dateOut == date) dateOut.clear();   break;
       case 3: timeOut = fld->name; break;
       case 4: desc    = fld->name; break;
       }
@@ -169,6 +169,7 @@ CSVout co(ar);
   co << _T("End Time") << _T(',') << _T("Activity") << vCrlf;
 
   storeLogData(ar);
+
   CTimeSpan total = getTotalTime();
   LONGLONG  secs  = total.GetTotalSeconds();
   double    ttl;
