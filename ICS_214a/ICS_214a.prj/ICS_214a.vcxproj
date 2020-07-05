@@ -152,7 +152,6 @@
     <None Include="..\..\..\Sources\Library\AboutFiles\About.rc2" />
     <None Include="res\ICS_214a.rc2" />
     <None Include="..\README.md" />
-  <None Include="x" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\ICS_214a.ico" />

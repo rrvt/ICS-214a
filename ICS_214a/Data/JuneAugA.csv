@@ -1,4 +1,9 @@
-"June, July, Aug",06/16/20,12:19,"Bob ""K6RWY Van Tuyl",Field Operator,Last half of June and  all of July,Bob,102
+ICS 214a Unit Log,Incident Name,Date Prepared,Time Prepared
+,"June, July, Aug",06/16/20,12:19
+Unit Name Designator,Unit Leader: Name,Position,Operational Period
+,"Bob ""K6RWY Van Tuyl",Field Operator,Last half of June and  all of July
+
+Date,Start Time,End Date,End Time,Activity
 06/16/20,17:29,,18:29,01 Now is the time for all good people to come to the aid of the party.  Now the red brown fox is jumping over the black and blue dog.
 06/16/20,17:29,,18:29,02 Prep for Dinner. Now is the time for all good people to come to the aid of the party.  Now the red brown fox is jumping over the black and blue dog.
 06/16/20,21:18,,22:00,03 Watching SeaChange Now is the time for all good people to come to the aid of the party.  Now the red brown fox is jumping over the black and blue dog.
@@ -60,3 +65,9 @@
 06/19/20,18:23,,,59 Prep for Dinner on Friday Now is the time for all good people to come to the aid of the party.  Now the red brown fox is jumping over the black and blue dog.
 06/19/20,18:23,,,60 Prep for Dinner on Friday.
 06/19/20,18:23,,,61 Prep for Dinner on Friday.
+
+,Total Time:,,501.20,hours
+
+
+ICS 214a,Prepared By,,Mission Number
+,Bob,,102

@@ -38,13 +38,14 @@
 #define ID_StopEntry                    403
 #define ID_EditLogEntry                 404
 #define ID_NewLog                       405
+#define ID_MakeExcelFile                406
 
 // Next default values for new objects
 //
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        107
-#define _APS_NEXT_COMMAND_VALUE         406
+#define _APS_NEXT_COMMAND_VALUE         407
 #define _APS_NEXT_CONTROL_VALUE         222
 #define _APS_NEXT_SYMED_VALUE           310
 #endif

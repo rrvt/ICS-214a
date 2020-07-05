@@ -12,25 +12,25 @@
 		<param name="Name" value="ICS-214a">
 		<param name="Local" value="Introduction.htm">
 		</OBJECT>
-	<UL>
-		<LI> <OBJECT type="text/sitemap">
-			<param name="Name" value="Introduction">
-			<param name="Local" value="Introduction.htm">
-			</OBJECT>
-	</UL>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="eICS-214a Operations">
 		<param name="Local" value="Operations.htm">
 		</OBJECT>
-	<UL>
-		<LI> <OBJECT type="text/sitemap">
-			<param name="Name" value="Tool Bar -- Left to Right with Notations of the Corresponding Menu Command">
-			<param name="Local" value="Operations.htm">
-			</OBJECT>
-		<LI> <OBJECT type="text/sitemap">
-			<param name="Name" value="Menu Items not on ToolBar">
-			<param name="Local" value="Operations.htm">
-			</OBJECT>
-	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Header/Footer Dialog">
+		<param name="Local" value="HeaderFooterDlg.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Activity Log Dialog">
+		<param name="Local" value="ActivityLogDlg.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Stop activity Dialog">
+		<param name="Local" value="StopActivityDlg.htm">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Edit Activity Dialog">
+		<param name="Local" value="EditActivityDlg.htm">
+		</OBJECT>
 </UL>
 </BODY></HTML>

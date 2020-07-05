@@ -62,7 +62,7 @@ CTimeSpan operator+= (CTimeSpan& t, LogData& ld);
 
 class Activity {
 
-enum StoreType {NilStore, StoreAll, StoreIncr};
+enum StoreType {NilStore, StoreIncr, StoreAll, StoreExcel};
 
 StoreType storeType;
 
@@ -88,8 +88,9 @@ WrapPrep opPeriod;                      // Used during reporting only
   void     clear();
 
   void     load(Archive&  ar);
-  void     setStoreAll()  {storeType = StoreAll;}
-  void     setStoreIncr() {storeType = StoreIncr;}
+  void     setStoreAll()   {storeType = StoreAll;}
+  void     setStoreIncr()  {storeType = StoreIncr;}
+  void     setStoreExcel() {storeType = StoreExcel;}
   void     store(Archive& ar);
 
   void     add(TCchar* date, TCchar* timeIn, TCchar* timeOut, TCchar* desc);
@@ -97,10 +98,14 @@ WrapPrep opPeriod;                      // Used during reporting only
 
 private:
 
+  void      storeIncr( Archive&  ar);
+  void      storeAll(  Archive&  ar);
+  void      storeExcel(Archive&  ar);
   bool      loadHeader(CSVrecord& rcd);
   void      loadLog(   CSVrecord& rcd);
-  bool      storeHeader(Archive& ar);
-  bool      storeLogData(Archive& ar);
+  void      storeHeader(Archive& ar);
+  void      storeLogData(Archive& ar);
+  void      storeIncrLogData(Archive& ar);
   CTimeSpan getTotalTime();
 
   friend class ActivityIter;

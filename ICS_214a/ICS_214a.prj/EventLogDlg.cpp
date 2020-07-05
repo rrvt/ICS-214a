@@ -20,7 +20,7 @@ END_MESSAGE_MAP()
 IMPLEMENT_DYNAMIC(EventLogDlg, CDialogEx)
 
 EventLogDlg::EventLogDlg(CWnd* pParent) : CDialogEx(IDD_EventLogEntry, pParent), logDate(_T("")),
-                        startTime(_T("")), endTime(_T("")), logActivity(_T("")) { }
+                                              startTime(_T("")), endTime(_T("")), logActivity(_T("")) { }
 
 EventLogDlg::~EventLogDlg() { }
 

@@ -1,0 +1,25 @@
+Microsoft HTML Help Compiler 4.74.8702
+
+Compiling d:\Sources\ICS_214a\Help\ICS_214a.chm
+
+ICS_214a.hhc
+HHC6000: Error: An internal file could not be created. Make certain there is enough disk space on the drive where you are compiling your file.
+HHC5007: Error: Fatal navigational compilation error. This is likely the result of an invalid contents (.hhc) file.
+
+
+The following files were not compiled:
+Microsoft HTML Help Compiler 4.74.8702
+
+Compiling d:\Sources\ICS_214a\Help\ICS_214a.chm
+
+ICS_214a.hhc
+
+Compile time: 0 minutes, 0 seconds
+5	Topics
+0	Local links
+0	Internet links
+12	Graphics
+
+
+Created d:\Sources\ICS_214a\Help\ICS_214a.chm, 48,189 bytes
+Compression decreased file by 125,209 bytes.

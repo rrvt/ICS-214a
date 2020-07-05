@@ -32,7 +32,6 @@ String       dateOut;
 String       timeOut;
 String       desc;
 
-
   CDialogEx::OnInitDialog();
 
   for (ld = iter(), n = 0; ld; ld = iter++, n++) {
@@ -51,20 +50,20 @@ String       desc;
 
 void EditEntryDlg::onSelectEntry() {
 int      index = entryDescCtrl.GetCurSel();  if (index < 0) return;
-LogData* ld    = activity.entry(index);    if (!ld)       return;
+LogData* ld    = activity.entry(index);      if (!ld)       return;
 String   date;
 String   timeIn;
 String   dateOut;
 String   timeOut;
-String   desc;
+String   dsc;
 
-  ld->get(date, timeIn, dateOut, timeOut, desc);
+  ld->get(date, timeIn, dateOut, timeOut, dsc);
 
-  logDateCtrl.SetWindowText(date);
-  logTimeCtrl.SetWindowText(timeIn);
-  endDateCtrl.SetWindowText(dateOut);
-  endTimeCtrl.SetWindowText(timeOut);
-     descCtrl.SetWindowText(desc);
+  logDate = date;    logDateCtrl.SetWindowText(logDate);
+  logTime = timeIn;  logTimeCtrl.SetWindowText(timeIn);
+  endDate = dateOut; endDateCtrl.SetWindowText(endDate);
+  endTime = timeOut; endTimeCtrl.SetWindowText(endTime);
+  desc    = dsc;     descCtrl.SetWindowText(dsc);
   }
 
 
@@ -86,21 +85,38 @@ void EditEntryDlg::DoDataExchange(CDataExchange* pDX) {
 
 
 BEGIN_MESSAGE_MAP(EditEntryDlg, CDialogEx)
-  ON_CBN_SELCHANGE(IDC_EntryDesc, &EditEntryDlg::onSelectEntry)
-  ON_BN_CLICKED(   IDOK,          &EditEntryDlg::OnOk)
+  ON_CBN_SELCHANGE(IDC_EntryDesc,  &EditEntryDlg::onSelectEntry)
+  ON_BN_CLICKED(  IDOK,            &EditEntryDlg::OnOk)
+  ON_EN_CHANGE(   IDC_LogDate,     &EditEntryDlg::OnChangeLogdate)
+  ON_EN_CHANGE(   IDC_StartTime,   &EditEntryDlg::OnChangeStarttime)
+  ON_EN_CHANGE(   IDC_EndDate,     &EditEntryDlg::OnChangeEnddate)
+  ON_EN_CHANGE(   IDC_EndTime,     &EditEntryDlg::OnChangeEndtime)
+  ON_EN_KILLFOCUS(IDC_LogDate,     &EditEntryDlg::OnLeaveLogdate)
+  ON_EN_KILLFOCUS(IDC_StartTime,   &EditEntryDlg::OnLeaveStarttime)
+  ON_EN_KILLFOCUS(IDC_EndDate,     &EditEntryDlg::OnLeaveEnddate)
+  ON_EN_KILLFOCUS(IDC_EndTime,     &EditEntryDlg::OnLeaveEndtime)
+  ON_EN_KILLFOCUS(IDC_LogActivity, &EditEntryDlg::OnLeaveLogactivity)
 END_MESSAGE_MAP()
 
 
-// EditEntryDlg message handlers
+void EditEntryDlg::OnChangeLogdate()   {Date::onChangeDate(logDateCtrl);}
+void EditEntryDlg::OnChangeStarttime() {Date::onChangeTime(logTimeCtrl);}
+void EditEntryDlg::OnChangeEnddate()   {Date::onChangeDate(endDateCtrl);}
+void EditEntryDlg::OnChangeEndtime()   {Date::onChangeTime(endTimeCtrl);}
 
-void EditEntryDlg::OnOk() {
-int      index;
-LogData* ld;
 
-  CDialogEx::OnOK();
+void EditEntryDlg::OnLeaveLogdate()     {logDateCtrl.GetWindowText(logDate); updateRcd();}
+void EditEntryDlg::OnLeaveStarttime()   {logTimeCtrl.GetWindowText(logTime); updateRcd();}
+void EditEntryDlg::OnLeaveEnddate()     {endDateCtrl.GetWindowText(endDate); updateRcd();}
+void EditEntryDlg::OnLeaveEndtime()     {endTimeCtrl.GetWindowText(endTime); updateRcd();}
+void EditEntryDlg::OnLeaveLogactivity() {descCtrl.GetWindowText(desc);       updateRcd();}
+void EditEntryDlg::OnOk()               {CDialogEx::OnOK();                  updateRcd();}
 
-  index = entryDescCtrl.GetCurSel();  if (index < 0) return;
-  ld    = activity.entry(index);      if (!ld)       return;
+
+void EditEntryDlg::updateRcd() {
+int      index = entryDescCtrl.GetCurSel();  if (index < 0) return;
+LogData* ld    = activity.entry(index);      if (!ld)       return;
 
   ld->set(logDate, logTime, endDate, endTime, desc);
   }
+

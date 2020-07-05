@@ -1,0 +1,48 @@
+<!doctype html>
+<html><!-- InstanceBegin template="/Templates/OneColumnPage.dwt" codeOutsideHTMLIsLocked="false" -->
+<head>
+<meta charset="utf-8">
+<!-- InstanceBeginEditable name="doctitle" -->
+<title>Activity Dialog</title>
+<!-- InstanceEndEditable -->
+<!-- InstanceBeginEditable name="head" -->
+<!-- InstanceEndEditable -->
+<link href="App.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+<div class="container">
+<div class="content">
+<!-- InstanceBeginEditable name="Title" -->
+<h1>Activity Log Dialog</h1>
+<!-- InstanceEndEditable -->
+
+<!-- InstanceBeginEditable name="Body" -->
+<h2>Dialog Box</h2>
+<p><img src="Images/ActivityLogDlg.jpg" width="963" height="184"></p>
+<p>
+The dialog box appears as a result of the either the toolbar command 
+"<img src="Images/Activity.jpg" width="16" height="15"> Create New Log Entry" or the Menu command 
+[File/Log Entry]. 
+It is intended to capture the current date and time when the activity starts and optionally the end time.  It 
+also a description of the activity to be entered.  When the dialog box is invoked the current date and time are
+placed in the corresponding fields.  Of course the user may edit them to reflect the correct date and time that 
+the activity started or will start.
+</p>
+<p>
+The date and time are monitored by the application to ensure that they are input as legal dates and times.  The format for dates is "mm/dd/yy" with mm and dd constrained to correct values.  Time is only to the nearest minute 
+and the format is "hh:mm" and again the hh and mm are constrained to be correct values.  The time may be input as
+hhmm and the colon will be supplied.
+</p>
+<p>
+While the Description field is limited in size, the content may be any length.  The application goes to 
+considerable trouble to wrap the text nicely in the output.  Please do not insert carriage returns (Enter) as 
+that will terminate the Dialog Box saving the result.  Those of you that know about Shift-Enter or Ctrl-Enter
+are also requested to suppress the urge.  This is a simple program at the moment.
+</p>
+<!-- InstanceEndEditable -->
+</div><!-- end .content -->
+</div><!-- end .container -->
+</body>
+<!-- InstanceEnd --></html>

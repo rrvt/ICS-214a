@@ -37,8 +37,15 @@ protected:
   virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 
   DECLARE_MESSAGE_MAP()
+
+private:
+
+  void updateRcd();
+
 public:
   afx_msg void OnOk();
   afx_msg void OnChangeStopdate();
   afx_msg void OnChangeStoptime();
-  };
+  afx_msg void OnLeaveStopdate();
+  afx_msg void OnLeaveStoptime();
+};

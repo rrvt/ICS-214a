@@ -1,5 +1,5 @@
 [OPTIONS]
-Auto TOC=2
+Auto TOC=1
 Binary Index=No
 Compatibility=1.1 or later
 Compiled file=ICS_214a.chm
@@ -14,11 +14,20 @@ Title=eICS-214a Help
 
 [WINDOWS]
 Introduction="Introduction","ICS_214a.hhc",,"Introduction.htm",,,,,,0x42120,,0x3006,,,,,,,,0
+Operations="Operations","ICS_214a.hhc",,"Operations.htm","Introduction.htm",,,,,0x40020,,0x3006,,,,,,,,0
+HeaderFooter="Header/Footer Dialog","ICS_214a.hhc",,"HeaderFooterDlg.htm","Introduction.htm",,,,,0x40020,,0x3006,,,,,,,,0
+Activity Dialog="Activity Dialog","ICS_214a.hhc",,"ActivityLogDlg.htm","Introduction.htm",,,,,0x40020,,0x3006,,,,,,,,0
+StopActivityDlg="Stop Activitity Dialog","ICS_214a.hhc",,"StopActivityDlg.htm","Introduction.htm",,,,,0x40020,,0x3006,,,,,,,,0
+EditActivityDlg="Edit Activity Dialog","ICS_214a.hhc",,"EditActivityDlg.htm","Introduction.htm",,,,,0x40020,,0x3006,,,,,,,,0
 
 
 [FILES]
 Introduction.htm
 Operations.htm
+HeaderFooterDlg.htm
+ActivityLogDlg.htm
+StopActivityDlg.htm
+EditActivityDlg.htm
 
 [INFOTYPES]
 

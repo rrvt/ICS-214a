@@ -13,6 +13,15 @@
 IMPLEMENT_DYNAMIC(StopEntryDlg, CDialogEx)
 
 
+BEGIN_MESSAGE_MAP(StopEntryDlg, CDialogEx)
+  ON_BN_CLICKED(  IDOK,         &StopEntryDlg::OnOk)
+  ON_EN_CHANGE(   IDC_StopDate, &StopEntryDlg::OnChangeStopdate)
+  ON_EN_CHANGE(   IDC_StopTime, &StopEntryDlg::OnChangeStoptime)
+  ON_EN_KILLFOCUS(IDC_StopDate, &StopEntryDlg::OnLeaveStopdate)
+  ON_EN_KILLFOCUS(IDC_StopTime, &StopEntryDlg::OnLeaveStoptime)
+END_MESSAGE_MAP()
+
+
 StopEntryDlg::StopEntryDlg(CWnd* pParent) : CDialogEx(IDD_StopEntry, pParent), entryDesc(_T("")),
                                                                   stopDate(_T("")), stopTime(_T("")) { }
 
@@ -29,7 +38,6 @@ String       timeIn;
 String       dateOut;
 String       timeOut;
 String       desc;
-
 
   CDialogEx::OnInitDialog();
 
@@ -57,34 +65,20 @@ void StopEntryDlg::DoDataExchange(CDataExchange* pDX) {
   }
 
 
-
-
 void StopEntryDlg::OnChangeStopdate() {Date::onChangeDate(stopDateCtrl);}
-
-
 void StopEntryDlg::OnChangeStoptime() {Date::onChangeTime(stopTimeCtrl);}
 
 
-BEGIN_MESSAGE_MAP(StopEntryDlg, CDialogEx)
-  ON_BN_CLICKED(IDOK, &StopEntryDlg::OnOk)
-  ON_EN_CHANGE(IDC_StopDate, &StopEntryDlg::OnChangeStopdate)
-  ON_EN_CHANGE(IDC_StopTime, &StopEntryDlg::OnChangeStoptime)
-END_MESSAGE_MAP()
+void StopEntryDlg::OnLeaveStopdate() {stopDateCtrl.GetWindowText(stopDate); updateRcd();}
+void StopEntryDlg::OnLeaveStoptime() {stopTimeCtrl.GetWindowText(stopTime); updateRcd();}
+void StopEntryDlg::OnOk()            {CDialogEx::OnOK();                    updateRcd();}
 
 
-void StopEntryDlg::OnOk() {
-int      sel;
-int      actX;
-LogData* ld;
-String   dtOut;
+void StopEntryDlg::updateRcd() {
+int      index = entryDescCtrl.GetCurSel();  if (index < 0 || indexes.end() <= index) return;
+int      selX  = indexes[index];
+LogData* ld    = activity.entry(selX);       if (!ld)                                 return;
 
-  CDialogEx::OnOK();
-
-  sel = entryDescCtrl.GetCurSel();
-
-  if (sel < indexes.end()) {
-    actX = indexes[sel];
-    ld = activity.entry(actX);
-    if (ld) {ld->setStop(stopDate, stopTime);  ld->archived = false;}
-    }
+  ld->setStop(stopDate, stopTime);  ld->archived = false;
   }
+

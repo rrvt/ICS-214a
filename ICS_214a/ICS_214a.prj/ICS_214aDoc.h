@@ -38,7 +38,8 @@ public:
 
   afx_msg void OnNewLog();
   afx_msg void OnFileOpen();
-  afx_msg void OnFileSave();
+  afx_msg void onSave214();
+  afx_msg void onSaveExcel();
   afx_msg void OnEditHeader();
   afx_msg void OnLogEntry();
   afx_msg void OnStopEntry();

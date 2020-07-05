@@ -99,29 +99,61 @@ CSVfield* fld;
 
 
 void Activity::store(Archive& ar) {
+  switch (storeType) {
+    case StoreIncr  : storeIncr(ar);  break;
+    case StoreAll   : storeAll(ar);   break;
+    case StoreExcel : storeExcel(ar); break;
+    }
+  }
 
-  if (storeType == StoreAll && !storeHeader(ar)) return;
+
+void Activity::storeIncr(Archive&  ar) {storeIncrLogData(ar);}
+
+
+void Activity::storeAll(Archive&  ar) {storeHeader(ar);   storeLogData(ar);}
+
+
+void Activity::storeExcel(Archive&  ar) {
+CSVout co(ar);
+
+  co << _T("ICS 214a Unit Log") << _T(',') << _T("Incident Name") << _T(',') << _T("Date Prepared");
+  co << _T(',') << _T("Time Prepared") << vCrlf;
+  co << _T(',') << name;
+  co << _T(',') << prepDate;
+  co << _T(',') << prepTime << vCrlf;
+
+  co << _T("Unit Name Designator") << _T(',') << _T("Unit Leader: Name") << _T(',');
+  co << _T("Position") << _T(',') << _T("Operational Period") << vCrlf;
+  co << _T(',') << leaderName;
+  co << _T(',') << leaderPosition;
+  co << _T(',') << operationalPeriod << vCrlf << vCrlf;
+
+  co << _T("Date") << _T(',') << _T("Start Time") << _T(',') << _T("End Date") << _T(',');
+  co << _T("End Time") << _T(',') << _T("Activity") << vCrlf;
 
   storeLogData(ar);
 
-  if (storeType == StoreAll) {
-    CTimeSpan total = getTotalTime();
-    LONGLONG  secs  = total.GetTotalSeconds();
-    double    ttl;
-    String    t;
-    CSVout    co(ar);
+  CTimeSpan total = getTotalTime();
+  LONGLONG  secs  = total.GetTotalSeconds();
+  double    ttl;
+  String    t;
 
-    ttl = (double) secs / 3600.0;   t.format(_T("%0.2f"), ttl);
-    co << vCrlf;
-    co << _T(',') << _T("Total Time:") << _T(',') << _T(',');
-    co << t << _T(',') << _T("hours") << vCrlf;
-    }
+  ttl = (double) secs / 3600.0;   t.format(_T("%0.2f"), ttl);
+  co << vCrlf;
+  co << _T(',') << _T("Total Time:") << _T(',') << _T(',');
+  co << t << _T(',') << _T("hours") << vCrlf;
+
+  co << vCrlf << vCrlf;
+
+  co << _T("ICS 214a") << _T(',') << _T("Prepared By") << _T(',') << _T(',');
+  co << _T("Mission Number") << vCrlf;
+  co << _T(',') << preparedBy << _T(',') << _T(',') << missionNo << vCrlf;
 
   return;
   }
 
 
-bool Activity::storeHeader(Archive& ar) {
+void Activity::storeHeader(Archive& ar) {
 CSVout co(ar);
 
   co << name              << _T(',');
@@ -132,22 +164,22 @@ CSVout co(ar);
   co << operationalPeriod << _T(',');
   co << preparedBy        << _T(',');
   co << missionNo         << vCrlf;
-  return true;
   }
 
 
-bool Activity::storeLogData(Archive& ar) {
+void Activity::storeLogData(Archive& ar) {
 int n = log.end();
 int i;
 
-  for (i = 0; i < n; i++) {
-    LogData& data = log[i];
+  for (i = 0; i < n; i++) {log[i].store(ar);}
+  }
 
-    if (storeType == StoreAll) {data.store(ar);}
-    else if (!data.archived)   {data.store(ar);}
-    }
 
-  return true;
+void Activity::storeIncrLogData(Archive& ar) {
+int n = log.end();
+int i;
+
+  for (i = 0; i < n; i++) {LogData& data = log[i];   if (!data.archived) {data.store(ar);}}
   }
 
 

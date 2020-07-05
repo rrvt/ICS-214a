@@ -29,20 +29,21 @@ static TCchar* LogPath     = _T("LogPath");
 IMPLEMENT_DYNCREATE(ICS_214aDoc, CDocument)
 
 BEGIN_MESSAGE_MAP(ICS_214aDoc, CDocument)
-  ON_COMMAND(ID_NewLog,       &ICS_214aDoc::OnNewLog)
-  ON_COMMAND(ID_FILE_OPEN,    &ICS_214aDoc::OnFileOpen)
-  ON_COMMAND(ID_FILE_SAVE,    &ICS_214aDoc::OnFileSave)
-  ON_COMMAND(ID_EditHeader,   &ICS_214aDoc::OnEditHeader)
-  ON_COMMAND(ID_LogEntry,     &ICS_214aDoc::OnLogEntry)
-  ON_COMMAND(ID_StopEntry,    &ICS_214aDoc::OnStopEntry)
-  ON_COMMAND(ID_EditLogEntry, &ICS_214aDoc::OnEditLogEntry)
+  ON_COMMAND(ID_NewLog,        &ICS_214aDoc::OnNewLog)
+  ON_COMMAND(ID_FILE_OPEN,     &ICS_214aDoc::OnFileOpen)
+  ON_COMMAND(ID_FILE_SAVE,     &ICS_214aDoc::onSave214)
+  ON_COMMAND(ID_MakeExcelFile, &ICS_214aDoc::onSaveExcel)
+  ON_COMMAND(ID_EditHeader,    &ICS_214aDoc::OnEditHeader)
+  ON_COMMAND(ID_LogEntry,      &ICS_214aDoc::OnLogEntry)
+  ON_COMMAND(ID_StopEntry,     &ICS_214aDoc::OnStopEntry)
+  ON_COMMAND(ID_EditLogEntry,  &ICS_214aDoc::OnEditLogEntry)
 END_MESSAGE_MAP()
 
 
 // ICS_214aDoc construction/destruction
 
 ICS_214aDoc::ICS_214aDoc() noexcept {
-  saveAsTitle = _T("eICS-214a");   defExt = _T("csv");   defFilePat = _T("*.csv");
+  saveAsTitle = _T("eICS-214a");   defExt = _T("214");   defFilePat = _T("*.214");
   }
 
 
@@ -107,7 +108,7 @@ ActvtyNameDlg dlg;
     activity.preparedBy         = dlg.prepBy;
     activity.missionNo          = dlg.missionNo;
 
-    if (!DoFileSave()) OnFileSave();
+    if (!DoFileSave()) onSave214();
     }
 
   invalidate();
@@ -157,7 +158,7 @@ EditEntryDlg dlg;
   }
 
 
-void ICS_214aDoc::OnFileSave() {
+void ICS_214aDoc::onSave214() {
 String path;
 
   if (!getSaveAsPathDlg(saveAsTitle, defFileName, defExt, defFilePat, path)) return;
@@ -165,6 +166,15 @@ String path;
   iniFile.writeString(FileSection, LogPath, path);
 
   activity.setStoreAll();   onSaveDocument(path, true);
+  }
+
+
+void ICS_214aDoc::onSaveExcel() {
+String path;
+
+  if (!getSaveAsPathDlg(saveAsTitle, defFileName, _T("csv"), _T("*.csv"), path)) return;
+
+  activity.setStoreExcel();   onSaveDocument(path, true);
   }
 
 
