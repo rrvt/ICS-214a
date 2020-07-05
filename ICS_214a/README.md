@@ -65,6 +65,9 @@ following changes were made (at the moment they are option one [Tools/Options]).
 In addition when attempting to save a file, windows sometimes prevents over writing a file being used by
 another program.  Detect and report an occurrence of this phenomenon.
 
+Added a little logic to invoke the OnNewLog function at the first time startup.  Added titles to all
+of the open/save dialog boxes that specify why the file name is being sought.
+
 ### July 4, 2020
 
 Separated the command to produce a csv file for Excel and the reading and writing to the raw data.  Gave

@@ -67,7 +67,8 @@ BOOL ICS_214a::InitInstance() {
 
   view()->setFont(_T("Arial"), 120);
 
-  doc()->OnFileOpen();
+  if (doc()->getDefFileName().isEmpty()) doc()->OnNewLog();
+  else                                   doc()->OnFileOpen();
 
   m_pMainWnd->ShowWindow(SW_SHOW);   m_pMainWnd->UpdateWindow();   return TRUE;
   }

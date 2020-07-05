@@ -45,7 +45,8 @@ END_MESSAGE_MAP()
 // ICS_214aDoc construction/destruction
 
 ICS_214aDoc::ICS_214aDoc() noexcept {
-  saveAsTitle = _T("eICS-214a");   defExt = _T("214");   defFilePat = _T("*.214");
+//  saveAsTitle = _T("eICS-214a");
+  defExt = _T("214");   defFilePat = _T("*.214");
   }
 
 
@@ -62,10 +63,12 @@ OptionsDlg dlg;
 
 void ICS_214aDoc::OnNewLog() {
 String path;
+String title = _T("Specify New Log Name");
 
   activity.clear();   notePad.clear();   defFileName.clear();   OnNewDocument();
 
-  if (!getSaveAsPathDlg(saveAsTitle, defFileName, defExt, defFilePat, path)) return;
+
+  if (!getSaveAsPathDlg(title, defFileName, defExt, defFilePat, path)) return;
 
   defFileName = getMainName(path);
 
@@ -76,14 +79,17 @@ String path;
   OnEditHeader();
   }
 
+
+
 void ICS_214aDoc::OnFileOpen() {
 String path;
+String title = _T("Specify Existing Log File");
 
   activity.clear();   notePad.clear();
 
   iniFile.readString(FileSection, LogPath, defFileName);
 
-  if (!getPathDlg(saveAsTitle, defFileName, defExt, defFilePat, path)) return;
+  if (!getPathDlg(title, defFileName, defExt, defFilePat, path)) return;
 
   defFileName = getMainName(path);
 
@@ -93,6 +99,10 @@ String path;
 
   if (OnOpenDocument(path)) {backupCopy(path, 10);   invalidate();}
   }
+
+
+String& ICS_214aDoc::getDefFileName()
+                          {iniFile.readString(FileSection, LogPath, defFileName);  return defFileName;}
 
 
 void ICS_214aDoc::OnEditHeader() {
@@ -173,8 +183,9 @@ EditEntryDlg dlg;
 
 void ICS_214aDoc::onSave214() {
 String path;
+String title = _T("Save Log Data File");
 
-  if (!getSaveAsPathDlg(saveAsTitle, defFileName, defExt, defFilePat, path)) return;
+  if (!getSaveAsPathDlg(title, defFileName, defExt, defFilePat, path)) return;
 
   iniFile.writeString(FileSection, LogPath, path);
 
@@ -185,8 +196,9 @@ String path;
 
 void ICS_214aDoc::onSaveExcel() {
 String path;
+String title = _T("Save Excel CSV File");
 
-  if (!getSaveAsPathDlg(saveAsTitle, defFileName, _T("csv"), _T("*.csv"), path)) return;
+  if (!getSaveAsPathDlg(title, defFileName, _T("csv"), _T("*.csv"), path)) return;
 
   activity.setStoreExcel();   saveDoc(path);
   }

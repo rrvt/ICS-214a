@@ -7,7 +7,7 @@
 
 class ICS_214aDoc : public CDoc {
 
-String saveAsTitle;                                             // Save As Parameters, examples:
+//String saveAsTitle;                                             // Save As Parameters, examples:
 String defFileName;                                             // _T("mumble.txt")
 String defExt;                                                  // _T("txt")
 String defFilePat;                                              // _T("*.txt")
@@ -20,6 +20,8 @@ protected: // create from serialization only
 public:
 
   virtual ~ICS_214aDoc() { }
+
+  String& getDefFileName();
 
   virtual void serialize(Archive& ar);
 
