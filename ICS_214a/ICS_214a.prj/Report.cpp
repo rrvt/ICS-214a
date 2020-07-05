@@ -9,7 +9,8 @@
 #include "Utilities.h"
 
 
-static const int linesPerPg = 52;
+static const int linesPerPg  = 52;
+static const int opPeriodTab = 50;
 
 Report report;
 
@@ -29,11 +30,13 @@ ICS_214aView& vw  = *view();
 Display&      dev = vw.getDev();
 ActivityIter  iter(activity);
 LogData*      ld;
-int           noHeaderLns = 7 + activity.opPeriod(activity.operationalPeriod, 24, 3);
-int           noLines = noHeaderLns;
+int           noHeaderLns;
+int           noLines;
 int           noPages = 0;
 int           n;
 CDC*          dc = dev.getDC();
+
+  noHeaderLns = 7 + activity.wrapOpPer(opPeriodTab, dev, dc);   noLines = noHeaderLns;
 
   for (ld = iter(); ld; ld = iter++) {
     n = ld->wrap(dev, dc);    if (iter.last()) n += 2;
@@ -86,7 +89,7 @@ void Report::header() {
 
   noLines = 0;
 
-  notePad << nClrTabs << nSetTab(18) << nSetTab(38) << nSetTab(55);
+  notePad << nClrTabs << nSetTab(18) << nSetTab(53) << nSetRTab(70);
 
   notePad << nBold << nFSize(160) << _T("ICS 214a Unit Log") << nFont << nFont;
   notePad << nTab << nFSize(90) << _T("Incident Name") << nTab << _T("Date Prepared");
@@ -97,12 +100,14 @@ void Report::header() {
   notePad << nTab << activity.prepDate;
   notePad << nTab << activity.prepTime;   crlf();   crlf();
 
+  notePad << nClrTabs << nSetTab(14) << nSetTab(32) << nSetRTab(70);
+
   notePad << nFSize(90) << _T("Unit Name Designator") << nTab << _T("Unit Leader: Name");
   notePad << nTab << _T("Position") << nTab << _T("Operational Period") << nFont;   crlf();
   notePad << _T("San Jose RACES");
   notePad << nTab << activity.leaderName;
-  notePad << nTab << activity.leaderPosition << nTab;
-  noLines += activity.opPeriod.display();
+  notePad << nTab << activity.leaderPosition << nTab << activity.operationalPeriod;
+//  noLines += activity.dspOpPer();
   crlf(); crlf();
 
   notePad << nClrTabs << nSetTab(6) << nSetRTab(17) << nSetTab(18);
@@ -115,12 +120,12 @@ void Report::footer(Display& dev, int pageN) {
 
   if (pageN > maxPages) maxPages = pageN;
 
-  dev << dClrTabs << dSetTab(7) << dSetTab(28) << dSetTab(62);
-  dev << dFSize(90) << _T("ICS 214a") << dTab << _T("Prepared By") << dTab;
-  dev << _T("Mission Number") << dTab << _T("Page")  << dPrevFont << dCrlf;
+  dev << dClrTabs << dSetTab(7) << dSetRTab(70);
+  dev << dFSize(90) << _T("ICS 214a") << dTab << _T("Prepared By") << dCenter;
+  dev << _T("Mission Number") << dTab << _T("Page No.")  << dPrevFont << dCrlf;
 
-  dev << dClrTabs << dSetTab(7) << dSetRTab(35) << dSetRTab(65);
-  dev << _T("RACES") << dTab << activity.preparedBy << dTab << _T("SJS-") << activity.missionNo;
+  dev << dClrTabs << dSetTab(7) << dSetRTab(70);
+  dev << _T("RACES") << dTab << activity.preparedBy << dCenter << activity.missionNo;
   dev << dTab << pageN << _T(" of ") << maxPages << dflushFtr;
   }
 

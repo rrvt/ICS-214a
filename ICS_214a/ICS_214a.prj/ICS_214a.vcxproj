@@ -127,7 +127,6 @@
     <ClInclude Include="StopEntryDlg.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Utilities.h" />
-    <ClInclude Include="WrapPrep.h" />
     <ClInclude Include="..\..\..\Sources\Library\AboutFiles\About.h" />
   </ItemGroup>
   <ItemGroup>
@@ -146,7 +145,6 @@
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="StopEntryDlg.cpp" />
     <ClCompile Include="Utilities.cpp" />
-    <ClCompile Include="WrapPrep.cpp" />
     <ClCompile Include="..\..\..\Sources\Library\AboutFiles\About.cpp" />
   </ItemGroup>
   <ItemGroup>

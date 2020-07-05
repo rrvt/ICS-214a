@@ -63,9 +63,6 @@
     <ClInclude Include="Report.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="WrapPrep.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="OptionsDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -115,9 +112,6 @@
     </ClCompile>
     <ClCompile Include="Report.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WrapPrep.cpp">
-      <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="OptionsDlg.cpp">
       <Filter>Source Files</Filter>

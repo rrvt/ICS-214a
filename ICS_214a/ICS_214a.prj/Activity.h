@@ -8,7 +8,6 @@
 #include "Display.h"
 #include "Expandable.h"
 #include "Wrap.h"
-#include "WrapPrep.h"
 
 
 class LogData {
@@ -79,13 +78,16 @@ String operationalPeriod;             // Dates any way they want to display them
 String preparedBy;
 String missionNo;
 
-WrapPrep opPeriod;                      // Used during reporting only
+Wrap   opPeriod;                      // Used during reporting only
 
 
   Activity() : storeType(NilStore) { }
  ~Activity() { }
 
   void     clear();
+
+  int       wrapOpPer(int tab, Display& dev, CDC* dc);
+  int       dspOpPer();
 
   void     load(Archive&  ar);
   void     setStoreAll()   {storeType = StoreAll;}
