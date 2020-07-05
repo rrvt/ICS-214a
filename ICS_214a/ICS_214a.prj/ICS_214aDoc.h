@@ -28,10 +28,12 @@ public:
   virtual void Dump(CDumpContext& dc) const;
 #endif
 
+private:
+
+  void saveDoc(String& path);
+
 protected:
 
-// Generated message map functions
-protected:
   DECLARE_MESSAGE_MAP()
 
 public:
@@ -44,4 +46,5 @@ public:
   afx_msg void OnLogEntry();
   afx_msg void OnStopEntry();
   afx_msg void OnEditLogEntry();
+  afx_msg void OnOptions();
 };

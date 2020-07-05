@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "Activity.h"
+#include "Options.h"
 #include "Utilities.h"
 
 
@@ -113,43 +114,93 @@ void Activity::storeIncr(Archive&  ar) {storeIncrLogData(ar);}
 void Activity::storeAll(Archive&  ar) {storeHeader(ar);   storeLogData(ar);}
 
 
+/*
+ICS 214a  Unit Log    Date Prepared 7/4/2020
+Ver: NC     Time Prepared 0:00
+      Incident Name forVerification
+      Operational Period  7/4/2020_0600 to 7/5/2020_0600
+      Unit Name Designator
+      Unit Leader: Name Lowell Papa
+      Position  Field Operator
+
+
+ICS 214a,Unit Log,,Date Prepared,7/4/2020
+Ver: NC,,,Time Prepared,0:00
+,,,Incident Name,forVerification
+,,,Operational Period,7/4/2020_0600 to 7/5/2020_0600
+,,,Unit Name Designator,
+,,,Unit Leader: Name,Lowell Papa
+,,,Position,Field Operator
+*/
+
 void Activity::storeExcel(Archive&  ar) {
 CSVout co(ar);
 
-  co << _T("ICS 214a Unit Log") << _T(',') << _T("Incident Name") << _T(',') << _T("Date Prepared");
-  co << _T(',') << _T("Time Prepared") << vCrlf;
-  co << _T(',') << name;
-  co << _T(',') << prepDate;
-  co << _T(',') << prepTime << vCrlf;
+  if (options.excelOne) {
+    co << _T("ICS 214a") << _T(',') << _T("Unit Log") << _T(',') << _T(',') << _T("Date Prepared");
+    co << _T(',') << prepDate << vCrlf;
 
-  co << _T("Unit Name Designator") << _T(',') << _T("Unit Leader: Name") << _T(',');
-  co << _T("Position") << _T(',') << _T("Operational Period") << vCrlf;
-  co << _T(',') << leaderName;
-  co << _T(',') << leaderPosition;
-  co << _T(',') << operationalPeriod << vCrlf << vCrlf;
+    co << _T("Ver: NC") << _T(',') << _T(',') << _T(',') << _T("Time Prepared");
+    co << _T(',') << prepTime << vCrlf;
+
+    co << _T(',') << _T(',') << _T(',') << _T("Incident Name") << _T(',') << name << vCrlf;
+    co << _T(',') << _T(',') << _T(',') << _T("Operational Period") << _T(',') << operationalPeriod;
+    co << vCrlf;
+    co << _T(',') << _T(',') << _T(',') << _T("Unit Name Designator") << vCrlf;
+    co << _T(',') << _T(',') << _T(',') << _T("Unit Leader: Name") << _T(',') << name << vCrlf;
+    co << _T(',') << _T(',') << _T(',') << _T("Position") << _T(',') << leaderPosition << vCrlf;
+    }
+
+  else {
+    co << _T("ICS 214a Unit Log") << _T(',') << _T("Incident Name") << _T(',') << _T("Date Prepared");
+    co << _T(',') << _T("Time Prepared") << vCrlf;
+    co << _T(',') << name;
+    co << _T(',') << prepDate;
+    co << _T(',') << prepTime << vCrlf;
+
+    co << _T("Unit Name Designator") << _T(',') << _T("Unit Leader: Name") << _T(',');
+    co << _T("Position") << _T(',') << _T("Operational Period") << vCrlf;
+    co << _T(',') << leaderName;
+    co << _T(',') << leaderPosition;
+    co << _T(',') << operationalPeriod << vCrlf << vCrlf;
+    }
 
   co << _T("Date") << _T(',') << _T("Start Time") << _T(',') << _T("End Date") << _T(',');
   co << _T("End Time") << _T(',') << _T("Activity") << vCrlf;
 
   storeLogData(ar);
-
   CTimeSpan total = getTotalTime();
   LONGLONG  secs  = total.GetTotalSeconds();
   double    ttl;
   String    t;
 
   ttl = (double) secs / 3600.0;   t.format(_T("%0.2f"), ttl);
+
+/*
+Footer
+,,,,
+,Total Time:,,501.2,hours
+,,,Prepared By,Bob
+ICS 214a,,,Mission Number,102
+,,,,
+,,,,
+*/
+
   co << vCrlf;
-  co << _T(',') << _T("Total Time:") << _T(',') << _T(',');
-  co << t << _T(',') << _T("hours") << vCrlf;
+  co << _T(',') << _T("Total Time:") << _T(',') << _T(',') << t << _T(',') << _T("hours") << vCrlf;
 
   co << vCrlf << vCrlf;
 
-  co << _T("ICS 214a") << _T(',') << _T("Prepared By") << _T(',') << _T(',');
-  co << _T("Mission Number") << vCrlf;
-  co << _T(',') << preparedBy << _T(',') << _T(',') << missionNo << vCrlf;
-
-  return;
+  if (options.excelOne) {
+    co << _T(',') << _T(',') << _T(',') << _T("Prepared By") << _T(',') << preparedBy  << vCrlf;
+    co << _T("ICS 214a") << _T(',') << _T(',') << _T(',') << _T("Mission Number");
+    co << _T(',') << missionNo << vCrlf;
+    }
+  else {
+    co << _T("ICS 214a") << _T(',') << _T("Prepared By") << _T(',');
+    co << _T(',') << _T("Mission Number") << vCrlf;
+    co << _T(',') << preparedBy << _T(',') << _T(',') << missionNo << vCrlf;
+    }
   }
 
 
@@ -296,7 +347,7 @@ CSVout co(ar);
 
   co << date    << _T(',');
   co << timeIn  << _T(',');
-  co << dateOut << _T(',');
+  if (dateOut.isEmpty()) co << date; else co << dateOut;   co << _T(',');
   co << timeOut << _T(',');
   co << desc    << vCrlf;
   archived = true;

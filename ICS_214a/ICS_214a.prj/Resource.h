@@ -8,6 +8,7 @@
 #define IDD_EventLogEntry               104
 #define IDD_StopEntry                   105
 #define IDD_EditEntry                   106
+#define IDD_Options                     107
 #define IDC_NameVer                     200
 #define IDC_Copyright                   201
 #define IDC_CompanyName                 202
@@ -32,6 +33,8 @@
 #define IDC_EDIT1                       220
 #define IDC_EndDate                     220
 #define IDC_Ugly                        221
+#define IDC_CHECK1                      222
+#define IDC_ExcelOne                    222
 #define ID_Help                         400
 #define ID_EditHeader                   401
 #define ID_LogEntry                     402
@@ -39,14 +42,15 @@
 #define ID_EditLogEntry                 404
 #define ID_NewLog                       405
 #define ID_MakeExcelFile                406
+#define ID_Options                      407
 
 // Next default values for new objects
-//
+// 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        107
-#define _APS_NEXT_COMMAND_VALUE         407
-#define _APS_NEXT_CONTROL_VALUE         222
+#define _APS_NEXT_RESOURCE_VALUE        109
+#define _APS_NEXT_COMMAND_VALUE         408
+#define _APS_NEXT_CONTROL_VALUE         223
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

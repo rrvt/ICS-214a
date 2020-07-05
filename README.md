@@ -54,6 +54,17 @@ installer and help files.  My WixApp might be useful for creating the Product.wx
 changes to the app.
 
 ## Update
+### July 5, 2020
+
+Lowell made some astute comments about the Excel spreadsheet that resulted from the csv output.  So the
+following changes were made (at the moment they are option one [Tools/Options]).
+ - The header was rearranged to a vertical format with the data in the description column
+ - The footer was rearranged to a vertical format with the data in the description column
+ - The end date was supplied for all activities, even those that have no end time
+
+In addition when attempting to save a file, windows sometimes prevents over writing a file being used by
+another program.  Detect and report an occurrence of this phenomenon.
+
 ### July 4, 2020
 
 Separated the command to produce a csv file for Excel and the reading and writing to the raw data.  Gave

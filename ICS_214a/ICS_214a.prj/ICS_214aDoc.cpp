@@ -14,7 +14,8 @@
 #include "IniFile.h"
 #include "MessageBox.h"
 #include "NotePad.h"
-//#include "Report.h"
+#include "Options.h"
+#include "OptionsDlg.h"
 #include "Resource.h"
 #include "StopEntryDlg.h"
 #include "Utilities.h"
@@ -37,6 +38,7 @@ BEGIN_MESSAGE_MAP(ICS_214aDoc, CDocument)
   ON_COMMAND(ID_LogEntry,      &ICS_214aDoc::OnLogEntry)
   ON_COMMAND(ID_StopEntry,     &ICS_214aDoc::OnStopEntry)
   ON_COMMAND(ID_EditLogEntry,  &ICS_214aDoc::OnEditLogEntry)
+  ON_COMMAND(ID_Options, &ICS_214aDoc::OnOptions)
 END_MESSAGE_MAP()
 
 
@@ -44,6 +46,17 @@ END_MESSAGE_MAP()
 
 ICS_214aDoc::ICS_214aDoc() noexcept {
   saveAsTitle = _T("eICS-214a");   defExt = _T("214");   defFilePat = _T("*.214");
+  }
+
+
+void ICS_214aDoc::OnOptions() {
+OptionsDlg dlg;
+
+  dlg.excelOne = options.excelOne;
+
+  if (dlg.DoModal() == IDOK) {
+    options.excelOne = dlg.excelOne;
+    }
   }
 
 
@@ -165,7 +178,8 @@ String path;
 
   iniFile.writeString(FileSection, LogPath, path);
 
-  activity.setStoreAll();   onSaveDocument(path, true);
+  activity.setStoreAll();   saveDoc(path);
+
   }
 
 
@@ -174,7 +188,18 @@ String path;
 
   if (!getSaveAsPathDlg(saveAsTitle, defFileName, _T("csv"), _T("*.csv"), path)) return;
 
-  activity.setStoreExcel();   onSaveDocument(path, true);
+  activity.setStoreExcel();   saveDoc(path);
+  }
+
+
+void ICS_214aDoc::saveDoc(String& path) {
+String name;
+String s;
+
+  if (!onSaveDocument(path, true)) {
+    name = removePath(path);   s.format(_T("Unable to Open File: %s"), name.str());
+    messageBox(s);
+    }
   }
 
 

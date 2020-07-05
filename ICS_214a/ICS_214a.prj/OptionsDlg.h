@@ -1,0 +1,30 @@
+// Options Dialog Box
+
+
+#pragma once
+#include "Resource.h"
+
+
+// OptionsDlg dialog
+
+class OptionsDlg : public CDialogEx {
+
+  DECLARE_DYNAMIC(OptionsDlg)
+
+public:
+BOOL excelOne;
+
+  OptionsDlg(CWnd* pParent = nullptr);   // standard constructor
+  virtual ~OptionsDlg();
+
+// Dialog Data
+#ifdef AFX_DESIGN_TIME
+  enum { IDD = IDD_Options };
+#endif
+
+protected:
+
+  virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+
+  DECLARE_MESSAGE_MAP()
+  };

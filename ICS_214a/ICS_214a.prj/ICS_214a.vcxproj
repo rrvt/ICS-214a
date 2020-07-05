@@ -119,6 +119,8 @@
     <ClInclude Include="ICS_214aDoc.h" />
     <ClInclude Include="ICS_214aView.h" />
     <ClInclude Include="MainFrame.h" />
+    <ClInclude Include="Options.h" />
+    <ClInclude Include="OptionsDlg.h" />
     <ClInclude Include="Report.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -138,6 +140,8 @@
     <ClCompile Include="ICS_214aDoc.cpp" />
     <ClCompile Include="ICS_214aView.cpp" />
     <ClCompile Include="MainFrame.cpp" />
+    <ClCompile Include="Options.cpp" />
+    <ClCompile Include="OptionsDlg.cpp" />
     <ClCompile Include="Report.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="StopEntryDlg.cpp" />
@@ -152,15 +156,10 @@
     <None Include="..\..\..\Sources\Library\AboutFiles\About.rc2" />
     <None Include="res\ICS_214a.rc2" />
     <None Include="..\README.md" />
+    <None Include="res\Toolbar17.bmp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\ICS_214a.ico" />
-    <Image Include="res\Toolbar00.bmp" />
-    <Image Include="res\Toolbar01.bmp" />
-    <Image Include="res\Toolbar02.bmp" />
-    <Image Include="res\Toolbar11.bmp" />
-    <Image Include="res\Toolbar12.bmp" />
-    <Image Include="res\Toolbar14.bmp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Library\LibUni7\LibUni7.vcxproj">
