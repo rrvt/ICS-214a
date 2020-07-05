@@ -53,6 +53,20 @@ install compiler and Help Workshop (an old application but still available) are 
 installer and help files.  My WixApp might be useful for creating the Product.wxs file if there are big
 changes to the app.
 
+## Update
+### July 4, 2020
+
+Separated the command to produce a csv file for Excel and the reading and writing to the raw data.  Gave
+the raw data file a unique extension (i.e. "214") while the Excel file has the traditional "csv"
+extension.
+
+While writing the help file found that a couple of the dialog boxes could be improved.  The Edit Activity
+dialog can now edit more than one activity line without leaving the dialog box.  Furthermore, the
+handling of dates and times was added to two of the dialog boxes where it have been neglected.
+
+The help file was expanded to include all the operations that can be performed.  Individual pages were
+written for the 4 main steps of managing an Activity with pictures of the actual dialog boxes.
+
 ## Authors
 
 Robert R. Van Tuyl, rrvt@swde.com
