@@ -36,7 +36,7 @@ int           noPages = 0;
 int           n;
 CDC*          dc = dev.getDC();
 
-  noHeaderLns = 7 + activity.wrapOpPer(opPeriodTab, dev, dc);   noLines = noHeaderLns;
+  noLines = noHeaderLns = 7;
 
   for (ld = iter(); ld; ld = iter++) {
     n = ld->wrap(dev, dc);    if (iter.last()) n += 2;
@@ -89,26 +89,25 @@ void Report::header() {
 
   noLines = 0;
 
-  notePad << nClrTabs << nSetTab(18) << nSetTab(53) << nSetRTab(70);
+  notePad << nClrTabs << nSetTab(18) << nSetRTab(60) << nSetRTab(70);
 
   notePad << nBold << nFSize(160) << _T("ICS 214a Unit Log") << nFont << nFont;
-  notePad << nTab << nFSize(90) << _T("Incident Name") << nTab << _T("Date Prepared");
-  notePad << nTab << _T("Time Prepared") << nFont;   crlf();
+  notePad << nTab << nFSize(90) << _T("1. Incident Name") << nTab << _T("2. Date Prepared");
+  notePad << nTab << _T("3. Time Prepared") << nFont;   crlf();
 
   notePad << nBold << _T("SJ RACES") << nFont;
   notePad << nTab << activity.name;
   notePad << nTab << activity.prepDate;
   notePad << nTab << activity.prepTime;   crlf();   crlf();
 
-  notePad << nClrTabs << nSetTab(14) << nSetTab(32) << nSetRTab(70);
+  notePad << nClrTabs << nSetTab(14) << nSetRTab(70);
 
-  notePad << nFSize(90) << _T("Unit Name Designator") << nTab << _T("Unit Leader: Name");
-  notePad << nTab << _T("Position") << nTab << _T("Operational Period") << nFont;   crlf();
+  notePad << nFSize(90) << _T("4. Unit Name Designator") << nTab;
+  notePad << _T("5. Unit Leader: (Name and Position)") << nTab;
+  notePad << _T("6. Operational Period") << nFont;   crlf();
   notePad << _T("San Jose RACES");
-  notePad << nTab << activity.leaderName;
-  notePad << nTab << activity.leaderPosition << nTab << activity.operationalPeriod;
-//  noLines += activity.dspOpPer();
-  crlf(); crlf();
+  notePad << nTab << activity.leaderName << _T(" - ") << activity.leaderPosition;
+  notePad << nTab << activity.operationalPeriod;   crlf(); crlf();
 
   notePad << nClrTabs << nSetTab(6) << nSetRTab(17) << nSetTab(18);
   notePad << nFSize(90) << _T("Date") << nTab << _T("Start Time") << nTab << _T("End Time");
@@ -121,8 +120,8 @@ void Report::footer(Display& dev, int pageN) {
   if (pageN > maxPages) maxPages = pageN;
 
   dev << dClrTabs << dSetTab(7) << dSetRTab(70);
-  dev << dFSize(90) << _T("ICS 214a") << dTab << _T("Prepared By") << dCenter;
-  dev << _T("Mission Number") << dTab << _T("Page No.")  << dPrevFont << dCrlf;
+  dev << dFSize(90) << _T("ICS 214a") << dTab << _T("8. Prepared By") << dCenter;
+  dev << _T("9. Mission Number") << dTab << _T("10. Page No.")  << dPrevFont << dCrlf;
 
   dev << dClrTabs << dSetTab(7) << dSetRTab(70);
   dev << _T("RACES") << dTab << activity.preparedBy << dCenter << activity.missionNo;

@@ -54,6 +54,13 @@ installer and help files.  My WixApp might be useful for creating the Product.wx
 changes to the app.
 
 ## Update
+### July 6, 2020
+
+ - Added logic to prevent a crash when window is narrowed.
+ - Add numbers on the field names
+ - Merged Unit Leader Name and Position on output.  Values are input in separate fields and output to
+Excel in separate fields.
+
 ### July 5, 2020
 
 Lowell made some astute comments about the Excel spreadsheet that resulted from the csv output.  So the

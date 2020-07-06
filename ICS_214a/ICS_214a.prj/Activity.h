@@ -78,16 +78,10 @@ String operationalPeriod;             // Dates any way they want to display them
 String preparedBy;
 String missionNo;
 
-Wrap   opPeriod;                      // Used during reporting only
-
-
   Activity() : storeType(NilStore) { }
  ~Activity() { }
 
   void     clear();
-
-  int       wrapOpPer(int tab, Display& dev, CDC* dc);
-  int       dspOpPer();
 
   void     load(Archive&  ar);
   void     setStoreAll()   {storeType = StoreAll;}

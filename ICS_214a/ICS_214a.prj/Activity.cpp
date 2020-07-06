@@ -246,32 +246,6 @@ CTimeSpan total = 0;
   }
 
 
-
-
-int Activity::wrapOpPer(int tab, Display& dev, CDC* dc) {
-
-  dev << dCR << dClrTabs << dSetTab(tab) << dTab;
-
-  opPeriod.initialize(dc, dev.remaining(), false);     dev<< dCR << dClrTabs;
-
-  return opPeriod(operationalPeriod);
-  }
-
-int Activity::dspOpPer() {
-int i;
-int n = opPeriod.lines.end();
-
-  for (i = 0; i < n; i++) {
-
-    if (i) notePad << nCrlf << nTab << nTab << nTab;
-
-    notePad << opPeriod.lines[i];
-    }
-
-  return n;
-  }
-
-
 int LogData::wrap(Display& dev, CDC* dc) {
 bool dateOutIsPresent;
 int  tab = dateOutTab(dateOutIsPresent);

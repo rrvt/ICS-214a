@@ -17,8 +17,11 @@ int    threshold = 5 * extent / 8;
 int    posWh;
 int    posComma;
 int    brkPt;
+String word = _T("Word");
 
   lines.clr();
+
+  if (extent <= width(word)) {lines[lines.end()] = s; return 1;}
 
   while (width(s) > extent) {
     brkPt    = 0;   t.clear();

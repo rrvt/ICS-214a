@@ -276,7 +276,7 @@ int  nLines;
 
   if (endPageFlag) {endPageFlag = false; beginPage = true;}
 
-  wrap.initialize(dc, tPos.remaining() + (printing ? tPos.widthCh() : 0), font.getAttr()->italic);
+  wrap.initialize(dc, tPos.remaining() + (printing ? 2*tPos.widthCh() : 0), font.getAttr()->italic);
   nLines = wrap(sum);
 
   if (!footer && printing && y + curHeight * nLines >= bottomEdge) {setEndPage(); return false;}
