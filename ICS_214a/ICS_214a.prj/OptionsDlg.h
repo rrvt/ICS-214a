@@ -12,7 +12,15 @@ class OptionsDlg : public CDialogEx {
   DECLARE_DYNAMIC(OptionsDlg)
 
 public:
-BOOL excelOne;
+BOOL    excelOne;
+CString topMargin;
+CString leftMargin;
+CString rightMargin;
+CString botMargin;
+CEdit   topCtrl;
+CEdit   leftCtrl;
+CEdit   rightCtrl;
+CEdit   botCtrl;
 
   OptionsDlg(CWnd* pParent = nullptr);   // standard constructor
   virtual ~OptionsDlg();
@@ -27,4 +35,14 @@ protected:
   virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 
   DECLARE_MESSAGE_MAP()
+
+private:
+
+  void floatingOnly(CEdit& ctrl);
+
+public:
+  afx_msg void OnChangeTop();
+  afx_msg void OnChangeLeft();
+  afx_msg void OnChangeRight();
+  afx_msg void OnChangeBot();
   };

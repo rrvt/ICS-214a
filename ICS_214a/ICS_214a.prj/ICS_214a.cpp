@@ -7,6 +7,7 @@
 #include "ICS_214aDoc.h"
 #include "ICS_214aView.h"
 #include "IniFile.h"
+#include "Options.h"
 #include "NotePad.h"
 #include "MainFrame.h"
 
@@ -65,6 +66,8 @@ BOOL ICS_214a::InitInstance() {
   setAppName(_T("eICS-214a")); setTitle(_T("Event Log"));
 
   view()->setFont(_T("Arial"), 120);
+
+  options.load();
 
   if (doc()->getDefFileName().isEmpty()) doc()->OnNewLog();
   else                                   doc()->OnFileOpen();

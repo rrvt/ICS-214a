@@ -46,17 +46,20 @@ public:
     tabs.clr();
     }
 
-  void iPos(int left, int right) {maxCursorPos = cursorPos = leftEdge = left; rightEdge = right;}
+  void setLeftMargin( int lm)
+                      {leftMargin = lm >= 0 ? lm : 0;  maxCursorPos = cursorPos = getInitialCursorPos();}
+  void iPos(int left, int right)
+                  {leftEdge = left; rightEdge = right; maxCursorPos = cursorPos = getInitialCursorPos();}
 
   void pos(int x)  {cursorPos  = x;}         // Change position to x
   bool exceedsRtMargin(int width);           // return true when new position would exceed right margin
   int  remaining();
-  int  widthCh() {return width;}
+  int  widthCh()   {return width;}
   void move(int x) {cursorPos += x;}         // Move Cursor by the number of characters specified
   int  get()       {return cursorPos;}       // Returns the current cursor position in pixels
   int  getCharPos(){return width ? (cursorPos - leftEdge)/width - leftMargin: 0;}
                                              // Returns the current cursor position in characters
-  void setLeftMargin(int lm) {leftMargin = lm >= 0 ? lm : 0;}
+
   void clrTabs()   {tabs.clr();}             // Clear Tabs
   void setTab( int charPos);                 // Insert an character position for the next
                                              // tab position
@@ -65,18 +68,20 @@ public:
   Tab tab();                                 // return position of next tab and sets cursorPos
   Tab findNextTab();
   void centerPos(int width) {pos((rightEdge - leftEdge - width) / 2 + leftEdge);}
-  void rightPos(int width)  {pos(rightEdge - width);}
+  void rightPos( int width) {pos(rightEdge - width);}
   void rightTabPos(Tab& tab, int width) {pos(tab.pos - width);}
 
   void doCR() {
     if (cursorPos > maxCursorPos) maxCursorPos = cursorPos;
 
-    cursorPos = leftEdge + leftMargin * width; width = lastWidth ? lastWidth : 1;
+    cursorPos = getInitialCursorPos(); width = lastWidth ? lastWidth : 1;
     }
    int getPortWidth() {return rightEdge - leftEdge;}
+
 private:
 
   int charsPerLine() {return (rightEdge - leftEdge) / width;}
+  int getInitialCursorPos() {return leftEdge + leftMargin * width;}
   };
 
 

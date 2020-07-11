@@ -32,7 +32,8 @@ public:
   #endif
 
   DECLARE_MESSAGE_MAP()
-  };
+  virtual void OnPrepareDC(CDC* pDC, CPrintInfo* pInfo = NULL);
+};
 
 
 #ifndef _DEBUG  // debug version in ICS_214aView.cpp

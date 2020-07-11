@@ -10,25 +10,17 @@ int CScrView::lastPos = 0;
 
 
 BEGIN_MESSAGE_MAP(CScrView, CScrollView)
-  ON_COMMAND(ID_FILE_PRINT,         &CScrView::OnFilePrint)
-  ON_COMMAND(ID_FILE_PRINT_DIRECT,  &CScrollView::OnFilePrint)
-  ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CScrView::OnFilePrintPreview)
+  ON_COMMAND(ID_FILE_PRINT,         &CScrollView::OnFilePrint)
+  ON_COMMAND(ID_FILE_PRINT_PREVIEW, &CScrollView::OnFilePrintPreview)
 END_MESSAGE_MAP()
 
 
-// Default Print starting logic, it is virtual so it can be replaced with out removing this code...
+void CScrView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) {
 
-void CScrView::OnFilePrint() {printer.setNoFooterLns(noFooterLines);  CScrollView::OnFilePrint();}
-void CScrView::OnFilePrintPreview()
-                             {printer.setNoFooterLns(noFooterLines);  CScrollView::OnFilePrintPreview();}
+  if (printing) return;
 
-
-BOOL CScrView::PreCreateWindow(CREATESTRUCT& cs) {return CScrollView::PreCreateWindow(cs);}
-
-
-
-void CScrView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
-                                        {setScrollSize(); CScrollView::OnUpdate(pSender, lHint, pHint);}
+  setScrollSize(); CScrollView::OnUpdate(pSender, lHint, pHint);
+  }
 
 
 // CScrView printing
@@ -44,15 +36,21 @@ void OnPrint(        CDC* pDC, CPrintInfo* pInfo);  -- 6th                      
 void OnEndPrinting(  CDC* pDC, CPrintInfo* pInfo);  -- last
 */
 
-BOOL CScrView::OnPreparePrinting(CPrintInfo* pInfo)
-  {printing = true; prtPage = 0; return DoPreparePrinting(pInfo);}
-                                                                              // Get printer dialog box
+
+// Get printer dialog box
+
+BOOL CScrView::OnPreparePrinting(CPrintInfo* pInfo) {
+  printing = true; prtPage = 0; if (DoPreparePrinting(pInfo)) return true;
+
+  printing = false; return false;
+  }
+
 
 void CScrView::OnPrepareDC(CDC* pDC, CPrintInfo* pInfo) {
 
   if (printing && !pInfo) return;
 
-  dc = pDC;   CScrollView::OnPrepareDC(dc, pInfo);    printing = dc->IsPrinting();
+  dc = pDC;  info = pInfo;   CScrollView::OnPrepareDC(dc, pInfo);    printing = dc->IsPrinting();
 
   if (printing) preparePrinter(pInfo);
   else          prepareDisplay();
@@ -64,10 +62,27 @@ void CScrView::OnPrepareDC(CDC* pDC, CPrintInfo* pInfo) {
 
 void CScrView::onPrepareOutput() {
 
-  if (!printing) {display.startDev(); return;}
+  if (!printing)   {display.startDev(); return;}
 
   if (!endPrinting) printer.startDev();
   }
+
+
+void  CScrView::trialRun(int& maxLines, int& noPages) {
+uint i;
+
+  printer.startDev();
+
+  for (i = 1; !printer.isEndDoc(); i++) {
+
+    printer.suppressOutput();   printer();   printer.clrFont();
+
+    printer.preparePrinting(font, fontSize, dc, info);
+    }
+
+  maxLines = printer.maxLines();    noPages = i;
+  }
+
 
 
 void CScrView::preparePrinter(CPrintInfo* pInfo) {
@@ -77,7 +92,9 @@ int pageNo = pInfo->m_nCurPage;
 
   pInfo->m_nNumPreviewPages = 0;
 
-  pInfo->SetMinPage(1);   pInfo->SetMaxPage(9999);    //printer.startDev();
+  pInfo->SetMinPage(1);   pInfo->SetMaxPage(9999);
+
+  printer.setHorzMgns(leftMargin, rightMargin);   printer.setVertMgns(topMargin, botMargin);
 
   printer.preparePrinting(font, fontSize, dc, pInfo);
 
@@ -108,7 +125,7 @@ void CScrView::OnPrint(CDC* dc, CPrintInfo* pInfo) {print(pInfo);}
 
 void CScrView::print(CPrintInfo* pInfo) {
 
-  printer();  startFooter(pInfo);   prtPage = pInfo->m_nCurPage;
+  printer();  startFooter(pInfo, printer.getDisplay());   prtPage = pInfo->m_nCurPage;
 
   printer.clrFont();
 
@@ -116,13 +133,8 @@ void CScrView::print(CPrintInfo* pInfo) {
   }
 
 
-void CScrView::startFooter(CPrintInfo* pInfo) {
-Display footer(printer.getY());
-
-  footer.preparePrinting(font, fontSize, dc, pInfo);   footer.setFooter();
-
-  printFooter(footer, pInfo->m_nCurPage);
-  }
+void CScrView::startFooter(CPrintInfo* pInfo, Display& dev)
+                              {dev.setFooter();  printFooter(dev, pInfo->m_nCurPage);   dev.clrFooter();}
 
 
 
@@ -153,16 +165,23 @@ bool fin = printer.isEndDoc();
 
 
 void CScrView::OnEndPrinting(CDC* pDC, CPrintInfo* pInfo) {printing = false;}
-                                                                //if (!pInfo->m_bPreview) invalidate();
+
 
 // Display Functions
 
-void CScrView::prepareDisplay() {display.prepareDisplay(font, fontSize, dc);  onPrepareOutput();}
+void CScrView::prepareDisplay() {
+  if (printing) return;
+
+  display.setHorzMgns(leftMargin, rightMargin);   display.setVertMgns(topMargin, botMargin);
+
+  display.prepareDisplay(font, fontSize, dc);   onPrepareOutput();
+  }
 
 
 // CScrView drawing
 
-void CScrView::OnDraw(CDC* pDC) {display();   display.clrFont();   setScrollSize();}
+void CScrView::OnDraw(CDC* pDC)
+                              {if (printing) return;   display();   display.clrFont();   setScrollSize();}
 
 
 //  SB_LINEUP           0
@@ -183,10 +202,10 @@ void CScrView::OnDraw(CDC* pDC) {display();   display.clrFont();   setScrollSize
 
 
 BOOL CScrView::OnScroll(UINT nScrollCode, UINT nPos, BOOL bDoScroll) {
-int        x  = nScrollCode >> 8;
-POINT      pt;
-int        nextPos;
-int        delta;
+int   x  = nScrollCode >> 8;
+POINT pt;
+int   nextPos;
+int   delta;
 
   if (x == SB_THUMBTRACK) {
 
@@ -207,7 +226,7 @@ int        delta;
 
 void CScrView::setScrollSize() {
 RECT  winSize;
-int   height = display.getHeight();
+int   height = display.chHeight();
 int   t      = 1;
 CSize scrollViewSize;
 CSize pageSize;
@@ -219,7 +238,7 @@ CSize scrollSize;
 
   pageSize.cy = t; pageSize.cx = winSize.right;
 
-  scrollSize.cx = display.getWidth();   scrollSize.cy = height;
+  scrollSize.cx = display.chWidth();   scrollSize.cy = height;
 
   display.getMaxPos(scrollViewSize.cx, scrollViewSize.cy);
 

@@ -54,6 +54,14 @@ installer and help files.  My WixApp might be useful for creating the Product.wx
 changes to the app.
 
 ## Update
+### July 10, 2020
+
+ - Chased down some bugs
+ - Added the ability to change the print and print preview margins
+ - Changed the right most fields in the header to float to the right edge of the output window (Display,
+Print Preview or Printed Output).  The motivation is to give the maximum space for data in the header
+fields.
+
 ### July 6, 2020
 
  - Added logic to prevent a crash when window is narrowed.

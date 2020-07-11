@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "ICS_214aView.h"
 #include "ICS_214aDoc.h"
+#include "Options.h"
 #include "Report.h"
 
 
@@ -15,8 +16,21 @@ BEGIN_MESSAGE_MAP(ICS_214aView, CScrView)
 END_MESSAGE_MAP()
 
 
-void ICS_214aView::onPrepareOutput()
-                              {setNoFooterLns(2);  report(isPrinting());   CScrView::onPrepareOutput();}
+void ICS_214aView::OnPrepareDC(CDC* pDC, CPrintInfo* pInfo) {
+uint   x;
+double topMgn   = options.topMargin.stod(x);
+double leftMgn  = options.leftMargin.stod(x);
+double rightMgn = options.rightMargin.stod(x);
+double botMgn   = options.botMargin.stod(x);
+
+  if (pDC->IsPrinting()) {setHorzMgns(leftMgn, rightMgn); setVertMgns(topMgn, botMgn);}
+  else                   {setHorzMgns(0.33, 0.33); setVertMgns(0.33, 0.33);}
+
+  CScrView::OnPrepareDC(pDC, pInfo);
+  }
+
+
+void ICS_214aView::onPrepareOutput() {report(isPrinting());   CScrView::onPrepareOutput();}
 
 
 void ICS_214aView::printFooter(Display& dev, int pageNo) {report.footer(dev, pageNo); invalidate();}

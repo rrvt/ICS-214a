@@ -19,7 +19,7 @@ CFont   font;
 CFont*  original;
 LOGFONT logFont;
 
-  stkX = 0;
+  stkX = 0;   dc->SetMapMode(MM_TEXT);
 
   if (!font.CreatePointFont(fontSize, face, dc)) {createFailed(_T("initialize")); return;}
 

@@ -10,7 +10,6 @@
 Activity activity;
 
 
-
 void Activity::clear() {
   storeType = NilStore;
   log.clr();
@@ -248,11 +247,12 @@ CTimeSpan total = 0;
 
 int LogData::wrap(Display& dev, CDC* dc) {
 bool dateOutIsPresent;
-int  tab = dateOutTab(dateOutIsPresent);
+int  tab     = dateOutTab(dateOutIsPresent);
+int  chWidth = dev.chWidth();
 
   dev << dCR << dClrTabs << dSetTab(tab) << dTab;
 
-  wrp.initialize(dc, dev.remaining(), false);     dev<< dCR << dClrTabs;
+  wrp.initialize(dc, dev.remaining() - 3 * chWidth, false);     dev<< dCR << dClrTabs;
 
   return wrp(desc);
   }
@@ -363,53 +363,4 @@ CTimeSpan sp(sec + sc1); return sp;
 
 
 CTimeSpan operator+= (CTimeSpan t, LogData& ld) {return t += ld.deltaT;}
-
-
-
-
-#if 0
-void Activity::display() {
-int       n = log.end();
-int       i;
-CTimeSpan totalTime = 0;
-LONGLONG  secs;
-String    t;
-int       noLines = 0;
-
-  notePad.clear();
-
-  notePad << nClrTabs << nSetTab(18) << nSetTab(38) << nSetTab(55);
-
-  notePad << nBold << nFSize(160) << _T("ICS 214a Unit Log") << nFont << nFont;
-  notePad << nTab << nFSize(90) << _T("Incident Name") << nTab << _T("Date Prepared");
-  notePad << nTab << _T("Time Prepared") << nFont;
-  notePad << nCrlf;
-  notePad << nBold << _T("SJ RACES") << nFont;
-  notePad << nTab << name;
-  notePad << nTab << prepDate;
-  notePad << nTab << prepTime;
-  notePad << nCrlf << nCrlf;
-  notePad << nFSize(90) << _T("Unit Name Designator") << nTab << _T("Unit Leader: Name");
-  notePad << nTab << _T("Position") << nTab << _T("Operational Period") << nFont << nCrlf;
-  notePad << _T("San Jose RACES");
-  notePad << nTab << leaderName;
-  notePad << nTab << leaderPosition << nTab;
-  dsplyWrap(operationalPeriod, 24, 3);
-  notePad << nCrlf << nCrlf;
-
-  notePad << nClrTabs << nSetTab(6) << nSetRTab(17) << nSetTab(18);
-  notePad << nFSize(90) << _T("Date") << nTab << _T("Start Time") << nTab << _T("End Time");
-  notePad << nTab << _T("Activity") << nFont << nCrlf;
-
-  notePad << nClrTabs << nSetTab(7) << nSetRTab(17) << nSetTab(18) << nSetTab(24);
-
-  for (i = 0; i < n; i++) totalTime += log[i].display(noLines);
-
-  secs  = totalTime.GetTotalSeconds();
-  double ttl = (double) secs / 3600.0;
-  t.format(_T("%0.2f"), ttl);
-
-  notePad << nCrlf << _T("   Total Time:") << nTab << t << nTab << _T("hours") << nCrlf;
-  }
-#endif
 

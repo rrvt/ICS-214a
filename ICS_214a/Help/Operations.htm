@@ -64,7 +64,7 @@ Displays the About File. </p>
 <p>
 Causes the application to terminate. 
 </p>
-<h2><a id="MenuItems"></a>Menu Items not on ToolBar</h2>
+<h2></a>Menu Items not on ToolBar</h2>
 <h3>File/Save Log</h3>
 <p>
 This command outputs the current log data into a new xxx.214 file suitable for loading back into ICS_214a.
@@ -76,6 +76,30 @@ Displays the log as it would appear printed.
 <h3>File/Print Setup</h3>
 <p>
 Displays the Windows Printer Setup Dialog.  Allows one to select the printer and its attributes.
+</p>
+<h3>Tools/Options</h3>
+<p>
+The Options Dialog will appear and it has two groups of options:
+<ul>
+<li>A checkbox to determine how the header in the Excel Spreadsheet CSV file is handled.</li>
+<li>Fields that will allow the user to specify the margins on print and print preview output.</li>
+</ul>
+The display output margins are fixed at 1/3 of the character width and height.
+</p>
+<p>
+The Excel default format is similar to the ICS-214, i.e. four lines with the data being on the 2nd and 4th lines respectively.  The Excel Option One is selected if the checkbox is checked.  This format uses a
+line for each data item in the header and places the data in the description column.  Note that column should be formated to be left aligned so that the date and time are next to the label.
+</p>
+<p>
+The margin option is to allow the user to adjust the margins on the printer output and print preview window.  The values may be decimal numbers and the Option Dialog insists that only digits and one period
+are input.  Since every printer is slightly different the actual margin is the product of the value in 
+the option field and the width or height of a single character.   The values chose are saved in the applications ini file.  The devault values are:
+<ul>
+<li>Top: 2.0</li>
+<li>lLeft: 5.0</li>
+<li>Right: 3.0</li>
+<li>Bottom: 2.7</li>
+</ul>
 </p>
 <h3>Help/Introduction</h3>
 <p>

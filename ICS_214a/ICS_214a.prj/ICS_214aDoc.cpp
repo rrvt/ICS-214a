@@ -53,10 +53,21 @@ ICS_214aDoc::ICS_214aDoc() noexcept {
 void ICS_214aDoc::OnOptions() {
 OptionsDlg dlg;
 
+  dlg.excelOne    = options.excelOne;
+  dlg.topMargin   = options.topMargin;
+  dlg.leftMargin  = options.leftMargin;
+  dlg.rightMargin = options.rightMargin;
+  dlg.botMargin   = options.botMargin;
+
   dlg.excelOne = options.excelOne;
 
   if (dlg.DoModal() == IDOK) {
-    options.excelOne = dlg.excelOne;
+    options.excelOne     = dlg.excelOne;
+    options.topMargin    = dlg.topMargin;
+    options.leftMargin   = dlg.leftMargin;
+    options.rightMargin  = dlg.rightMargin;
+    options.botMargin    = dlg.botMargin;
+    options.store();
     }
   }
 

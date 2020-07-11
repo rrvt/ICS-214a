@@ -10,6 +10,7 @@ class Report {
 bool      printing;
 int       noLines;
 int       maxPages;
+int       maxLines;
 CTimeSpan totalTime;
 
 public:
@@ -18,8 +19,12 @@ public:
  ~Report() { }
 
   void operator() (bool printing = false);
-  int  detWraps();
+
+  void trialRun();
+
+  void detWraps();
   void footer(Display& dev, int pageNo);
+  void dspFtr();
 
 private:
 

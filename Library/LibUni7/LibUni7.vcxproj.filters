@@ -204,7 +204,10 @@
     <ClInclude Include="..\LibFiles\Wrap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\LibFiles\DCdata.h">
+    <ClInclude Include="..\LibFiles\Horiz.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LibFiles\VertMgmt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -359,7 +362,10 @@
     <ClCompile Include="..\LibFiles\Wrap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\LibFiles\DCdata.cpp">
+    <ClCompile Include="..\LibFiles\Horiz.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LibFiles\VertMgmt.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

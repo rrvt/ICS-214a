@@ -14,21 +14,21 @@ static const int  Margin    = 3;
 static DspManip1& setupManip1(DspManip1::Func fn, int val);
 
 
-DspManip dClrTabs;    // add to stream to clear tabs: dsp << dClrTabs;
+DspManip dClrTabs;                      // add to stream to clear tabs: dsp << dClrTabs;
 DspManip dCrlf;
-DspManip dCR;             // add to stream to perform a carriage return (only)
-DspManip dEndPage;    // add to stream to terminate a page when printing or do nothing
+DspManip dCR;                           // add to stream to perform a carriage return (only)
+DspManip dEndPage;                      // add to stream to terminate a page when printing or do nothing
 DspManip dTab;
 DspManip dCenter;
-DspManip dRight;      // right align the String following up to the nCrlf
+DspManip dRight;                        // right align the String following up to the nCrlf
 DspManip dBeginLine;
 DspManip dEndLine;
-DspManip dPrevFont;   // Restore previous font
+DspManip dPrevFont;                     // Restore previous font
 DspManip dBoldFont;
 DspManip dItalicFont;
 DspManip dUnderLineFont;
 DspManip dStrikeOutFont;
-DspManip dflushFtr;   // add to stream to terminate a footer when printing
+DspManip dflushFtr;                     // add to stream to terminate a footer when printing
 
 DspManip1& dSetLMargin(int val) {return setupManip1(Display::doSetLMargin, val);}
 DspManip1& dSetTab(    int val) {return setupManip1(Display::doSetTab,     val);}
@@ -42,15 +42,14 @@ DspManip1& setupManip1(DspManip1::Func fn, int val)
 
 
 
-Display::Display()          : tPos(), initialYPos(0),     points{{0,0}} {initialize();}
-Display::Display(int initY) : tPos(), initialYPos(initY), points{{0,0}} {initialize();}
+Display::Display()          : points{{0,0}} {initialize();}    //tPos(),
 
 
 void Display::initialize() {
 
-  noPoints = maxHeight = curHeight = toLine = maxY = topEdge = bottomEdge = 0;   y = initialYPos + Margin;
-  center = right = beginPage = endPageFlag = false;  footer = false;  noFooterLines = 0; suppress = false;
-  dc = 0; tPos.clrTabs();
+  noPoints = 0;
+  center = right = false;  footer = false;  suppress = false;
+  dc = 0;   leftMargin = rightMargin = 0;
   points[0] = {0,0};
 
   printing = false;   noPages = 0;  nonBlankLine = true;
@@ -81,30 +80,40 @@ Display& Display::append(ulong v) {String s;   s.format(_T("%uli"), v);    sum +
 
 
 Display& Display::doEditBox(Display& d, int v) {
-int curPos = d.tPos.cursorPos;
+int curPos = d.hz.currentPos();
+int curY   = d.vert.pos();
 
-  d.rightTab = d.tPos.tab();
+  d.hz.tab(d.rightTab);
 
-  editBoxes.create(d.y, v, curPos+1, d.y-2, d.tPos.cursorPos-curPos-1, d.curHeight+1);
+  editBoxes.create(curY, v, curPos+1, curY-2, d.hz.currentPos() - curPos-1, d.chHeight()+1);
 
   return d;
   }
 
-                                                     // if (y + curHeight >= bottomEdge) setEndPage();
+
+void Display::crlf() {
+
+  if (!footer && printing && vert.exceedsBnd(1)) {setEndPage(); return;}
+
+  hz.cr();   vert.lf(printing, footer);
+  }
 
 
-void Display::crlf() {y += maxHeight; maxHeight = curHeight; setMaxY(y);   tPos.doCR();}
+bool Display::doEndPageChk()
+                {if (printing && vert.isEndPage()) {vert.atEndPageCond(); return true;}   return false;}
+
+void Display::atEndPageCond() {if (printing) vert.atEndPageCond();}
 
 
 Display& Display::doEndPage(Display& d) {
 
-  if (d.printing && d.topEdge < d.y && d.y < d.bottomEdge) {
+  if (d.printing && d.vert.withinBounds()) {
 
     if (!d.textOut()) return d;
 
     d.setEndPage();
 
-    d.tPos.doCR();
+    d.hz.cr();
     }
 
   return d;
@@ -115,16 +124,16 @@ Display& Display::doFlushFtr(Display& d) {
 
   d.textOut();
 
-  d.y += d.maxHeight; d.maxHeight = d.curHeight;  d.nonBlankLine = false; d.setMaxY(d.y);
-
-  d.tPos.doCR(); return d;
+  d.nonBlankLine = false;   d.vert.lf(d.printing, d.footer);   d.hz.cr(); return d;
   }
 
 
 Display& Display::doBeginLine(Display& d) {
+
   if (!d.sum.empty() || d.rightTab.right) if (!d.textOut()) return d;
 
-  d.points[0].x = d.tPos.cursorPos; d.points[0].y = d.y + d.toLine; d.noPoints = 1;
+  d.points[0].x = d.hz.currentPos(); d.points[0].y = d.vert.getUlinePos(); d.noPoints = 1;
+
   return d;
   }
 
@@ -132,7 +141,7 @@ Display& Display::doBeginLine(Display& d) {
 Display& Display::doEndLine(Display& d) {
   if (!d.sum.empty() || d.center || d.right || d.rightTab.right) if (!d.textOut()) return d;
 
-  d.points[1].x = d.tPos.cursorPos; d.points[1].y = d.y + d.toLine;
+  d.points[1].x = d.hz.currentPos(); d.points[1].y = d.vert.getUlinePos();
 
   if (d.points[0].y == d.points[1].y && !d.suppress) d.dc->Polyline(d.points, 2);
 
@@ -151,15 +160,19 @@ int   cy      = 0;
 
   dc = pDC; printing = false;
 
-  sum.clear(); noPoints = maxHeight = curHeight = 0;   y = initialYPos + Margin;
+  sum.clear(); noPoints = 0;
 
-  tPos.initialize(); center = right = rightTab.right = false; tPos.clrTabs();
+  center = right = rightTab.right = false;
 
   win = pDC->GetWindow(); win->GetClientRect(&winSz);
 
-  cy = winSz.bottom; cx = winSz.right; tPos.iPos(Margin, cx-Margin); setMaxY(y);
+  cy = winSz.bottom; cx = winSz.right;
 
-  dc->SetMapMode(MM_TEXT);  initializeFont(face, fontSize);
+  initializeFont(face, fontSize);
+
+  vert.setAttributes(cy, topMargin, botMargin);
+
+  hz.setAttributes(cx, leftMargin + 0.3, rightMargin + 0.3);    hz.clrTabs();
   }
 
 
@@ -167,56 +180,39 @@ void Display::preparePrinting(TCchar* face, int fontSize, CDC* pDC, CPrintInfo* 
 
   dc = pDC; printing = true;   suppress = false;
 
-  sum.clear(); noPoints = maxHeight = curHeight = y = 0;
+  sum.clear(); noPoints = 0;
 
-  tPos.initialize(); center = right = rightTab.right = false; tPos.clrTabs();
+  center = right = rightTab.right = false;
 
-  beginPage = true; endPageFlag = false;
+  vert.setBeginPage();
 
-  dc->SetMapMode(MM_TEXT);  initializeFont(face, fontSize);   initializeFrame(pInfo);
+  initializeFont(face, fontSize);   initializeFrame(pInfo);
   }
 
 
 void Display::initializeFrame(CPrintInfo* pInfo) {
-CPrintDialog* pPD           = 0;                // pointer to print dialog
-LPDEVMODE     devMode       = 0;
-bool          portrait      = true;
-int           h             = 0;
-int           w             = 0;
-int           yOffset       = 0;
-int           xOffset       = 0;
 int           cx            = 0;
 int           cy            = 0;
-int           qtrInch       = 0;
-int           sixteenThInch = 0;
-int           footerDepth   = printing ? noFooterLines * curHeight : 0;
 
-  if (pInfo) {
-    pInfo->m_bContinuePrinting = true;
-
-    pPD = pInfo->m_pPD;
-    if (pPD) {
-      devMode = pPD->GetDevMode();
-      if (devMode && devMode->dmOrientation & DMORIENT_LANDSCAPE) portrait = false;
-      }
-    }
+  if (pInfo) pInfo->m_bContinuePrinting = true;
 
   cy      = dc->GetDeviceCaps(VERTRES);        cx = dc->GetDeviceCaps(HORZRES);
-  h       = dc->GetDeviceCaps(PHYSICALHEIGHT);  w = dc->GetDeviceCaps(PHYSICALWIDTH);
 
-  qtrInch = portrait ? w * 10 / 85 / 4 : w * 10 / 110 / 4;
+  vert.setAttributes(cy, topMargin, botMargin);
+  hz.setAttributes(cx, leftMargin, rightMargin);    hz.clrTabs();
+  }
 
-  sixteenThInch = qtrInch / 4;  yOffset = (h - cy) / 2;   xOffset = (w - cx) / 2;
 
-  xOffset = qtrInch + sixteenThInch - xOffset;
+bool Display::isPortrait(CPrintInfo* pInfo) {
+CPrintDialog* pPD     = pInfo->m_pPD;                  // pointer to print dialog
+LPDEVMODE     devMode;
 
-  topEdge = qtrInch + sixteenThInch - yOffset;                              // + sixteenThInch;
+  if (pPD) {
+    devMode = pPD->GetDevMode();
+    if (devMode && devMode->dmOrientation & DMORIENT_LANDSCAPE) return false;
+    }
 
-  bottomEdge = cy - topEdge - 3*sixteenThInch - footerDepth;
-
-  y = initialYPos ? initialYPos : topEdge;
-
-  tPos.iPos(xOffset, cx - xOffset);
+  return true;
   }
 
 
@@ -230,31 +226,7 @@ void Display::strikeOutFont()    {if (textOut()) {font.setStrikeOut(); setMetric
 void Display::prevFont()         {if (textOut()) {font.pop();          setMetric();}}
 
 
-void Display::setMetric() {
-TEXTMETRIC metric;
-int        buf[26];
-int        i;
-double     sum;
-double     avg;
-int        chWidth;
-
-  if (dc->GetTextMetrics(&metric)) {
-
-    dc->GetCharWidth(_T('A'), _T('Z'), buf);
-    for (i = 0, sum = 0; i < noElements(buf); i++) sum += buf[i];
-    avg = sum / noElements(buf) + 0.5;   chWidth = (int) avg;
-
-    if (metric.tmAveCharWidth > chWidth) chWidth = metric.tmAveCharWidth;
-
-    curHeight = metric.tmHeight + metric.tmExternalLeading + 2;
-
-    if (!tPos.getCharPos() || curHeight > maxHeight) maxHeight = curHeight;
-
-    toLine = curHeight - metric.tmInternalLeading - metric.tmExternalLeading;
-
-    if (chWidth > tPos.width) tPos.width = chWidth;    tPos.lastWidth = chWidth;
-    }
-  }
+void Display::setMetric() {hz.setAvgChWidth(dc);    vert.setHeight(dc);}
 
 
 
@@ -263,30 +235,31 @@ int  wth = width(sum);
 Wrap wrap;
 int  n;
 int  i;
-int  curPos;
 int  nLines;
 
-  if (center) {        tPos.centerPos(wth);             center         = false;}
-  if (right)          {tPos.rightPos(wth);              right          = false;}
-  if (rightTab.right) {tPos.rightTabPos(rightTab, wth); rightTab.right = false;}
+  if (center) {hz.centerText(wth); center = false; hz.centerText(wth);}
+  if (right)  {hz.rightText(wth);  right  = false; hz.rightText(wth);}
+  if (rightTab.right)
+              {hz.rightTabText(rightTab, wth); rightTab.right = false;}
 
   if (sum.empty()) return true;
 
-  if (beginPage) {noPages++; beginPage = false;}
+  if (vert.isBeginPage()) noPages++;
 
-  if (endPageFlag) {endPageFlag = false; beginPage = true;}
+  vert.atEndPageCond();
 
-  wrap.initialize(dc, tPos.remaining() + (printing ? 2*tPos.widthCh() : 0), font.getAttr()->italic);
+  wrap.initialize(dc, hz.remaining(), font.getAttr()->italic);
+
   nLines = wrap(sum);
 
-  if (!footer && printing && y + curHeight * nLines >= bottomEdge) {setEndPage(); return false;}
+  if (!footer && printing && vert.exceedsBnd(nLines)) {setEndPage(); return false;}
 
-  n = wrap.lines.end();   curPos = tPos.get();
+  n = wrap.lines.end();   hz.saveCurPos();
 
-  if (footer && y < bottomEdge) y = bottomEdge;
+  if (footer) vert.setBottom();
 
   for (i = 0; i < n; i++) {
-    if (i) {crlf(); tPos.pos(curPos);}
+    if (i) {crlf(); hz.restorePos();}
 
     fragmentOut(wrap.lines[i]);
     }
@@ -300,11 +273,11 @@ CString cs;  cs = frag;
 
   if (!suppress) {
 
-    try {if (!dc->TextOut(tPos.cursorPos, y, cs)) {outError(cs); return;}}
-    catch (...)                                   {outError(cs); return;}
+    try {if (!dc->TextOut(hz.currentPos(), vert.pos(), cs)) {outError(cs); return;}}
+    catch (...)                                             {outError(cs); return;}
     }
 
-  tPos.move(width(frag));
+  hz.move(width(frag));
   }
 
 
@@ -328,10 +301,4 @@ String err = _T("Unable to output: '"); err += stg; err += _T("'");
 
   messageBox(err);
   }
-
-
-
-
-
-
 

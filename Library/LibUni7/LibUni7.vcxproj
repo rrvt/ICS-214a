@@ -125,7 +125,6 @@
     <ClInclude Include="..\LibFiles\Csv.h" />
     <ClInclude Include="..\LibFiles\Currency.h" />
     <ClInclude Include="..\LibFiles\Date.h" />
-    <ClInclude Include="..\LibFiles\DCdata.h" />
     <ClInclude Include="..\LibFiles\Debug.h" />
     <ClInclude Include="..\LibFiles\Display.h" />
     <ClInclude Include="..\LibFiles\DisplayDev.h" />
@@ -140,6 +139,7 @@
     <ClInclude Include="..\LibFiles\GetPathDlg.h" />
     <ClInclude Include="..\LibFiles\Guid.h" />
     <ClInclude Include="..\LibFiles\Handle.h" />
+    <ClInclude Include="..\LibFiles\Horiz.h" />
     <ClInclude Include="..\LibFiles\IniFile.h" />
     <ClInclude Include="..\LibFiles\InsertSorted.h" />
     <ClInclude Include="..\LibFiles\LexT.h" />
@@ -159,7 +159,6 @@
     <ClInclude Include="..\LibFiles\Resources.h" />
     <ClInclude Include="..\LibFiles\SrchFile.h" />
     <ClInclude Include="..\LibFiles\std.h" />
-    <ClInclude Include="..\LibFiles\Wrap.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="..\LibFiles\StringInput.h" />
     <ClInclude Include="..\LibFiles\Strings.h" />
@@ -172,8 +171,10 @@
     <ClInclude Include="..\LibFiles\ToString.h" />
     <ClInclude Include="..\LibFiles\trim.h" />
     <ClInclude Include="..\LibFiles\Variant.h" />
+    <ClInclude Include="..\LibFiles\VertMgmt.h" />
     <ClInclude Include="..\LibFiles\WindowData.h" />
     <ClInclude Include="..\LibFiles\WindowPos.h" />
+    <ClInclude Include="..\LibFiles\Wrap.h" />
     <ClInclude Include="..\LibFiles\XTerm.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
@@ -195,7 +196,6 @@
     <ClCompile Include="..\LibFiles\Csv.cpp" />
     <ClCompile Include="..\LibFiles\Currency.cpp" />
     <ClCompile Include="..\LibFiles\Date.cpp" />
-    <ClCompile Include="..\LibFiles\DCdata.cpp" />
     <ClCompile Include="..\LibFiles\Debug.cpp" />
     <ClCompile Include="..\LibFiles\Display.cpp" />
     <ClCompile Include="..\LibFiles\DisplayDev.cpp" />
@@ -209,6 +209,7 @@
     <ClCompile Include="..\LibFiles\GetPathDlg.cpp" />
     <ClCompile Include="..\LibFiles\Guid.cpp" />
     <ClCompile Include="..\LibFiles\Handle.cpp" />
+    <ClCompile Include="..\LibFiles\Horiz.cpp" />
     <ClCompile Include="..\LibFiles\IniFile.cpp" />
     <ClCompile Include="..\LibFiles\LexTOut.cpp" />
     <ClCompile Include="..\LibFiles\LoadScratchPad.cpp" />
@@ -227,6 +228,7 @@
     <ClCompile Include="..\LibFiles\ToolBar.cpp" />
     <ClCompile Include="..\LibFiles\ToString.cpp" />
     <ClCompile Include="..\LibFiles\trim.cpp" />
+    <ClCompile Include="..\LibFiles\VertMgmt.cpp" />
     <ClCompile Include="..\LibFiles\WindowData.cpp" />
     <ClCompile Include="..\LibFiles\WindowPos.cpp" />
     <ClCompile Include="..\LibFiles\Wrap.cpp" />
