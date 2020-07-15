@@ -35,8 +35,10 @@ bool   underline;
 bool   strikeout;
 String face;
 
-  FontAttr() : dc(0), sz(0), bold(false), italic(false), underline(false), strikeout(false) {}
+  FontAttr() {clear();}
   FontAttr(FontAttr& fd) {copy(fd);}
+
+  void clear() {dc = 0; sz = 0; bold = italic = underline = strikeout = false; face.clear();}
 
   FontAttr& operator= (FontAttr& fd) {copy(fd); return *this;}
 
@@ -49,16 +51,33 @@ private:
   };
 
 
+class FontAttrP {
+public:
+FontAttr* p;
+
+  FontAttrP() {p = 0;}
+  FontAttrP(FontAttrP& attr) {p = attr.p;}
+ ~FontAttrP() {p = 0;}
+
+  void       clear() {if (p) delete p; p = 0;}
+
+  FontAttrP& operator= (FontAttrP& attr) {p = attr.p; return *this;}
+
+  FontAttr* operator() ();
+  };
+
+
 class FontMgr {
-int                      stkX;
-Expandable <FontAttr, 4> stk;
+int                       stkX;
+Expandable <FontAttrP, 4> stk;
 
 public:
-FontAttr                 current;
-LOGFONT                  curLogFont;
+LOGFONT curLogFont;
 
   FontMgr();
  ~FontMgr();
+
+  void clear();
 
   void initialize(TCchar* face, int fontSize, CDC* dc);
   void pop();
@@ -68,14 +87,14 @@ LOGFONT                  curLogFont;
   void setUnderLine();
   void setStrikeOut();
 
-  FontAttr* getAttr()    {return &stk[stkX];}     // Returns a temporary pointer to the current attr
+  FontAttr& getAttr();//    {FontAttrP* ap = &stk[stkX]; return *(*ap)();}
   LOGFONT&  getLogFont() {return curLogFont;}
 
 private:
 
   FontAttr& push();
   void      install(FontAttr& attr, CFont& font);
-  void      update(CFont& font, FontAttr& attr);
+  void      update(FontAttr& attr, TCchar* fn);
   void      createFailed(TCchar* fn);
   };
 

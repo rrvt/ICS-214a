@@ -155,7 +155,7 @@
     <None Include="res\ICS_214a.rc2" />
     <None Include="..\README.md" />
     <None Include="res\Toolbar17.bmp" />
-  <None Include="x" />
+  <None Include="..\Data\pushTabBefore.txt" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\ICS_214a.ico" />

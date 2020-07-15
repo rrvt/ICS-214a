@@ -54,6 +54,29 @@ installer and help files.  My WixApp might be useful for creating the Product.wx
 changes to the app.
 
 ## Update
+
+### July 15, 2020
+
+Whoa, what have I taken on.  Windows MFC makes things a little more confusing than it should be...
+
+Enough complaining.  The goal of this update is to figure out how to:
+ - Wrap the long lines correctly
+ - Count the number of lines that will fit on a single printed page with whatever printer is used
+   (Apparently it matters).
+ - Correctly count the number of pages
+
+After trying and rejecting several approaches it takes three passes over the data to correctly determine
+the parameters.  The first pass sends to the printer control logic very short lines and counts them
+until the next line would exceed the bottom boundary as determined by the page dimensions and the margins
+which the user has requested.  The second pass over the data uses the tabbing and width of the page and
+margins to determine the wrap of the description.  This second pass is done in the output to the device
+so that it is device dependent.  The third pass is to paginate the report, send the paginated report to
+the device and count the pages (this seemed easier than just counting lines in the data as very little
+additional software was required).  Finally with the number of lines per page determined, the individual
+records wrapped so that the information is visible on the page and the number of pages known then the data
+is output to the device.  Note, there are two devices available, the print preview and the current
+printer.  While the two devices share attributes, they are output in very different ways...
+
 ### July 10, 2020
 
  - Chased down some bugs

@@ -45,13 +45,20 @@ public:
 bool         printing;                      // Printing when true, else displaying
 bool         suppress;
 uint         noPages;
+bool         wrapEnabled;
 
   Display();
  ~Display() {}
 
+  void     clear();
+
   void     prepareDisplay( TCchar* face, int fontSize, CDC* pDC);
   void     preparePrinting(TCchar* face, int fontSize, CDC* pDC, CPrintInfo* pInfo);
   void     suppressOutput() {suppress = true;}
+  void     negateSuppress() {suppress = false;}
+  void     disableWrap()    {wrapEnabled = false;}
+  void     enableWrap()     {wrapEnabled = true;}
+
   void     setFooter() {footer = true; vert.setBottom();}
   void     clrFooter() {footer = false;}
   void     setHorzMgns(double left, double right) {leftMargin = left; rightMargin = right;}
@@ -59,6 +66,7 @@ uint         noPages;
 
   Display& operator<< (String&    s) {return stg(s);}
   Display& operator<< (TCchar*    s) {return stg(s);}
+  Display& operator<< (Wrap&      w) {return append(w);}
   Display& operator<< (int        v) {return append(v);}
   Display& operator<< (ulong      v) {return append(v);}
   Display& operator<< (DspManip&  m) {return m.func(*this);}
@@ -69,7 +77,7 @@ uint         noPages;
   int      chWidth()   {return hz.chWidth();}
   int      chHeight()  {return vert.heightCh();}
 
-  FontAttr& getCurFont() {return font.current;}
+  FontAttr& getCurFont() {return font.getAttr();}
   LOGFONT&  getLogFont() {return font.getLogFont();}
 
 private:
@@ -83,6 +91,7 @@ private:
          void     atEndPageCond();
          int      getRemainder()                    {return hz.remaining();}
          int      vertPos()                         {return vert.pos();}
+         void     clrLines()                        {vert.clrLines();}
          int      maxLines()                        {return vert.getMaxLines();}
 
   static Display& doClrTabs(       Display& d) {d.hz.clrTabs(); return d;}
@@ -113,9 +122,9 @@ private:
   static Display& doFSize(         Display& d, int v) {d.setFontSize(v);  return d;}
 
 
-  void     initialize();
   Display& stg(TCchar*  s) {if (*s) nonBlankLine = true;   sum += s; return *this;}
   Display& stg(String&  s) {return this->stg(s.str());}
+  Display& append(Wrap& w);
   Display& append(int   v);
   Display& append(ulong v);
 

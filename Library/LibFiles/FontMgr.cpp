@@ -7,11 +7,20 @@
 #include "MessageBox.h"
 
 
-FontMgr::FontMgr() : stkX(0), current() { }
+FontMgr::FontMgr() : stkX(0) {clear();}
 
-FontMgr::~FontMgr() {
+FontMgr::~FontMgr() {clear();}
+
+
+void FontMgr::clear() {
+
   while (stkX > 0) pop();
+
+  stk[0].clear();   stkX = 0;   stk.clr();
   }
+
+
+FontAttr& FontMgr::getAttr() {FontAttrP& x  = stk[stkX];      return *x();}
 
 
 void FontMgr::initialize(TCchar* face, int fontSize, CDC* dc) {
@@ -28,7 +37,7 @@ LOGFONT logFont;
   if (original) {
     original->GetLogFont(&logFont);    original->DeleteObject();
 
-    FontAttr& attr = stk[stkX];
+    FontAttr& attr = getAttr();
     attr.dc        = dc;
     attr.sz        = logFont.lfHeight;
     attr.bold      = logFont.lfWeight == FW_BOLD;
@@ -38,88 +47,48 @@ LOGFONT logFont;
     attr.face      = logFont.lfFaceName;
     }
 
+  stkX++;
 
-  FontAttr& attr = stk[++stkX];
+  FontAttr& attr = getAttr();
   attr.dc   = dc;
   attr.sz   = fontSize;
-  attr.face = face;         current = attr;
+  attr.face = face;
   }
 
 
-void FontMgr::setSize(int fontSize) {
-FontAttr& attr = push();
-CFont     font;
-
-  attr.sz = fontSize;
-
-  if (!font.CreatePointFont(attr.sz, attr.face, attr.dc)) {createFailed(_T("setSize")); return;}
-
-  update(font, attr);
-  }
+void FontMgr::setSize(int fontSize)
+                          {FontAttr& attr = push();   attr.sz = fontSize;   update(attr, _T("setSize"));}
 
 
 
-void FontMgr::setBold() {
-FontAttr& attr = push();
-CFont     font;
-
-  if (!font.CreatePointFont(attr.sz, attr.face, attr.dc)) {createFailed(_T("setBold")); return;}
-
-  attr.bold = true;  update(font, attr);
-  }
+void FontMgr::setBold()   {FontAttr& attr = push();   attr.bold = true;    update(attr, _T("setBold"));}
+void FontMgr::setItalic() {FontAttr& attr = push();   attr.italic = true;  update(attr, _T("setItalic"));}
+void FontMgr::setUnderLine()
+                    {FontAttr& attr = push();  attr.underline = true; update(attr, _T("setUnderLine"));}
+void FontMgr::setStrikeOut()
+                    {FontAttr& attr = push();  attr.strikeout = true; update(attr, _T("setStrikeOut"));}
 
 
-
-void FontMgr::setItalic() {
-FontAttr& attr = push();
-CFont     font;
-
-  if (!font.CreatePointFont(attr.sz, attr.face, attr.dc)) {createFailed(_T("setItalic")); return;}
-
-  attr.italic = true;   update(font, attr);
-  }
-
-
-
-void FontMgr::setUnderLine() {
-FontAttr& attr = push();
-CFont     font;
-
-  if (!font.CreatePointFont(attr.sz, attr.face, attr.dc)) {createFailed(_T("setUnderLine")); return;}
-
-  attr.underline = true;   update(font, attr);
-  }
-
-
-
-void FontMgr::setStrikeOut() {
-FontAttr& attr = push();
-CFont     font;
-
-  if (!font.CreatePointFont(attr.sz, attr.face, attr.dc)) {createFailed(_T("setStrikeOut")); return;}
-
-  attr.strikeout = true;   update(font, attr);
-  }
-
-
-FontAttr& FontMgr::push() {FontAttr& attr = stk[++stkX]; attr = stk[stkX-1]; return attr;}
+FontAttr& FontMgr::push() {
+FontAttr& prev = getAttr();     stkX++;
+FontAttr& cur  = getAttr();     cur = prev;  return cur;}
 
 
 void FontMgr::pop() {
-          if (stkX <= 0) return;
-FontAttr& attr = stk[--stkX];
-CFont     font;
 
-  if (!font.CreatePointFont(attr.sz, attr.face, attr.dc)) {createFailed(_T("pop")); return;}
+  if (stkX <= 0) return;
 
-  update(font, attr);
-  }
+FontAttrP& cur = stk[stkX];     cur.clear();   --stkX;
+FontAttr& attr = getAttr();     update(attr, _T("pop"));}
 
 
 
-void FontMgr::update(CFont& font, FontAttr& attr) {
+void FontMgr::update(FontAttr& attr, TCchar* fn) {
+CFont   font;
 LOGFONT logFont;
 CFont   f;
+
+  if (!font.CreatePointFont(attr.sz, attr.face, attr.dc)) {createFailed(fn); return;}
 
   font.GetLogFont(&logFont); font.DeleteObject();
 
@@ -140,11 +109,13 @@ CFont* x;
 
   font.GetLogFont(&curLogFont);
 
-  x = attr.dc->SelectObject(&font);   if (x) x->DeleteObject();   current = attr;
+  x = attr.dc->SelectObject(&font);   if (x) x->DeleteObject();
   }
 
 
 void FontMgr::createFailed(TCchar* fn)
                             {String s;   s.format(_T("Create Font failed in %s"), fn);   messageBox(s);}
 
+
+FontAttr* FontAttrP::operator() () {if (!p) p = new FontAttr;  return p;}
 

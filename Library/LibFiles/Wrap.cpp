@@ -21,6 +21,8 @@ String word = _T("Word");
 
   lines.clr();
 
+  if (!enabled) {lines[0] = s;  return lines.end();}
+
   if (extent <= width(word)) {lines[lines.end()] = s; return 1;}
 
   while (width(s) > extent) {

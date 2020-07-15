@@ -3,6 +3,7 @@
 
 #pragma once
 #include "Display.h"
+#include "ICS_214aView.h"
 #include "NotePad.h"
 
 
@@ -20,9 +21,10 @@ public:
 
   void operator() (bool printing = false);
 
-  void trialRun();
+  void detNoLines(ICS_214aView& vw);
+  void detNoPages(ICS_214aView& vw);
+  void detWraps(  ICS_214aView& vw);
 
-  void detWraps();
   void footer(Display& dev, int pageNo);
   void dspFtr();
 

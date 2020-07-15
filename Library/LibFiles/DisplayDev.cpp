@@ -5,13 +5,18 @@
 #include "DisplayDev.h"
 
 
-void DisplayDev::initialize() {note = 0; lastPageNo = 0; lastLeftMargin = 0; endDoc = debugging = false;}
+#if 0
+static String dbgLastLine[10];
+static void   saveDbgLine(String& line);
+static void   saveDbgWrap(Wrap& w);
+static void   rippleDbgLine();
+saveDbgLine(note->line);
+saveDbgWrap(note->wrap);
+#endif
 
 
-void DisplayDev::startDev() {
-  note = notePadLp.start(); dev.noPages = 0; lastPageNo = 0; lastLeftMargin = 0;
-  endDoc = debugging = false;
-  }
+void DisplayDev::startDev()
+             {note = notePadLp.start(); lastPageNo = 0; lastLeftMargin = 0;  endDoc = debugging = false;}
 
 
 // Output to Device (Display or Printer)
@@ -43,6 +48,9 @@ bool endLoop = false;
 
                               dev << note->line;                if (dev.doEndPageChk()) break;
 
+                              dev << note->wrap;                if (dev.doEndPageChk()) break;
+
+
     if (note->endLine)       {dev << dEndLine;                  if (dev.doEndPageChk()) break;}
 
     if (note->crlf)          {dev << dCrlf;                     if (dev.doEndPageChk()) break;}
@@ -56,3 +64,32 @@ bool endLoop = false;
   }
 
 
+
+#if 0
+void saveDbgWrap(Wrap& w) {
+String* s;
+
+  if (w.isEmpty()) return;
+
+  for (s = w.startLoop(); s; s = w.nextLine()) saveDbgLine(*s);
+  }
+
+
+void saveDbgLine(String& line) {
+
+  if (line.isEmpty()) return;
+
+  rippleDbgLine();
+
+  dbgLastLine[noElements(dbgLastLine)-1] = line;
+  }
+
+
+
+void rippleDbgLine() {
+int n = noElements(dbgLastLine);
+int i;
+
+  for (i = 1; i < n; i++) dbgLastLine[i-1] = dbgLastLine[i];
+  }
+#endif

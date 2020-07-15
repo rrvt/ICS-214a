@@ -15,6 +15,10 @@ BEGIN_MESSAGE_MAP(CScrView, CScrollView)
 END_MESSAGE_MAP()
 
 
+
+
+
+
 void CScrView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) {
 
   if (printing) return;
@@ -40,7 +44,10 @@ void OnEndPrinting(  CDC* pDC, CPrintInfo* pInfo);  -- last
 // Get printer dialog box
 
 BOOL CScrView::OnPreparePrinting(CPrintInfo* pInfo) {
-  printing = true; prtPage = 0; if (DoPreparePrinting(pInfo)) return true;
+
+  printing = true; outputDone = false;
+
+  if (DoPreparePrinting(pInfo)) return true;
 
   printing = false; return false;
   }
@@ -64,25 +71,9 @@ void CScrView::onPrepareOutput() {
 
   if (!printing)   {display.startDev(); return;}
 
-  if (!endPrinting) printer.startDev();
+  if (!endPrinting)
+    printer.startDev();
   }
-
-
-void  CScrView::trialRun(int& maxLines, int& noPages) {
-uint i;
-
-  printer.startDev();
-
-  for (i = 1; !printer.isEndDoc(); i++) {
-
-    printer.suppressOutput();   printer();   printer.clrFont();
-
-    printer.preparePrinting(font, fontSize, dc, info);
-    }
-
-  maxLines = printer.maxLines();    noPages = i;
-  }
-
 
 
 void CScrView::preparePrinter(CPrintInfo* pInfo) {
@@ -94,18 +85,36 @@ int pageNo = pInfo->m_nCurPage;
 
   pInfo->SetMinPage(1);   pInfo->SetMaxPage(9999);
 
+  printer.clear();
+
   printer.setHorzMgns(leftMargin, rightMargin);   printer.setVertMgns(topMargin, botMargin);
 
   printer.preparePrinting(font, fontSize, dc, pInfo);
 
-  if (pageNo == 1 && pageNo != prtPage) onPrepareOutput();
+  if (!outputDone) {outputDone = true; onPrepareOutput();}
+  }
+
+
+void  CScrView::trialRun(int& maxLines, int& noPages) {
+uint i;
+
+  printer.startDev();   printer.clrLines();
+
+  for (i = 0; !printer.isEndDoc(); i++) {
+
+    if (i) printer.preparePrinting(font, fontSize, dc, info);
+
+    printer.suppressOutput();  printer();   printer.clrFont();
+    }
+
+  maxLines = printer.maxLines();    noPages = i;
+
+  if (noPages == 1) maxLines++;  info->m_nCurPage = 1;   preparePrinter(info);
   }
 
 
 void CScrView::preview(CPrintInfo* pInfo) {
 uint i;
-
-  if (pInfo->m_nCurPage > prtPage) return;
 
   printer.startDev();
 
@@ -125,7 +134,7 @@ void CScrView::OnPrint(CDC* dc, CPrintInfo* pInfo) {print(pInfo);}
 
 void CScrView::print(CPrintInfo* pInfo) {
 
-  printer();  startFooter(pInfo, printer.getDisplay());   prtPage = pInfo->m_nCurPage;
+  if (!wrapEnabled) printer.disableWrap();   printer();   startFooter(pInfo, printer.getDisplay());
 
   printer.clrFont();
 
@@ -171,6 +180,8 @@ void CScrView::OnEndPrinting(CDC* pDC, CPrintInfo* pInfo) {printing = false;}
 
 void CScrView::prepareDisplay() {
   if (printing) return;
+
+  display.clear();
 
   display.setHorzMgns(leftMargin, rightMargin);   display.setVertMgns(topMargin, botMargin);
 
@@ -244,6 +255,7 @@ CSize scrollSize;
 
   SetScrollSizes(MM_TEXT, scrollViewSize, pageSize, scrollSize);
   }
+
 
 
 

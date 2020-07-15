@@ -42,17 +42,8 @@ DspManip1& setupManip1(DspManip1::Func fn, int val)
 
 
 
-Display::Display()          : points{{0,0}} {initialize();}    //tPos(),
-
-
-void Display::initialize() {
-
-  noPoints = 0;
-  center = right = false;  footer = false;  suppress = false;
-  dc = 0;   leftMargin = rightMargin = 0;
-  points[0] = {0,0};
-
-  printing = false;   noPages = 0;  nonBlankLine = true;
+Display::Display() {
+  clear();
 
   dCrlf.n           = this; dCrlf.func           = &doCrlf;
   dCR.n             = this; dCR.func             = &doCR;
@@ -70,6 +61,22 @@ void Display::initialize() {
   dItalicFont.n     = this; dItalicFont.func     = &doItalicFont;
   dUnderLineFont.n  = this; dUnderLineFont.func  = &doUnderLineFont;
   dStrikeOutFont.n  = this; dStrikeOutFont.func  = &doStrikeOutFont;
+  }
+
+
+void Display::clear() {
+
+  dc = 0; hz.clear(); vert.clear();  font.clear();
+
+  sum.clear(); noPoints = 0;  points[0] = {0,0};  nonBlankLine = true;
+
+  topMargin = botMargin = leftMargin = rightMargin = 0.0;
+
+  center = right = false;  rightTab.clear();
+
+  footer = false;
+
+  printing = suppress = false;  noPages = 0;  wrapEnabled = true;
   }
 
 
@@ -93,14 +100,16 @@ int curY   = d.vert.pos();
 
 void Display::crlf() {
 
-  if (!footer && printing && vert.exceedsBnd(1)) {setEndPage(); return;}
+//  if (!footer && printing && vert.exceedsBnd(1)) {setEndPage(); return;}
 
-  hz.cr();   vert.lf(printing, footer);
+  if (vert.lf(printing, footer)) hz.cr();
   }
 
 
-bool Display::doEndPageChk()
-                {if (printing && vert.isEndPage()) {vert.atEndPageCond(); return true;}   return false;}
+bool Display::doEndPageChk() {
+  if (printing && vert.isEndPage()) {vert.atEndPageCond();  return true;}
+  return false;
+  }
 
 void Display::atEndPageCond() {if (printing) vert.atEndPageCond();}
 
@@ -229,13 +238,31 @@ void Display::prevFont()         {if (textOut()) {font.pop();          setMetric
 void Display::setMetric() {hz.setAvgChWidth(dc);    vert.setHeight(dc);}
 
 
+Display& Display::append(Wrap& w) {
+int     i;
+String* s;
+
+  if (w.isEmpty()) return *this;
+
+  if (printing && !footer && vert.exceedsBnd(w.noLines())) {setEndPage(); return *this;}
+
+  hz.saveCurPos();
+
+  for (i = 0, s = w.startLoop(); s; i++, s = w.nextLine()) {
+    if (i) {crlf(); hz.restorePos();}
+    sum = *s;  textOut();
+    }
+
+  return *this;
+  }
+
 
 bool Display::textOut() {
-int  wth = width(sum);
-Wrap wrap;
-int  n;
-int  i;
-int  nLines;
+int     wth = width(sum);
+Wrap    wrap(wrapEnabled);
+int     i;
+int     nLines;
+String* s;
 
   if (center) {hz.centerText(wth); center = false; hz.centerText(wth);}
   if (right)  {hz.rightText(wth);  right  = false; hz.rightText(wth);}
@@ -248,20 +275,20 @@ int  nLines;
 
   vert.atEndPageCond();
 
-  wrap.initialize(dc, hz.remaining(), font.getAttr()->italic);
+  wrap.initialize(dc, hz.remaining(), font.getAttr().italic);
 
   nLines = wrap(sum);
 
   if (!footer && printing && vert.exceedsBnd(nLines)) {setEndPage(); return false;}
 
-  n = wrap.lines.end();   hz.saveCurPos();
+  hz.saveCurPos();
 
   if (footer) vert.setBottom();
 
-  for (i = 0; i < n; i++) {
+  for (i = 0, s = wrap.startLoop(); s; i++, s = wrap.nextLine()) {
     if (i) {crlf(); hz.restorePos();}
 
-    fragmentOut(wrap.lines[i]);
+    fragmentOut(*s);
     }
 
   sum.clear();  return true;
@@ -287,7 +314,7 @@ CString cs;  cs = frag;
 int Display::width(String& s) {
 CString cs;
 CSize   sz;
-bool    italic = font.getAttr()->italic;
+bool    italic = font.getAttr().italic;
 
   cs = s;   sz = dc->GetOutputTextExtent(cs);
 

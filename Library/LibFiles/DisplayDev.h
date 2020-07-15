@@ -20,8 +20,13 @@ bool        debugging;
 public:
 uint        lastPageNo;
 
-  DisplayDev() {initialize();}
+  DisplayDev() {clear(); note = 0; lastLeftMargin = 0;  endDoc = debugging = false; lastPageNo = 0;}
  ~DisplayDev() { }
+
+  void     clear() {dev.clear();}          // startDev clears and sets as required to perform operator()
+
+  void     startDev();
+  void     operator() ();                  // Output to Device (Display or Printer)
 
   void     preparePrinting(TCchar* font, int fontSize, CDC* pDC, CPrintInfo* pInfo)
                                             {dev.preparePrinting(font, fontSize, pDC, pInfo);}
@@ -29,6 +34,10 @@ uint        lastPageNo;
   void     setVertMgns(double top,  double bot)   {dev.setVertMgns(top, bot);}
 
   void     suppressOutput()                 {dev.suppressOutput();}
+  void     negateSuppress()                 {dev.negateSuppress();}
+  void     disableWrap()                    {dev.disableWrap();}
+  void     enableWrap()                     {dev.enableWrap();}
+
   bool     isEndDoc()                       {return endDoc;}
   void     clrFont()                        {dev.clrFont();}
 
@@ -41,15 +50,9 @@ uint        lastPageNo;
   int  chHeight()  {return dev.chHeight();}
   int  vertPos()   {return dev.vertPos();}
   void getMaxPos(long& maxX, long& maxY) {dev.getMaxPos(maxX, maxY);}
+  void clrLines() {dev.clrLines();}
   int  maxLines()  {return dev.maxLines();}
 
-  void startDev();
-  void operator() ();                  // Output to Device (Display or Printer)
-
   uint getNoPages()    {return dev.noPages;}
-
-private:
-
-  void initialize();
   };
 

@@ -7,7 +7,7 @@
 
 
 NotePad notePad;
-String  dbgLine;
+
 
 
 static NoteManip1& setupManip1(NoteManip1::Func func, int val);
@@ -110,6 +110,14 @@ int          cnt;
   }
 
 
+NotePad& NotePad::append(Wrap& w) {
+Note& note = getNote();  if (!note.line.isEmpty()) this->note = 0;
+
+  getNote().wrap = w; return *this;
+  }
+
+
+
 NotePad& NotePad::doClrTabs(NotePad& n) {
 Note& note = n.getNote();
 
@@ -129,13 +137,13 @@ Note& note = n.getNote();
 
 
 NotePad& NotePad::crlf() {
-  getNote().crlf    = true; dbgLine = note->line; note = 0; noLines++; return *this;
+  getNote().crlf    = true; note->line; note = 0; noLines++; return *this;
   }
 
 
 NotePad& NotePad::endPage() {
 
-  if (noLines) {note = 0; getNote().endPage = true; dbgLine = note->line; note = 0; noLines = 0;}
+  if (noLines) {note = 0; getNote().endPage = true; note->line; note = 0; noLines = 0;}
 
   return *this;
   }

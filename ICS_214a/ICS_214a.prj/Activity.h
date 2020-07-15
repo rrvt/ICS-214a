@@ -23,8 +23,8 @@ CTimeSpan deltaT;
 Wrap      wrp;
 bool      archived;
 
-  LogData() : archived(false), deltaT(0) { }
-  LogData(LogData& ld) {copy(ld);}
+  LogData() : wrp(true), archived(false), deltaT(0) { }
+  LogData(LogData& ld) : wrp(true) {copy(ld);}
  ~LogData() { }
 
   LogData&  operator= (LogData& ld) {copy(ld); return *this;}
@@ -38,17 +38,17 @@ bool      archived;
   void      load(CSVrecord& rcd);
 
   int       wrap(Display& dev, CDC* dc);
-  int       noLines() {return wrp.lines.end();}
+  int       noLines() {return wrp.noLines();}
   CTimeSpan display(int& noLines);
 
 private:
 
-  int  displayDesc();
+//  int  displayDesc();
   int  dateOutTab(bool& dateOutIsPresent);
 
   void copy(LogData& ld) {
     date = ld.date; timeIn = ld.timeIn; dateOut = ld.dateOut; timeOut = ld.timeOut;
-    desc = ld.desc; archived = ld.archived;  deltaT = ld.deltaT;
+    desc = ld.desc;  deltaT = ld.deltaT;  wrp = ld.wrp;   archived = ld.archived;
     }
   friend CTimeSpan operator+  (CTimeSpan t, LogData& ld);
   friend CTimeSpan operator+= (CTimeSpan t, LogData& ld);

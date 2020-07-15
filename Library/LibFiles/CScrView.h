@@ -22,8 +22,9 @@ void OnEndPrinting(  CDC* pDC, CPrintInfo* pInfo);  -- last
 class CScrView : public CScrollView {
 
 bool        printing;
-uint        prtPage;
 bool        endPrinting;
+bool        outputDone;
+bool        wrapEnabled;
 
 DisplayDev  display;
 DisplayDev  printer;
@@ -45,7 +46,8 @@ public:
 String      rightFooter;                                          // Data to print at right side of footer
 Date        date;                                                 // Date to print at left edge of footer
 
-  CScrView() : printing(false), prtPage(0), endPrinting(false), font(_T("Arial")), fontSize(120) {}
+  CScrView() : printing(false), endPrinting(false), outputDone(false), wrapEnabled(true),
+                                                                      font(_T("Arial")), fontSize(120) {}
  ~CScrView() { }
 
   void setFont(  TCchar* f, int points = 120) {font = f; fontSize = points < 70 ? points * 10 : points;}
@@ -70,6 +72,9 @@ Date        date;                                                 // Date to pri
           Display& getDev() {return printing ? printer.getDisplay() : display.getDisplay();}
 
           void     suppressOutput() {if (printing) printer.suppressOutput();}
+          void     negateSuppress() {if (printing) printer.negateSuppress();}
+          void     disableWrap()    {wrapEnabled = false;}
+          void     enableWrap()     {wrapEnabled = true;}
 private:
 
   virtual BOOL      OnPreparePrinting(CPrintInfo* pInfo);

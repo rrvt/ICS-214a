@@ -5,36 +5,63 @@
 #include "Report.h"
 #include "Activity.h"
 #include "ICS_214a.h"
-#include "ICS_214aView.h"
 #include "Utilities.h"
 
+#if 0
+enum Progress {StartPr, DetNoLinesPR, DetNoPages, PrintPr};
+
+static Progress testProgress;
+testProgress = StartPr;
+testProgress = DetNoLinesPR;
+testProgress = DetNoPages;
+testProgress = PrintPr;
+#endif
 
 Report report;
 
 
 void Report::operator() (bool printing) {
+ICS_214aView& vw  = *view();
 
   this->printing = printing;
 
-  detWraps();
+  if (printing) detNoLines(vw);
 
-  if (printing) trialRun();
+  detWraps(vw);
+
+  vw.disableWrap();
+
+  if (printing) detNoPages(vw);
 
   create();
   }
 
 
-void Report::trialRun() {
-ICS_214aView& vw  = *view();
+void Report::detNoLines(ICS_214aView& vw) {
+int i;
+int mxPgs;
 
   vw.suppressOutput();   maxLines = 999999;
-  create();
-  vw.trialRun(maxLines, maxPages);
+
+  notePad.clear();
+
+  // Header simulation
+  notePad << nBold << nFSize(160) << _T("ICS 214a Unit Log") << nFont << nFont << nCrlf;
+  notePad << nBold << _T("SJ RACES") << nFont << nCrlf << nCrlf;
+  notePad << nFSize(90) << _T("4. Unit Name Designator") << nFont << nCrlf;
+  notePad << _T("San Jose RACES") << nCrlf << nCrlf;
+  notePad << nFSize(90) << _T("Date") << nFont << nCrlf;
+
+  for (i = 8; i < 65; i++) {
+    String s; s.format(_T("Line %i"), i);
+    notePad  << s << nCrlf;
+    }
+
+  vw.trialRun(maxLines, mxPgs);
   }
 
 
-void Report::detWraps() {
-ICS_214aView& vw  = *view();
+void Report::detWraps(ICS_214aView& vw) {
 Display&      dev = vw.getDev();
 CDC*          dc  = dev.getDC();
 ActivityIter  iter(activity);
@@ -44,6 +71,9 @@ LogData*      ld;
   }
 
 
+void Report::detNoPages(ICS_214aView& vw) {int nLns;   create();   vw.trialRun(nLns, maxPages);}
+
+
 void Report::create() {
 ActivityIter iter(activity);
 LogData*     ld;
@@ -51,7 +81,6 @@ LONGLONG     secs;
 double       ttl;
 String       t;
 int          n;
-bool         endPage = false;
 
   if (!iter()) return;
 
@@ -59,11 +88,11 @@ bool         endPage = false;
 
   for (ld = iter(); ld; ld = iter++) {
 
-    n = ld->noLines();  if (iter.last()) n += 2;
+    n = ld->noLines();
 
-    endPage = printing && n + noLines >= maxLines;
+    if (iter.last()) n += 2;
 
-    if (endPage) {notePad << nEndPage;    header();}
+    if (printing && n + noLines > maxLines) {notePad << nEndPage;    header();}
 
     totalTime += ld->display(noLines);
     }
@@ -98,6 +127,7 @@ void Report::header() {
   notePad << nFSize(90) << _T("4. Unit Name Designator") << nTab;
   notePad << _T("5. Unit Leader: (Name and Position)") << nRight;
   notePad << _T("6. Operational Period") << nFont;   crlf();
+
   notePad << _T("San Jose RACES");
   notePad << nTab << activity.leaderName << _T(" ") << activity.leaderPosition;
   notePad << nRight << activity.operationalPeriod;   crlf(); crlf();

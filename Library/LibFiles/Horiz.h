@@ -28,8 +28,10 @@ struct TabX {
 double pos;                                        // Tab position in pixels
 bool   right;                                      // right tab when true;
 
-  TabX() : pos(0), right(false) { }
+  TabX() {clear();}
   TabX(TabX& tabX) {pos = tabX.pos; right = tabX.right;}
+
+  void  clear() {pos = 0.0; right = false;}
 
   TabX& operator=  (TabX& tabX) {pos = tabX.pos; right = tabX.right; return *this;}
 
@@ -78,8 +80,10 @@ double   savePos;                 // used to save and restore the position (1 la
 
 public:
 
-  Horiz();
+  Horiz() {clear();}
  ~Horiz() { }
+
+  void clear();
 
   void setAttributes(int width, double leftMargin, double rightMargin);
   void setLeftMargin( double v);

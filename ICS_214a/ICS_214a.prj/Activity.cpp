@@ -252,7 +252,7 @@ int  chWidth = dev.chWidth();
 
   dev << dCR << dClrTabs << dSetTab(tab) << dTab;
 
-  wrp.initialize(dc, dev.remaining() - 3 * chWidth, false);     dev<< dCR << dClrTabs;
+  wrp.initialize(dc, dev.remaining(), false);     dev<< dCR << dClrTabs;     // - 3 * chWidth
 
   return wrp(desc);
   }
@@ -268,11 +268,9 @@ int  tab = dateOutTab(dateOutIsPresent);
 
   if (dateOutIsPresent) notePad << dateOut << _T(" ");
 
-  notePad << timeOut << nTab;
+  notePad << timeOut << nTab << wrp << nCrlf;
 
-  noLines += displayDesc();
-
-  notePad << nCrlf;
+  noLines += wrp.noLines();                               //displayDesc();
 
   return deltaT;
   }
@@ -282,19 +280,21 @@ int LogData::dateOutTab(bool& dateOutIsPresent)
                             {dateOutIsPresent = !dateOut.isEmpty();   return dateOutIsPresent ? 24 : 18;}
 
 
+#if 0
 int LogData::displayDesc() {
-int i;
-int n = wrp.lines.end();
+int     i;
+String* s;
 
-  for (i = 0; i < n; i++) {
+  for (i = 0, s = wrp.startLoop(); s; i++, s = wrp.nextLine()) {
 
     if (i) notePad << nCrlf << nTab << nTab << nTab;
 
-    notePad << wrp.lines[i];
+    notePad << *s;
     }
 
-  return n;
+  return i;
   }
+#endif
 
 
 

@@ -29,21 +29,24 @@ public:
   VertMgmt();
  ~VertMgmt() { }
 
+  void clear();
+
   void setAttributes(int height, double topMargin, double botMargin);
   void setTopMargin(double v);
   void setBotMargin(double v);
   void setHeight(CDC* dc);
 
-  bool exceedsBnd(int n) {return y + n * maxHeight > botBnd;}
+  bool exceedsBnd(int n);       // {return y + n * maxHeight > botBnd;}
   void setBeginPage()    {beginPage = true; endPage = false;}
   bool isBeginPage()     {if (beginPage) {beginPage = false; return true;}  return false;}
   void atEndPageCond()   {if (endPage) {endPage = false; beginPage = true; noLines = 0;}}
   bool isEndPage()       {return endPage && y > topBnd;}
-  void lf(bool printing, bool footer);
-  int  getMaxLines()        {return maxLines;}
+  bool lf(bool printing, bool footer);
+  void clrLines()        {maxLines = 0; noLines = 0;}
+  int  getMaxLines()     {return maxLines;}
 
   void setMaxY(int v) {if (v > yMax) yMax = v;}
-  void setEndPage() {y = botBnd; endPage = true;}
+  void setEndPage();          //{y = botBnd; endPage = true;}
   void setBottom();
 
   int  pos()          {return y;}

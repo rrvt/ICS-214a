@@ -5,9 +5,10 @@
 #include "Horiz.h"
 
 
-Horiz::Horiz() : position(0), maxPos(0), rightEdge(0), leftMgn(0), rightMgn(0),
-                                                  leftBnd(0), rightBnd(0), avgChWidth(1), savePos(0) { }
-
+void Horiz::clear() {
+  position = maxPos = rightEdge = leftMgn = rightMgn = leftBnd = rightBnd = savePos = 0;
+  avgChWidth = 1.0; tabMgmt.clear();
+  }
 
 void Horiz::setAttributes(int width, double leftMargin, double rightMargin)
               {rightEdge = width; leftMgn = leftMargin; rightMgn = rightMargin; initPos(); setRtEdge();}
