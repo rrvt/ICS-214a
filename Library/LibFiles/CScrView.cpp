@@ -19,43 +19,24 @@ END_MESSAGE_MAP()
 
 
 
-void CScrView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) {
-
-  if (printing) return;
-
-  setScrollSize(); CScrollView::OnUpdate(pSender, lHint, pHint);
-  }
-
-
 // CScrView printing
 /* The following functions are called for printing a page in the order given with one exception:
 void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo);  -- 1st
 BOOL OnPreparePrinting(        CPrintInfo* pInfo);  -- 2nd
-     CDC::StartDoc()                                -- 3rd
+     CDC::StartDoc()                                -- 3rd      // Handled by CView
 void OnPrepareDC(    CDC* pDC, CPrintInfo* pInfo);  -- 4th                         <-
-     CDC::StartPage()                               -- 5th                          ^
+     CDC::StartPage()                               -- 5th                          ^ // Handled by CView
 void OnPrint(        CDC* pDC, CPrintInfo* pInfo);  -- 6th                          ^
-     CDC::EndPage()                                 -- 7th then loops for each page ^
-     CDC::EndDoc()                                  -- after last page
+     CDC::EndPage()                                 -- 7th then loops for each page ^ // Handled by CView
+     CDC::EndDoc()                                  -- after last page                // Handled by CView
 void OnEndPrinting(  CDC* pDC, CPrintInfo* pInfo);  -- last
 */
 
 
-// Get printer dialog box
-
-BOOL CScrView::OnPreparePrinting(CPrintInfo* pInfo) {
-
-  printing = true; outputDone = false;
-
-  if (DoPreparePrinting(pInfo)) return true;
-
-  printing = false; return false;
-  }
-
 
 void CScrView::OnPrepareDC(CDC* pDC, CPrintInfo* pInfo) {
 
-  if (printing && !pInfo) return;
+  if (printing && !pInfo) return;                             // Block display while printing
 
   dc = pDC;  info = pInfo;   CScrollView::OnPrepareDC(dc, pInfo);    printing = dc->IsPrinting();
 
@@ -67,14 +48,19 @@ void CScrView::OnPrepareDC(CDC* pDC, CPrintInfo* pInfo) {
 
 
 
-void CScrView::onPrepareOutput() {
+// Get printer dialog box
 
-  if (!printing)   {display.startDev(); return;}
+BOOL CScrView::OnPreparePrinting(CPrintInfo* pInfo) {
 
-  if (!endPrinting)
-    printer.startDev();
+  printing = true; outputDone = false; startDocDone = false;
+
+  if (DoPreparePrinting(pInfo)) return true;
+
+  printing = false; return false;
   }
 
+
+// Initialize dc for printer and other initialization, called for each page
 
 void CScrView::preparePrinter(CPrintInfo* pInfo) {
 int pageNo = pInfo->m_nCurPage;
@@ -91,9 +77,11 @@ int pageNo = pInfo->m_nCurPage;
 
   printer.preparePrinting(font, fontSize, dc, pInfo);
 
-  if (!outputDone) {outputDone = true; onPrepareOutput();}
+  if (!outputDone) {outputDone = true; onPrepareOutput();}      // Only need to prepare data once
   }
 
+
+// To determine number of lines in page and number of pages this is run twice for each printed output
 
 void  CScrView::trialRun(int& maxLines, int& noPages) {
 uint i;
@@ -113,6 +101,9 @@ uint i;
   }
 
 
+// The OnPrint function is used to output to the preview window.  This function is required to find
+// the next page to display.  Useful to contol the paging in my program rather than in CView...
+
 void CScrView::preview(CPrintInfo* pInfo) {
 uint i;
 
@@ -131,8 +122,10 @@ uint i;
 
 // Draw on Printer (i.e. Output to Printer)
 
-void CScrView::OnPrint(CDC* dc, CPrintInfo* pInfo) {print(pInfo);}
+void CScrView::OnPrint(CDC* pDC, CPrintInfo* pInfo) {print(pInfo);}
 
+
+// print a page
 
 void CScrView::print(CPrintInfo* pInfo) {
 
@@ -144,11 +137,14 @@ void CScrView::print(CPrintInfo* pInfo) {
   }
 
 
+// The output location details are initialized and then the virtual function printFooter is called.
+// The user may provide a footer function patterned after CScrView's version below.
+
 void CScrView::startFooter(CPrintInfo* pInfo, Display& dev)
                               {dev.setFooter();  printFooter(dev, pInfo->m_nCurPage);   dev.clrFooter();}
 
 
-
+// Default footer for printer output.
 
 void CScrView::printFooter(Display& dev, int pageNo) {          // Overload if different footer desired.
 
@@ -162,6 +158,10 @@ void CScrView::printFooter(Display& dev, int pageNo) {          // Overload if d
   }
 
 
+// The most secure way to cease printed output is to change the continuePrinting value in the printer
+// info structure from true to false.  This function determinse that by examining the progress of the
+// passage through the NotePad list of entities.
+
 bool CScrView::isFinishedPrinting(CPrintInfo* pInfo) {
 bool fin = printer.isEndDoc();
 
@@ -173,7 +173,8 @@ bool fin = printer.isEndDoc();
   }
 
 
-
+// When CScrollView sees that the printing has completed (see isFinishedPrinting) OnEndPrinting is
+// called at which point we turn off this module's printing function so that the display may be updated.
 
 void CScrView::OnEndPrinting(CDC* pDC, CPrintInfo* pInfo) {printing = false;}
 
@@ -187,8 +188,22 @@ void CScrView::prepareDisplay() {
 
   display.setHorzMgns(leftMargin, rightMargin);   display.setVertMgns(topMargin, botMargin);
 
-  display.prepareDisplay(font, fontSize, dc);   onPrepareOutput();
+  display.prepareDisplay(font, fontSize, dc);
+
+  onPrepareOutput();   // This may be overridden to prepare NotePad to contain the output
   }
+
+
+// Override to prepare NotePad output, then call CScrView::onPrepareOutput to start the display/prnter
+// output
+
+void CScrView::onPrepareOutput() {
+
+  if (!printing)   {display.startDev(); return;}
+
+  if (!endPrinting) printer.startDev();
+  }
+
 
 
 // CScrView drawing
@@ -237,6 +252,14 @@ int   delta;
   }
 
 
+void CScrView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint) {
+
+  if (printing) return;
+
+  setScrollSize(); CScrollView::OnUpdate(pSender, lHint, pHint);
+  }
+
+
 void CScrView::setScrollSize() {
 RECT  winSize;
 int   height = display.chHeight();
@@ -257,8 +280,4 @@ CSize scrollSize;
 
   SetScrollSizes(MM_TEXT, scrollViewSize, pageSize, scrollSize);
   }
-
-
-
-
 

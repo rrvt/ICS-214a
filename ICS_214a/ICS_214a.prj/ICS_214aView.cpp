@@ -30,8 +30,14 @@ double botMgn   = options.botMargin.stod(x);
   }
 
 
+// Perpare output (i.e. report) then start the output with the call to SCrView
+
 void ICS_214aView::onPrepareOutput() {report(isPrinting());   CScrView::onPrepareOutput();}
 
+
+// The footer is injected into the printed output, so the output goes directly to the device.
+// The output streaming functions are very similar to NotePad's streaming functions so it should not
+// be a great hardship to construct a footer.
 
 void ICS_214aView::printFooter(Display& dev, int pageNo) {report.footer(dev, pageNo); invalidate();}
 

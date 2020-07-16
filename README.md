@@ -53,7 +53,14 @@ install compiler and Help Workshop (an old application but still available) are 
 installer and help files.  My WixApp might be useful for creating the Product.wxs file if there are big
 changes to the app.
 
-## Update
+## Updates
+
+### July 16, 2020
+
+I tried to change the print spooler job title from Untitled to something useful and failed.  It appears
+that the CView class implements the call to set the title (i.w. StartDoc) and CView doesn't provide a
+way to set the value before StartDoc is called.  So instead I added comments the CScrView which is
+sub-classed from CScrollView (which is sub-classed from CView).
 
 ### July 15, 2020
 

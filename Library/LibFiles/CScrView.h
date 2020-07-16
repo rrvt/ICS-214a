@@ -9,12 +9,12 @@
 /* The following functions are called for printing a page in the order given with one exception:
 void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo);  -- 1st
 BOOL OnPreparePrinting(        CPrintInfo* pInfo);  -- 2nd
-     CDC::StartDoc()                                -- 3rd
+     CDC::StartDoc()                                -- 3rd      // Handled by CView
 void OnPrepareDC(    CDC* pDC, CPrintInfo* pInfo);  -- 4th                         <-
-     CDC::StartPage()                               -- 5th                          ^
+     CDC::StartPage()                               -- 5th                          ^ // Handled by CView
 void OnPrint(        CDC* pDC, CPrintInfo* pInfo);  -- 6th                          ^
-     CDC::EndPage()                                 -- 7th then loops for each page ^
-     CDC::EndDoc()                                  -- after last page
+     CDC::EndPage()                                 -- 7th then loops for each page ^ // Handled by CView
+     CDC::EndDoc()                                  -- after last page                // Handled by CView
 void OnEndPrinting(  CDC* pDC, CPrintInfo* pInfo);  -- last
 */
 
@@ -24,6 +24,7 @@ class CScrView : public CScrollView {
 bool        printing;
 bool        endPrinting;
 bool        outputDone;
+bool        startDocDone;
 bool        wrapEnabled;
 
 DisplayDev  display;
@@ -46,8 +47,8 @@ public:
 String      rightFooter;                                          // Data to print at right side of footer
 Date        date;                                                 // Date to print at left edge of footer
 
-  CScrView() : printing(false), endPrinting(false), outputDone(false), wrapEnabled(true),
-                                                                      font(_T("Arial")), fontSize(120) {}
+  CScrView() : printing(false), endPrinting(false), outputDone(false), startDocDone(false),
+                                                   wrapEnabled(true), font(_T("Arial")), fontSize(120) {}
  ~CScrView() { }
 
   void setFont(  TCchar* f, int points = 120) {font = f; fontSize = points < 70 ? points * 10 : points;}
