@@ -5,13 +5,13 @@
 #include "DisplayDev.h"
 
 
-#if 0
+//#define DebugDD
+
+#ifdef DebugDD
 static String dbgLastLine[10];
 static void   saveDbgLine(String& line);
 static void   saveDbgWrap(Wrap& w);
 static void   rippleDbgLine();
-saveDbgLine(note->line);
-saveDbgWrap(note->wrap);
 #endif
 
 
@@ -46,6 +46,10 @@ bool endLoop = false;
 
     if (note->editBoxX >= 0) {dev << dEditBox(note->editBoxX);  if (dev.doEndPageChk()) break;}
 
+#ifdef DebugDD
+saveDbgLine(note->line);
+saveDbgWrap(note->wrap);
+#endif
                               dev << note->line;                if (dev.doEndPageChk()) break;
 
                               dev << note->wrap;                if (dev.doEndPageChk()) break;
@@ -65,7 +69,8 @@ bool endLoop = false;
 
 
 
-#if 0
+
+#ifdef DebugDD
 void saveDbgWrap(Wrap& w) {
 String* s;
 

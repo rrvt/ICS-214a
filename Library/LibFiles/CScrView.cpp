@@ -120,7 +120,9 @@ uint i;
 
   for (i = 1; i < pInfo->m_nCurPage; i++) {
 
-    printer.suppressOutput();   printer();   printer.clrFont();
+    printer.suppressOutput();   if (!wrapEnabled) printer.disableWrap();
+
+    printer();   printer.clrFont();
 
     if (!isFinishedPrinting(pInfo)) printer.preparePrinting(font, fontSize, dc, pInfo);
     }
@@ -134,9 +136,9 @@ void CScrView::OnPrint(CDC* dc, CPrintInfo* pInfo) {print(pInfo);}
 
 void CScrView::print(CPrintInfo* pInfo) {
 
-  if (!wrapEnabled) printer.disableWrap();   printer();   startFooter(pInfo, printer.getDisplay());
+  if (!wrapEnabled) printer.disableWrap();   printer();
 
-  printer.clrFont();
+  startFooter(pInfo, printer.getDisplay());   printer.clrFont();
 
   if (isFinishedPrinting(pInfo)) {printing = false;  endPrinting = true;}
   }

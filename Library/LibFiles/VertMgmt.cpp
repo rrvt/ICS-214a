@@ -5,8 +5,10 @@
 #include "VertMgmt.h"
 
 #include "MessageBox.h"
+//#define DebugVM
 
-#if 0
+
+#ifdef DebugVM
 static int dbgY;
 static int dbgTop;
 static int dbgBot;
@@ -16,20 +18,17 @@ static int dbgV;
 static int dbgNoLines;
 
 static int dbgCnt;
-dbgCnt = 0;
+#endif
+
+#if 0
 testNoLines =
-dbgY   = y;
-dbgBot = botBnd;
-dbgN   = n;
-dbgMaxH = maxHeight;
-dbgV    = y + n * maxHeight;
 dbgNoLines = noLines;
-dbgCnt++;
 if (dbgCnt == 3) {
 int x = 1;
 }
 testTop = topBnd;
 #endif
+
 
 VertMgmt::VertMgmt() {clear();}
 
@@ -38,6 +37,9 @@ void VertMgmt::clear() {
 
   y = yMax = maxHeight = uLineDelta = botEdge = topBnd = botBnd = 0; chHeight = 1;  topMgn = botMgn = 0.0;
   beginPage = endPage = false; noLines = maxLines = 0;
+#ifdef DebugVM
+dbgCnt = 0;
+#endif
   }
 
 
@@ -86,6 +88,13 @@ TEXTMETRIC metric;
 
 
 bool VertMgmt::exceedsBnd(int n) {
+#ifdef DebugVM
+dbgY   = y;
+dbgBot = botBnd;
+dbgN   = n;
+dbgMaxH = maxHeight;
+dbgV    = y + n * maxHeight;
+#endif
 
   return y + n * maxHeight > botBnd;
   }
@@ -94,6 +103,7 @@ bool VertMgmt::exceedsBnd(int n) {
 bool VertMgmt::lf(bool printing, bool footer) {
 
   if (printing && !footer && exceedsBnd(1)) {
+
     setEndPage(); return false;
     }
 
@@ -101,11 +111,27 @@ bool VertMgmt::lf(bool printing, bool footer) {
 
   if (printing && !footer && noLines > maxLines) maxLines = noLines;
 
+#ifdef DebugVM
+dbgY = y;
+#endif
+
   return true;
   }
 
-void VertMgmt::setEndPage() {y = botBnd; endPage = true;}
+void VertMgmt::setEndPage() {
+#ifdef DebugVM
+dbgCnt++;
+#endif
+  y = botBnd; endPage = true;
+  }
 
 
-void VertMgmt::initY() {topBnd = y = int(topMgn * chHeight);  botBnd = int(botEdge - botMgn * chHeight);}
+void VertMgmt::initY() {
+  topBnd = y = int(topMgn * chHeight);  botBnd = int(botEdge - botMgn * chHeight);
+#ifdef DebugVM
+dbgTop = topBnd;
+dbgBot = botBnd;
+dbgY   = y;
+#endif
+  }
 

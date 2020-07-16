@@ -33,6 +33,8 @@ ICS_214aView& vw  = *view();
 
   if (printing) detNoPages(vw);
 
+//  vw.disableWrap();
+
   create();
   }
 
@@ -92,7 +94,8 @@ int          n;
 
     if (iter.last()) n += 2;
 
-    if (printing && n + noLines > maxLines) {notePad << nEndPage;    header();}
+    if (printing && n + noLines > maxLines)
+      {notePad << nEndPage;    header();}
 
     totalTime += ld->display(noLines);
     }

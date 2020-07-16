@@ -107,7 +107,8 @@ void Display::crlf() {
 
 
 bool Display::doEndPageChk() {
-  if (printing && vert.isEndPage()) {vert.atEndPageCond();  return true;}
+  if (printing && vert.isEndPage())
+    {vert.atEndPageCond();  return true;}
   return false;
   }
 
