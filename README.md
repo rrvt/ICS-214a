@@ -63,7 +63,9 @@ The following paragraph is found at that link:
 
     Visual Studio 2015, 2017 and 2019
 
-    Download the Microsoft Visual C++ Redistributable for Visual Studio 2015, 2017 and 2019. The following updates are the latest supported Visual C++ redistributable packages for Visual Studio 2015, 2017 and 2019. Included is a baseline version of the Universal C Runtime see MSDN for details.
+    Download the Microsoft Visual C++ Redistributable for Visual Studio 2015, 2017 and 2019. The
+    following updates are the latest supported Visual C++ redistributable packages for Visual Studio
+    2015, 2017 and 2019. Included is a baseline version of the Universal C Runtime see MSDN for details.
 
         x86: vc_redist.x86.exe
 
