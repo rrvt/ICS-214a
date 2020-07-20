@@ -158,7 +158,7 @@ written for the 4 main steps of managing an Activity with pictures of the actual
 
 ## Authors
 
-Robert R. Van Tuyl, rrvt@swde.com
+Robert R. Van Tuyl, romeo romeo victor tango alpha tango sam whisky delta echo dot charlie oscar mike
 
 ## License
 
