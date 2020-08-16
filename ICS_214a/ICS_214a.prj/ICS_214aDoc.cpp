@@ -38,7 +38,7 @@ BEGIN_MESSAGE_MAP(ICS_214aDoc, CDocument)
   ON_COMMAND(ID_LogEntry,      &ICS_214aDoc::OnLogEntry)
   ON_COMMAND(ID_StopEntry,     &ICS_214aDoc::OnStopEntry)
   ON_COMMAND(ID_EditLogEntry,  &ICS_214aDoc::OnEditLogEntry)
-  ON_COMMAND(ID_Options, &ICS_214aDoc::OnOptions)
+  ON_COMMAND(ID_Options,       &ICS_214aDoc::OnOptions)
 END_MESSAGE_MAP()
 
 

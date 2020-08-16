@@ -3,6 +3,11 @@
 
 #pragma once
 #include "Expandable.h"
+#include "IterT.h"
+
+
+class Wrap;
+typedef IterT<Wrap, String> WrapIter;                     // Establish the typename so it can be friended
 
 
 class Wrap {
@@ -11,7 +16,6 @@ CDC* dc;
 int  extent;
 bool isItalic;
 
-int                   i;
 Expandable<String, 2> lines;
 
 public:
@@ -30,10 +34,13 @@ public:
   bool isEmpty() {return lines.end() == 0;}
   int  noLines() {return lines.end();}
 
-  String* startLoop() {i = 0; return i < lines.end() ? &lines[i] : 0;}
-  String* nextLine()  {i++;   return i < lines.end() ? &lines[i] : 0;}
-
 private:
+
+  // returns number of data items in array
+  int nData() {return lines.end();}
+
+  // returns either a pointer to data (or datum) at index i in array or zero
+  String* datum(int i) {return 0 <= i && i < lines.end() ? &lines[i] : 0;}
 
   void copy(Wrap& w)
           {enabled = w.enabled; dc = w.dc; extent = w.extent; isItalic =   w.isItalic; lines = w.lines;}
@@ -44,5 +51,5 @@ private:
 
   int  findLastWh(String& s, int noChars);
 
+  friend typename WrapIter;
   };
-

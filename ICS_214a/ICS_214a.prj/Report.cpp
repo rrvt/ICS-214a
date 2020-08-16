@@ -64,10 +64,10 @@ int mxPgs;
 
 
 void Report::detWraps(ICS_214aView& vw) {
-Display&      dev = vw.getDev();
-CDC*          dc  = dev.getDC();
-ActivityIter  iter(activity);
-LogData*      ld;
+Display&  dev = vw.getDev();
+CDC*      dc  = dev.getDC();
+ActyIter  iter(activity);
+LogData*  ld;
 
   for (ld = iter(); ld; ld = iter++) ld->wrap(dev, dc);
   }
@@ -77,12 +77,12 @@ void Report::detNoPages(ICS_214aView& vw) {int nLns;   create();   vw.trialRun(n
 
 
 void Report::create() {
-ActivityIter iter(activity);
-LogData*     ld;
-LONGLONG     secs;
-double       ttl;
-String       t;
-int          n;
+ActyIter iter(activity);
+LogData* ld;
+LONGLONG secs;
+double   ttl;
+String   t;
+int      n;
 
   if (!iter()) return;
 
@@ -92,7 +92,7 @@ int          n;
 
     n = ld->noLines();
 
-    if (iter.last()) n += 2;
+    if (iter.isLast()) n += 2;
 
     if (printing && n + noLines > maxLines)
       {notePad << nEndPage;    header();}

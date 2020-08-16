@@ -7,6 +7,7 @@
 #include "Date.h"
 #include "Display.h"
 #include "Expandable.h"
+#include "IterT.h"
 #include "Wrap.h"
 
 
@@ -59,6 +60,12 @@ CTimeSpan operator+  (CTimeSpan& t, LogData& ld);
 CTimeSpan operator+= (CTimeSpan& t, LogData& ld);
 
 
+// Define an iterator
+
+class Activity;
+typedef IterT<Activity, LogData> ActyIter;                // Establish the typename so it can be friended
+
+
 class Activity {
 
 enum StoreType {NilStore, StoreIncr, StoreAll, StoreExcel};
@@ -104,11 +111,24 @@ private:
   void      storeIncrLogData(Archive& ar);
   CTimeSpan getTotalTime();
 
-  friend class ActivityIter;
+private:
+
+  // returns either a pointer to data (or datum) at index i in array or zero
+  LogData* datum(int i) {return 0 <= i && i < log.end() ? &log[i] : 0;}
+
+  // returns number of data items in array
+  int nData() {return log.end();}
+
+//  friend class ActivityIter;
   friend class Report;
+  friend typename ActyIter;
   };
 
 
+extern Activity activity;
+
+
+#if 0
 class ActivityIter {
 int       logX;
 Activity& activity;
@@ -125,6 +145,4 @@ private:
 
   ActivityIter() : activity(*(Activity*) 0), logX(0) { }
   };
-
-
-extern Activity activity;
+#endif

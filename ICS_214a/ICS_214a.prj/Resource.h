@@ -9,6 +9,7 @@
 #define IDD_StopEntry                   105
 #define IDD_EditEntry                   106
 #define IDD_Options                     107
+
 #define IDC_NameVer                     200
 #define IDC_Copyright                   201
 #define IDC_CompanyName                 202
@@ -34,6 +35,7 @@
 #define IDC_ExcelOne                    223
 #define IDC_LeftMargin                  224
 #define IDC_BotMargin                   225
+
 #define ID_Help                         400
 #define ID_EditHeader                   401
 #define ID_LogEntry                     402

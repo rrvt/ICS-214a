@@ -142,6 +142,7 @@
     <ClInclude Include="..\LibFiles\Horiz.h" />
     <ClInclude Include="..\LibFiles\IniFile.h" />
     <ClInclude Include="..\LibFiles\InsertSorted.h" />
+  <ClInclude Include="..\LibFiles\IterT.h" />
     <ClInclude Include="..\LibFiles\LexT.h" />
     <ClInclude Include="..\LibFiles\LexTOut.h" />
     <ClInclude Include="..\LibFiles\LoadScratchPad.h" />

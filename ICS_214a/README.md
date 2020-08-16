@@ -53,7 +53,41 @@ install compiler and Help Workshop (an old application but still available) are 
 installer and help files.  My WixApp might be useful for creating the Product.wxs file if there are big
 changes to the app.
 
+Recently it has become clear that not all computers are built equally.  The application requires the
+MFC redistributable which comes in a package that is sometimes not loaded into a computer.  It may be
+retrieved from a Microsoft page for the redistributables:
+
+    https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads
+
+The following paragraph is found at that link:
+
+    Visual Studio 2015, 2017 and 2019
+
+    Download the Microsoft Visual C++ Redistributable for Visual Studio 2015, 2017 and 2019. The
+    following updates are the latest supported Visual C++ redistributable packages for Visual Studio
+    2015, 2017 and 2019. Included is a baseline version of the Universal C Runtime see MSDN for details.
+
+        x86: vc_redist.x86.exe
+
+        x64: vc_redist.x64.exe
+
+        ARM64: vc_redist.arm64.exe
+
+    Note Visual C++ 2015, 2017 and 2019 all share the same redistributable files.
+
+Go to the web site and convince yourself that it is legitimate and download the x86 and/or the x64 version of the redistributable, which will depend on your operating systems bit size (32/64).
+
 ## Updates
+
+### August 15, 2020
+
+Update some code.
+
+### July 19, 2020
+
+A recent inquiry led to adding some information in the Prerequisites section on the Visual Studio
+redistributables.  The program was compiled without the MFC library loaded in the program to keep it
+relatively small.  Unfortanately it must be available as a dll in order for the program to execute.
 
 ### July 16, 2020
 
@@ -128,7 +162,7 @@ written for the 4 main steps of managing an Activity with pictures of the actual
 
 ## Authors
 
-Robert R. Van Tuyl, rrvt@swde.com
+Robert R. Van Tuyl, romeo romeo victor tango alpha tango sam whisky delta echo dot charlie oscar mike
 
 ## License
 

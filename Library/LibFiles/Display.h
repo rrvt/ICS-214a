@@ -59,7 +59,7 @@ bool         wrapEnabled;
   void     disableWrap()    {wrapEnabled = false;}
   void     enableWrap()     {wrapEnabled = true;}
 
-  void     setFooter() {footer = true; vert.setBottom();}
+  void     setFooter() {footer = true; sum.clear(); vert.setBottom();}
   void     clrFooter() {footer = false;}
   void     setHorzMgns(double left, double right) {leftMargin = left; rightMargin = right;}
   void     setVertMgns(double top,  double bot)   {topMargin  = top;   botMargin  = bot;}

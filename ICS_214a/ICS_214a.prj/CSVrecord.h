@@ -29,6 +29,10 @@ private:
   };
 
 
+class CSVrecord;
+typedef IterT<CSVrecord, CSVfield> CSVIter;
+
+
 class CSVrecord {
 Csv                        csv;
 
@@ -52,14 +56,20 @@ public:
 
   void      dspFields(int n);
 
-  CSVfield* startLoop() {i = 0; return i < nFields() ? &fields[i] : 0;}
-  CSVfield* nextFld()   {i++;   return i < nFields() ? &fields[i] : 0;}
-
 private:
 
   void startStore() {fields.clr();}
   void saveStore(TCchar* name = 0) {fields[fields.end()].name = name ? name : _T("");}
        CSVrecord() : csv(*(Archive*)0) {}
+
+  // returns either a pointer to data (or datum) at index i in array or zero
+
+  CSVfield* datum(int i) {return 0 <= i && i < nData() ? &fields[i] : 0;}       // or &data[i]
+
+  // returns number of data items in array
+  int   nData()      {return fields.end();}
+
+  friend typename CSVIter;
   };
 
 

@@ -19,6 +19,7 @@ public:
 
   virtual ~ICS_214aView() { }
 
+  virtual void OnPrepareDC(CDC* pDC, CPrintInfo* pInfo = NULL);
   virtual void onPrepareOutput();
   virtual void printFooter(Display& dev, int pageNo);
 
@@ -32,7 +33,6 @@ public:
   #endif
 
   DECLARE_MESSAGE_MAP()
-  virtual void OnPrepareDC(CDC* pDC, CPrintInfo* pInfo = NULL);
 };
 
 

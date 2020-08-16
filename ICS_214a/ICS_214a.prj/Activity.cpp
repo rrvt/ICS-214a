@@ -42,12 +42,13 @@ CSVrecord rcd(ar);
 
 
 bool Activity::loadHeader(CSVrecord& rcd) {
+CSVIter   iter(rcd);
 CSVfield* fld;
 int       i;
 
   if (!rcd.load()) return false;
 
-  for (fld = rcd.startLoop(), i = 0; fld; fld = rcd.nextFld(), i++) {
+  for (fld = iter(), i = 0; fld; fld = iter++, i++) {
 
     fld->name.trim();
 
@@ -78,10 +79,11 @@ int i;
 
 
 void LogData::load(CSVrecord& rcd) {
-int       i;
+CSVIter   iter(rcd);
 CSVfield* fld;
+int       i;
 
-  for (fld = rcd.startLoop(), i = 0; fld; fld = rcd.nextFld(), i++) {
+  for (fld = iter(), i = 0; fld; fld = iter++, i++) {
 
     fld->name.trim();
 
@@ -280,24 +282,6 @@ int LogData::dateOutTab(bool& dateOutIsPresent)
                             {dateOutIsPresent = !dateOut.isEmpty();   return dateOutIsPresent ? 24 : 18;}
 
 
-#if 0
-int LogData::displayDesc() {
-int     i;
-String* s;
-
-  for (i = 0, s = wrp.startLoop(); s; i++, s = wrp.nextLine()) {
-
-    if (i) notePad << nCrlf << nTab << nTab << nTab;
-
-    notePad << *s;
-    }
-
-  return i;
-  }
-#endif
-
-
-
 void LogData::set(TCchar* dt, TCchar* tmIn, TCchar* dtOut, TCchar* tmOut, TCchar* dsc) {
 
   date    = normalizeDate(dt);
@@ -363,4 +347,22 @@ CTimeSpan sp(sec + sc1); return sp;
 
 
 CTimeSpan operator+= (CTimeSpan t, LogData& ld) {return t += ld.deltaT;}
+
+
+
+#if 0
+int LogData::displayDesc() {
+int     i;
+String* s;
+
+  for (i = 0, s = wrp.startLoop(); s; i++, s = wrp.nextLine()) {
+
+    if (i) notePad << nCrlf << nTab << nTab << nTab;
+
+    notePad << *s;
+    }
+
+  return i;
+  }
+#endif
 

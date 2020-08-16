@@ -79,6 +79,10 @@ Go to the web site and convince yourself that it is legitimate and download the 
 
 ## Updates
 
+### August 15, 2020
+
+Update some code.
+
 ### July 19, 2020
 
 A recent inquiry led to adding some information in the Prerequisites section on the Visual Studio

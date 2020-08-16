@@ -240,6 +240,7 @@ void Display::setMetric() {hz.setAvgChWidth(dc);    vert.setHeight(dc);}
 
 
 Display& Display::append(Wrap& w) {
+WrapIter iter(w);
 int     i;
 String* s;
 
@@ -249,7 +250,7 @@ String* s;
 
   hz.saveCurPos();
 
-  for (i = 0, s = w.startLoop(); s; i++, s = w.nextLine()) {
+  for (i = 0, s = iter(); s; i++, s = iter++) {
     if (i) {crlf(); hz.restorePos();}
     sum = *s;  textOut();
     }
@@ -259,11 +260,12 @@ String* s;
 
 
 bool Display::textOut() {
-int     wth = width(sum);
-Wrap    wrap(wrapEnabled);
-int     i;
-int     nLines;
-String* s;
+int      wth = width(sum);
+Wrap     wrap(wrapEnabled);
+WrapIter iter(wrap);
+int      i;
+int      nLines;
+String*  s;
 
   if (center) {hz.centerText(wth); center = false; hz.centerText(wth);}
   if (right)  {hz.rightText(wth);  right  = false; hz.rightText(wth);}
@@ -286,7 +288,7 @@ String* s;
 
   if (footer) vert.setBottom();
 
-  for (i = 0, s = wrap.startLoop(); s; i++, s = wrap.nextLine()) {
+  for (i = 0, s = iter(); s; i++, s = iter++) {
     if (i) {crlf(); hz.restorePos();}
 
     fragmentOut(*s);

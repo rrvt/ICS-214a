@@ -29,15 +29,15 @@ StopEntryDlg::~StopEntryDlg() { }
 
 
 BOOL StopEntryDlg::OnInitDialog() {
-ActivityIter iter(activity);
-LogData*     ld;
-int          i;
-String       s;
-String       date;
-String       timeIn;
-String       dateOut;
-String       timeOut;
-String       desc;
+ActyIter iter(activity);
+LogData* ld;
+int      i;
+String   s;
+String   date;
+String   timeIn;
+String   dateOut;
+String   timeOut;
+String   desc;
 
   CDialogEx::OnInitDialog();
 

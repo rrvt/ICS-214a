@@ -22,15 +22,15 @@ EditEntryDlg::~EditEntryDlg() { }
 
 
 BOOL EditEntryDlg::OnInitDialog() {
-ActivityIter iter(activity);
-LogData*     ld;
-int          n;
-String       s;
-String       date;
-String       timeIn;
-String       dateOut;
-String       timeOut;
-String       desc;
+ActyIter iter(activity);
+LogData* ld;
+int      n;
+String   s;
+String   date;
+String   timeIn;
+String   dateOut;
+String   timeOut;
+String   desc;
 
   CDialogEx::OnInitDialog();
 
