@@ -90,7 +90,7 @@ String missionNo;
 
   void     clear();
 
-  void     load(Archive&  ar);
+  void     load(Archive& ar);
   void     setStoreAll()   {storeType = StoreAll;}
   void     setStoreIncr()  {storeType = StoreIncr;}
   void     setStoreExcel() {storeType = StoreExcel;}
@@ -104,8 +104,7 @@ private:
   void      storeIncr( Archive&  ar);
   void      storeAll(  Archive&  ar);
   void      storeExcel(Archive&  ar);
-  bool      loadHeader(CSVrecord& rcd);
-  void      loadLog(   CSVrecord& rcd);
+  bool      loadHeader(CSVLex& lex);
   void      storeHeader(Archive& ar);
   void      storeLogData(Archive& ar);
   void      storeIncrLogData(Archive& ar);
@@ -128,21 +127,3 @@ private:
 extern Activity activity;
 
 
-#if 0
-class ActivityIter {
-int       logX;
-Activity& activity;
-
-public:
-
-  ActivityIter(Activity& actLog) : activity(actLog), logX(0) { }
-
-  LogData* operator() ()    {logX = 0; return logX < activity.log.end() ? &activity.log[logX] : 0;}
-  LogData* operator++ (int) {logX++;   return logX < activity.log.end() ? &activity.log[logX] : 0;}
-  bool     last()           {return logX + 1 == activity.log.end();}
-
-private:
-
-  ActivityIter() : activity(*(Activity*) 0), logX(0) { }
-  };
-#endif

@@ -79,6 +79,13 @@ Go to the web site and convince yourself that it is legitimate and download the 
 
 ## Updates
 
+### Update 9/10/20
+Library improvement project.  Changed the Expandable Array classes, added templates for a pointer only
+class in the ExpandableP class definition.  It turned out I was defining this RcdPtr class many times
+worrying about exactly how it should be defined.  So I turned it into a template, which of course then
+I needed to go back and add it to all the programs.  Severl iterations later I added some documentation
+and I am uploading the programs today.
+
 ### August 15, 2020
 
 Update some code.

@@ -2,107 +2,35 @@
 
 
 #pragma once
-#include "Archive.h"
-#include "Csv.h"
-#include "Expandable.h"
+#include "CSVRcdB.h"
 
 
-class CSVfield {
+class CSVrecord : public CSVRcdB {
 public:
-String name;
+String date;
+String timeIn;
+String dateOut;
+String timeOut;
+String desc;
+String data6;
+String data7;
+String data8;
 
-  CSVfield() {}
-  CSVfield(CSVfield& fd) {copy(fd);}
-
- ~CSVfield() {}
-
-  void      clear()                {name.clear();}
-  bool      isEmpty()              {return name.isEmpty();}
-
-  CSVfield& operator<< (String& s) {name += s; return *this;}
-
-  CSVfield& operator=(CSVfield& fd) {copy(fd); return *this;}
-
-private:
-
-  void copy(CSVfield& src) {name = src.name;}
-  };
-
-
-class CSVrecord;
-typedef IterT<CSVrecord, CSVfield> CSVIter;
-
-
-class CSVrecord {
-Csv                        csv;
-
-int                        i;
-Expandable <CSVfield, 128> fields;
-
-public:
-
-  CSVrecord(Archive& ar) : csv(ar), i(0) {}
+  CSVrecord() { }
+  CSVrecord(CSVrecord& r) {copy(r);}
  ~CSVrecord() { }
 
-  bool      load();
+  void clear();
 
-  void      freeFields();
-
-  int       nFields() {return fields.end();}
-
-  int       notEmptyNo() {int i = fields.end(); return fields[i-1].isEmpty() ? 0 : i;}
-
-  void      dspFields() {dspFields(fields.end());}
-
-  void      dspFields(int n);
+  CSVrecord& operator= (CSVrecord& r) {copy(r); return *this;}
 
 private:
 
-  void startStore() {fields.clr();}
-  void saveStore(TCchar* name = 0) {fields[fields.end()].name = name ? name : _T("");}
-       CSVrecord() : csv(*(Archive*)0) {}
+  virtual void    put(TCchar* s);
 
-  // returns either a pointer to data (or datum) at index i in array or zero
+  virtual String* get();
 
-  CSVfield* datum(int i) {return 0 <= i && i < nData() ? &fields[i] : 0;}       // or &data[i]
-
-  // returns number of data items in array
-  int   nData()      {return fields.end();}
-
-  friend typename CSVIter;
+  virtual void    copy(CSVrecord& r);
   };
 
-
-class CSVout;
-
-typedef ManipT<CSVout> CSVManip;
-
-class CSVout {
-Archive& ar;
-
-public:
-
-  CSVout(Archive& a) : ar(a) {initialize();}
-
-  CSVout& operator<< (String&    s)     {ar.write(quotes(s));  return *this;}
-  CSVout& operator<< (TCchar*    p)     {ar.write(quotes(p));  return *this;}
-  CSVout& operator<< (Tchar     ch)     {ar.write(ch); return *this;}
-  CSVout& operator<< (int        x)     {ar.write(x);  return *this;}
-  CSVout& operator<< (CSVManip& m)      {return m.func(*this);}
-
-  void    crlf()                        {ar.crlf();}
-
-private:
-
-  static String& quotes(TCchar* p);
-
-  void initialize();
-
-  static CSVout& doCrlf(CSVout& n) {n.crlf(); return n;}
-
-  CSVout() : ar(*( Archive*) 0) { }
-  };
-
-
-extern CSVManip vCrlf;       // add to stream to terminate a line on display: ar << "xyz" << vCrlf;
 

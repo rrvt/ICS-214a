@@ -7,15 +7,6 @@
 #include "ICS_214a.h"
 #include "Utilities.h"
 
-#if 0
-enum Progress {StartPr, DetNoLinesPR, DetNoPages, PrintPr};
-
-static Progress testProgress;
-testProgress = StartPr;
-testProgress = DetNoLinesPR;
-testProgress = DetNoPages;
-testProgress = PrintPr;
-#endif
 
 Report report;
 

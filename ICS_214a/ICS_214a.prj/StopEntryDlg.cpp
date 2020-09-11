@@ -46,7 +46,7 @@ String   desc;
     if (timeOut.isEmpty()) {
       s = addTab(date, 10);  s += addTab(timeIn, 8);    s += desc;
 
-      entryDescCtrl.AddString(s);   indexes[indexes.end()] = i;
+      entryDescCtrl.AddString(s);   indexes += i;
       }
     }
 

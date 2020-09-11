@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "Activity.h"
+#include "CSVOut.h"
 #include "Options.h"
 #include "Utilities.h"
 
@@ -12,7 +13,7 @@ Activity activity;
 
 void Activity::clear() {
   storeType = NilStore;
-  log.clr();
+  log.clear();
 
   name.clear();
   prepDate.clear();
@@ -27,74 +28,48 @@ void Activity::clear() {
 
 
 void Activity::add(TCchar* date, TCchar* timeIn, TCchar* timeOut, TCchar* desc) {
-LogData& data = log[log.end()];
+LogData& data = log.nextData();
 
   data.set(date, timeIn, 0, timeOut, desc);
   }
 
 
-void Activity::load(Archive&  ar) {
-CSVrecord rcd(ar);
+void Activity::load(Archive& ar) {
+CSVLex    lex(ar);
+CSVrecord rcd;
 
-  if (!loadHeader(rcd)) return;
-  loadLog(rcd);
+  if (!loadHeader(lex)) return;
+
+  log.clear();
+
+  while (rcd.load(lex)) log.nextData().load(rcd);
   }
 
 
-bool Activity::loadHeader(CSVrecord& rcd) {
-CSVIter   iter(rcd);
-CSVfield* fld;
-int       i;
+bool Activity::loadHeader(CSVLex& lex) {
+CSVrecord rcd;
 
-  if (!rcd.load()) return false;
+  if (!rcd.load(lex)) return false;
 
-  for (fld = iter(), i = 0; fld; fld = iter++, i++) {
+  name              = rcd.date;
+  prepDate          = rcd.timeIn;
+  prepTime          = rcd.dateOut;
+  leaderName        = rcd.timeOut;
+  leaderPosition    = rcd.desc;
+  operationalPeriod = rcd.data6;
+  preparedBy        = rcd.data7;
+  missionNo         = rcd.data8;
 
-    fld->name.trim();
-
-    switch (i) {
-      case 0: name              = fld->name; break;
-      case 1: prepDate          = fld->name; break;
-      case 2: prepTime          = fld->name; break;
-      case 3: leaderName        = fld->name; break;
-      case 4: leaderPosition    = fld->name; break;
-      case 5: operationalPeriod = fld->name; break;
-      case 6: preparedBy        = fld->name; break;
-      case 7: missionNo         = fld->name; break;
-      }
-    }
   return true;
   }
 
 
-void Activity::loadLog(CSVrecord& rcd) {
-int i;
-
-  log.clr();
-
-  for (i = 0; rcd.load(); i++) log[log.end()].load(rcd);
-
-  }
-
-
-
 void LogData::load(CSVrecord& rcd) {
-CSVIter   iter(rcd);
-CSVfield* fld;
-int       i;
-
-  for (fld = iter(), i = 0; fld; fld = iter++, i++) {
-
-    fld->name.trim();
-
-    switch (i) {
-      case 0: date    = fld->name; break;
-      case 1: timeIn  = fld->name; break;
-      case 2: dateOut = fld->name; if (dateOut == date) dateOut.clear();   break;
-      case 3: timeOut = fld->name; break;
-      case 4: desc    = fld->name; break;
-      }
-    }
+  date    = rcd.date;
+  timeIn  = rcd.timeIn;
+  dateOut = rcd.dateOut;
+  timeOut = rcd.timeOut;
+  desc    = rcd.desc;
 
   setDeltaT();  archived = true;
   }
@@ -135,7 +110,7 @@ Ver: NC,,,Time Prepared,0:00
 */
 
 void Activity::storeExcel(Archive&  ar) {
-CSVout co(ar);
+CSVOut co(ar);
 
   if (options.excelOne) {
     co << _T("ICS 214a") << _T(',') << _T("Unit Log") << _T(',') << _T(',') << _T("Date Prepared");
@@ -207,7 +182,7 @@ ICS 214a,,,Mission Number,102
 
 
 void Activity::storeHeader(Archive& ar) {
-CSVout co(ar);
+CSVOut co(ar);
 
   co << name              << _T(',');
   co << prepDate          << _T(',');
@@ -327,7 +302,7 @@ void LogData::get(String& dt, String& tmIn, String& dtOut, String& tmOut, String
 
 
 void LogData::store(Archive& ar) {
-CSVout co(ar);
+CSVOut co(ar);
 
   co << date    << _T(',');
   co << timeIn  << _T(',');
@@ -350,19 +325,4 @@ CTimeSpan operator+= (CTimeSpan t, LogData& ld) {return t += ld.deltaT;}
 
 
 
-#if 0
-int LogData::displayDesc() {
-int     i;
-String* s;
-
-  for (i = 0, s = wrp.startLoop(); s; i++, s = wrp.nextLine()) {
-
-    if (i) notePad << nCrlf << nTab << nTab << nTab;
-
-    notePad << *s;
-    }
-
-  return i;
-  }
-#endif
 

@@ -3,66 +3,60 @@
 
 #include "stdafx.h"
 #include "CSVrecord.h"
-#include "Csv.h"
 
 
-bool CSVrecord::load() {
-String nullStg = _T("");
-Token* tok;
-Token* tok1;
-
-  startStore();
-
-  while (csv.get_token() != EOFToken) {
-    tok = csv.token;   tok1 = csv.token1;
-
-    if (tok->code  == EolToken)   {                       csv.accept_token();      return true;}
-
-    if (tok->code  == CommaToken) {saveStore();           csv.accept_token();      continue;}
-
-    if (tok1->code == CommaToken) {saveStore(tok->name);  csv.accept_two_tokens(); continue;}
-
-    if (tok1->code == EolToken)   {saveStore(tok->name);  csv.accept_token();      continue;}
-
-    if (tok1->code == EOFToken)   {saveStore(tok->name);  csv.accept_token();      continue;}
-    }
-
-  return false;
+void CSVrecord::clear() {
+  date.clear();
+  timeIn.clear();
+  dateOut.clear();
+  timeOut.clear();
+  desc.clear();
+  data6.clear();
+  data7.clear();
+  data8.clear();
+  CSVRcdB::clear();
   }
 
 
 
-
-
-static TCchar quote = _T('"');
-
-
-String& CSVout::quotes(TCchar* p) {
-static String s;
-bool          addQuotes = false;
-
-  s = p;
-
-  if (s.find(quote) >= 0) {
-    String t;
-    int    n = s.length();
-    int    i;
-
-    for (i = 0; i < n; i++) {Tchar ch = s[i];   if (ch == quote) t += quote;   t += ch;}
-
-    s = t; addQuotes = true;
+void CSVrecord::put(TCchar* s) {
+  switch ((putI)) {
+    case 0: date    = s; break;
+    case 1: timeIn  = s; break;
+    case 2: dateOut = s; break;
+    case 3: timeOut = s; break;
+    case 4: desc    = s; break;
+    case 5: data6   = s; break;
+    case 6: data7   = s; break;
+    case 7: data8   = s; break;
     }
-
-  if (s.find(_T(',')) >= 0) addQuotes = true;
-
-  if (addQuotes) s = quote + s + quote;
-
-  return s;
   }
 
 
+String* CSVrecord::CSVrecord::get() {
+  switch (getI) {
+    case 0: return &date;
+    case 1: return &timeIn;
+    case 2: return &dateOut;
+    case 3: return &timeOut;
+    case 4: return &desc;
+    case 5: return &data6;
+    case 6: return &data7;
+    case 7: return &data8;
+    }
+  return 0;
+  }
 
-CSVManip vCrlf;                  // add to stream to terminate a line on display: dsp << "xyz" << vCrlf;
 
-void CSVout::initialize() {vCrlf.n = this; vCrlf.func = CSVout::doCrlf;}
+void CSVrecord::copy(CSVrecord& r) {
+  date    = r.date;
+  timeIn  = r.timeIn;
+  dateOut = r.dateOut;
+  timeOut = r.timeOut;
+  desc    = r.desc;
+  data6   = r.data6;
+  data7   = r.data7;
+  data8   = r.data8;
+  CSVRcdB::copy(r);
+  }
 
