@@ -19,6 +19,7 @@ BEGIN_MESSAGE_MAP(StopEntryDlg, CDialogEx)
   ON_EN_CHANGE(   IDC_StopTime, &StopEntryDlg::OnChangeStoptime)
   ON_EN_KILLFOCUS(IDC_StopDate, &StopEntryDlg::OnLeaveStopdate)
   ON_EN_KILLFOCUS(IDC_StopTime, &StopEntryDlg::OnLeaveStoptime)
+  ON_CBN_SELCHANGE(IDC_EntryDesc, &StopEntryDlg::onChangeEntrydesc)
 END_MESSAGE_MAP()
 
 
@@ -33,24 +34,25 @@ ActyIter iter(activity);
 LogData* ld;
 int      i;
 String   s;
-String   date;
-String   timeIn;
-String   dateOut;
-String   timeOut;
-String   desc;
 
   CDialogEx::OnInitDialog();
 
   for (ld = iter(), i = 0; ld; ld = iter++, i++) {
-    ld->get(date, timeIn, dateOut, timeOut, desc);
-    if (timeOut.isEmpty()) {
-      s = addTab(date, 10);  s += addTab(timeIn, 8);    s += desc;
+    if (ld->startTime == ld->endTime) {
+      s  = addTab(ld->startTime.getDate(), 10);
+      s += addTab(ld->startTime.getHHMM(), 8);
+      s += ld->desc;
 
       entryDescCtrl.AddString(s);   indexes += i;
       }
     }
 
-  if (indexes.end()) entryDescCtrl.SetCurSel(0);   return TRUE;
+  if (indexes.end()) {
+    entryDescCtrl.SetCurSel(0);
+    Date d;  d.getToday();  stopDate = d.getDate();  stopTime = d.getHHMM();
+    }
+
+  return TRUE;
   }
 
 
@@ -62,6 +64,17 @@ void StopEntryDlg::DoDataExchange(CDataExchange* pDX) {
   DDX_Text(    pDX, IDC_StopDate,  stopDate);
   DDX_Control( pDX, IDC_StopTime,  stopTimeCtrl);
   DDX_Text(    pDX, IDC_StopTime,  stopTime);
+  }
+
+
+void StopEntryDlg::onChangeEntrydesc() {
+Date   d;  d.getToday();
+String s;
+
+  stopDateCtrl.GetWindowText(stopDate);   s = stopDate;
+  if (s.isEmpty()) {stopDate = d.getDate();    stopDateCtrl.SetWindowText(stopDate);}
+  stopTimeCtrl.GetWindowText(stopTime);   s = stopTime;
+  if (s.isEmpty()) {stopTime = d.getHHMM();    stopTimeCtrl.SetWindowText(stopTime);}
   }
 
 

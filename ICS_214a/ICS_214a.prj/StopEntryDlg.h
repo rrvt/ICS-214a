@@ -48,4 +48,5 @@ public:
   afx_msg void OnChangeStoptime();
   afx_msg void OnLeaveStopdate();
   afx_msg void OnLeaveStoptime();
+  afx_msg void onChangeEntrydesc();
 };

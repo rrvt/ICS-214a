@@ -63,7 +63,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)..\..\Library\LibFiles\;$(SolutionDir)..\..\Library\AboutFiles\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)..\..\Library\Library.prj\;$(SolutionDir)..\..\Library\Extras\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -77,7 +77,7 @@
     <ResourceCompile>
       <Culture>0x0409</Culture>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(IntDir);$(SolutionDir)..\..\Library\AboutFiles\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(IntDir);$(SolutionDir)..\..\Library\Extras\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -90,7 +90,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)..\..\Library\LibFiles\;$(SolutionDir)..\..\Library\AboutFiles\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)..\..\Library\Library.prj\;$(SolutionDir)..\..\Library\Extras\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -106,33 +106,36 @@
     <ResourceCompile>
       <Culture>0x0409</Culture>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(IntDir);$(SolutionDir)..\..\Library\AboutFiles\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(IntDir);$(SolutionDir)..\..\Library\Extras\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\Sources\Library\AboutFiles\About.h" />
+    <ClInclude Include="..\..\Library\Extras\About.h" />
     <ClInclude Include="Activity.h" />
     <ClInclude Include="ActvtyNameDlg.h" />
+    <ClInclude Include="ActvtyRpt.h" />
+    <ClInclude Include="..\..\Library\Extras\CalibDspPrtDlg.h" />
     <ClInclude Include="CSVrecord.h" />
     <ClInclude Include="EditEntryDlg.h" />
     <ClInclude Include="EventLogDlg.h" />
+    <ClInclude Include="..\..\Library\Extras\ExtraResource.h" />
     <ClInclude Include="ICS_214a.h" />
     <ClInclude Include="ICS_214aDoc.h" />
     <ClInclude Include="ICS_214aView.h" />
     <ClInclude Include="MainFrame.h" />
     <ClInclude Include="Options.h" />
     <ClInclude Include="OptionsDlg.h" />
-    <ClInclude Include="Report.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StopEntryDlg.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="Utilities.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\Sources\Library\AboutFiles\About.cpp" />
+    <ClCompile Include="..\..\Library\Extras\About.cpp" />
     <ClCompile Include="Activity.cpp" />
     <ClCompile Include="ActvtyNameDlg.cpp" />
+    <ClCompile Include="ActvtyRpt.cpp" />
+    <ClCompile Include="..\..\Library\Extras\CalibDspPrtDlg.cpp" />
     <ClCompile Include="CSVrecord.cpp" />
     <ClCompile Include="EditEntryDlg.cpp" />
     <ClCompile Include="EventLogDlg.cpp" />
@@ -142,26 +145,25 @@
     <ClCompile Include="MainFrame.cpp" />
     <ClCompile Include="Options.cpp" />
     <ClCompile Include="OptionsDlg.cpp" />
-    <ClCompile Include="Report.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="StopEntryDlg.cpp" />
-    <ClCompile Include="Utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ICS_214a.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\Sources\Library\AboutFiles\About.rc2" />
+    <None Include="..\..\Library\Extras\About.rc2" />
+    <None Include="..\..\Library\Extras\CalibDspPrtDlg.rc2" />
     <None Include="res\ICS_214a.rc2" />
     <None Include="..\README.md" />
-    <None Include="res\Toolbar17.bmp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\ICS_214a.ico" />
+    <Image Include="res\Toolbar19.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Library\LibUni7\LibUni7.vcxproj">
-      <Project>{0A7660E3-D384-44B1-959D-04FFF454F8CF}</Project>
+    <ProjectReference Include="..\..\Library\Library.prj\Library.vcxproj">
+      <Project>{cf57f3ec-d3db-4469-8519-3f9d73785d9b}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

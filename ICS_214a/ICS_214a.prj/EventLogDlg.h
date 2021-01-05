@@ -32,4 +32,4 @@ public:
   afx_msg void OnChangeLogdate();
   afx_msg void OnChangeStarttime();
   afx_msg void OnChangeEndtime();
-};
+  };

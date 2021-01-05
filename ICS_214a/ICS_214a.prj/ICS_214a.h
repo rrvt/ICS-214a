@@ -15,7 +15,7 @@ class ICS_214a : public CApp {
 
 public:
 
-               ICS_214a() noexcept { }
+               ICS_214a() noexcept : CApp(this) { }
 
   virtual BOOL InitInstance();
 

@@ -4,7 +4,10 @@
 #include "stdafx.h"
 #include "Activity.h"
 #include "CSVOut.h"
+#include "EditEntryDlg.h"
+#include "EventLogDlg.h"
 #include "Options.h"
+#include "StopEntryDlg.h"
 #include "Utilities.h"
 
 
@@ -65,29 +68,71 @@ CSVrecord rcd;
 
 
 void LogData::load(CSVrecord& rcd) {
-  date    = rcd.date;
-  timeIn  = rcd.timeIn;
-  dateOut = rcd.dateOut;
-  timeOut = rcd.timeOut;
-  desc    = rcd.desc;
+String s;
+
+  s = rcd.date    + _T(' ') + rcd.timeIn;    startTime = s;
+  s = rcd.dateOut + _T(' ') + rcd.timeOut;   endTime   = s;
+  desc = rcd.desc;
 
   setDeltaT();  archived = true;
   }
 
+bool Activity::logEntry() {
+EventLogDlg dlg;
 
-void Activity::store(Archive& ar) {
-  switch (storeType) {
-    case StoreIncr  : storeIncr(ar);  break;
-    case StoreAll   : storeAll(ar);   break;
-    case StoreExcel : storeExcel(ar); break;
-    }
+  dlg.logDate   = getDateNow();
+  dlg.startTime = getTimeNow();
+
+  if (dlg.DoModal() != IDOK) return false;
+
+  add(dlg.logDate, dlg.startTime, dlg.endTime, dlg.logActivity); return true;  //setStoreIncr();
   }
 
 
-void Activity::storeIncr(Archive&  ar) {storeIncrLogData(ar);}
+bool Activity::stopEntry() {
+StopEntryDlg dlg;
+
+  dlg.stopDate = getDateNow();
+  dlg.stopTime = getTimeNow();
+
+  if (dlg.DoModal() != IDOK) return false;
+
+     return true;
+  }                                              //setStoreAll();  activity.setStoreAll();
 
 
-void Activity::storeAll(Archive&  ar) {storeHeader(ar);   storeLogData(ar);}
+bool Activity::editLogEntry() {
+EditEntryDlg dlg;
+
+  if (dlg.DoModal() != IDOK) return false;
+
+   return true;
+  }
+
+
+
+void Activity::storeIncr(Archive&  ar) {
+int n = log.end();
+int i;
+
+  for (i = 0; i < n; i++) {LogData& data = log[i];   if (!data.archived) {data.store(ar);}}
+  }
+
+
+void Activity::storeAll(Archive&  ar) {
+CSVOut co(ar);
+
+  co << name              << _T(',');
+  co << prepDate          << _T(',');
+  co << prepTime          << _T(',');
+  co << leaderName        << _T(',');
+  co << leaderPosition    << _T(',');
+  co << operationalPeriod << _T(',');
+  co << preparedBy        << _T(',');
+  co << missionNo         << vCrlf;
+
+  storeLogData(ar);
+  }
 
 
 /*
@@ -181,33 +226,11 @@ ICS 214a,,,Mission Number,102
   }
 
 
-void Activity::storeHeader(Archive& ar) {
-CSVOut co(ar);
-
-  co << name              << _T(',');
-  co << prepDate          << _T(',');
-  co << prepTime          << _T(',');
-  co << leaderName        << _T(',');
-  co << leaderPosition    << _T(',');
-  co << operationalPeriod << _T(',');
-  co << preparedBy        << _T(',');
-  co << missionNo         << vCrlf;
-  }
-
-
 void Activity::storeLogData(Archive& ar) {
 int n = log.end();
 int i;
 
   for (i = 0; i < n; i++) {log[i].store(ar);}
-  }
-
-
-void Activity::storeIncrLogData(Archive& ar) {
-int n = log.end();
-int i;
-
-  for (i = 0; i < n; i++) {LogData& data = log[i];   if (!data.archived) {data.store(ar);}}
   }
 
 
@@ -222,94 +245,106 @@ CTimeSpan total = 0;
   }
 
 
-int LogData::wrap(Display& dev, CDC* dc) {
+int LogData::wrap(Device& dev, CDC* dc) {
 bool dateOutIsPresent;
 int  tab     = dateOutTab(dateOutIsPresent);
 int  chWidth = dev.chWidth();
 
   dev << dCR << dClrTabs << dSetTab(tab) << dTab;
 
-  wrp.initialize(dc, dev.remaining(), false);     dev<< dCR << dClrTabs;     // - 3 * chWidth
+  wrp.initialize(dc, dev.remaining(), dev.maxWidth(), false);     dev<< dCR << dClrTabs;   // - 3 * chWidth
 
   return wrp(desc);
   }
 
 
-CTimeSpan LogData::display(int& noLines) {
-bool dateOutIsPresent;
-int  tab = dateOutTab(dateOutIsPresent);
 
-  notePad << nClrTabs << nSetTab(7) << nSetRTab(tab-1) << nSetTab(tab);
+CTimeSpan LogData::display(int& noLines, NotePad& np) {
+bool   dateOutIsPresent;
+int    tab = dateOutTab(dateOutIsPresent);
+String s;
 
-  notePad << date << nTab << timeIn << nTab;
+  np << nClrTabs << nSetTab(7) << nSetRTab(tab-1) << nSetTab(tab);
 
-  if (dateOutIsPresent) notePad << dateOut << _T(" ");
+  np << startTime.getDate() << nTab << startTime.getHHMM() << nTab;
 
-  notePad << timeOut << nTab << wrp << nCrlf;
+  if (endTime > startTime) {
+    if (dateOutIsPresent) np << endTime.getDate() << _T(" ");
 
-  noLines += wrp.noLines();                               //displayDesc();
+    np << endTime.getHHMM() << nTab;
+    }
+  else np << _T(" ") << nTab;
+
+  np << wrp << nCrlf;   noLines += wrp.noLines();
 
   return deltaT;
   }
 
 
-int LogData::dateOutTab(bool& dateOutIsPresent)
-                            {dateOutIsPresent = !dateOut.isEmpty();   return dateOutIsPresent ? 24 : 18;}
+int LogData::dateOutTab(bool& dateOutIsPresent) {
+String dtin  = startTime.getDate();
+String dtout = endTime.getDate();
+
+  dateOutIsPresent = dtout != dtin;   return dateOutIsPresent ? 24 : 18;
+  }
 
 
 void LogData::set(TCchar* dt, TCchar* tmIn, TCchar* dtOut, TCchar* tmOut, TCchar* dsc) {
 
-  date    = normalizeDate(dt);
-  timeIn  = normalizeTime(tmIn);
-  setStop(dtOut, tmOut);
-  desc    = dsc;   desc.trim();
-
-  setDeltaT();
-  }
-
-
-void LogData::setDeltaT() {
-String dateO;
+String date    = normalizeDate(dt);
+String timeIn  = normalizeTime(tmIn);
+Date   d;        d.getToday();
 String s;
-Date   dIn;
-Date   dOut;
 
-  dateO = dateOut.isEmpty() ? date : dateOut;
+  if (date.isEmpty())   date   = d.getDate();
+  if (timeIn.isEmpty()) timeIn = d.getHHMM();
+  s = date + _T(' ') + timeIn;   startTime = s;
 
-  if (date.isEmpty() || timeIn.isEmpty() || dateO.isEmpty() || timeOut.isEmpty()) {deltaT = 0; return;}
-
-  s = date  + _T(' ') + timeIn;  dIn  = s;
-  s = dateO + _T(' ') + timeOut; dOut = s;
-
-  deltaT = dOut - dIn;
+  setStop(dtOut, tmOut);   desc = dsc;   desc.trim();
   }
 
 
 
 void LogData::setStop(TCchar* dtOut, TCchar* tmOut) {
-  dateOut = normalizeDate(dtOut);
-  timeOut = normalizeTime(tmOut);
+String dateOut = normalizeDate(dtOut);
+String timeOut = normalizeTime(tmOut);
+bool   noDate  = dateOut.isEmpty();
+bool   noTime  = timeOut.isEmpty();
+String s;
 
-  if (dateOut == date) dateOut.clear();
+  if (noDate && noTime) endTime = startTime;
+
+  else {
+    if (dateOut.isEmpty()) dateOut == startTime.getDate();
+    if (timeOut.isEmpty()) timeOut == startTime.getHHMM();
+    s = dateOut + _T(' ') + timeOut;   endTime = s;
+    }
 
   setDeltaT();
   }
 
 
-void LogData::get(String& dt, String& tmIn, String& dtOut, String& tmOut, String& dsc)
-                              {dt = date; tmIn = timeIn; dtOut = dateOut;  tmOut = timeOut; dsc = desc;}
+void LogData::setDeltaT() {deltaT = endTime > startTime ? endTime - startTime : 0;}
+
 
 
 
 void LogData::store(Archive& ar) {
 CSVOut co(ar);
 
-  co << date    << _T(',');
-  co << timeIn  << _T(',');
-  if (dateOut.isEmpty()) co << date; else co << dateOut;   co << _T(',');
-  co << timeOut << _T(',');
+  co << startTime.getDate() << _T(',');
+  co << startTime.getHHMM() << _T(',');
+  co << endTime.getDate()   << _T(',');
+  co << endTime.getHHMM()   << _T(',');
   co << desc    << vCrlf;
   archived = true;
+  }
+
+
+
+void LogData::copy(LogData& ld) {
+  startTime = ld.startTime;  endTime = ld.endTime;
+  desc = ld.desc;  deltaT = ld.deltaT;  wrp = ld.wrp;   archived = ld.archived;
   }
 
 
@@ -325,4 +360,43 @@ CTimeSpan operator+= (CTimeSpan t, LogData& ld) {return t += ld.deltaT;}
 
 
 
+#if 0
+void Activity::store(Archive& ar) {
+  switch (storeType) {
+    case StoreIncr  : storeIncr(ar);  break;
+    case StoreAll   : storeAll(ar);   break;
+    case StoreExcel : storeExcel(ar); break;
+    }
+  }
+#endif
+#if 0
+void Activity::storeIncrLogData(Archive& ar) {
+int n = log.end();
+int i;
+
+  for (i = 0; i < n; i++) {LogData& data = log[i];   if (!data.archived) {data.store(ar);}}
+  }
+#endif
+#if 0
+void Activity::storeHeader(Archive& ar) {
+CSVOut co(ar);
+
+  co << name              << _T(',');
+  co << prepDate          << _T(',');
+  co << prepTime          << _T(',');
+  co << leaderName        << _T(',');
+  co << leaderPosition    << _T(',');
+  co << operationalPeriod << _T(',');
+  co << preparedBy        << _T(',');
+  co << missionNo         << vCrlf;
+  }
+#endif
+#if 0
+void LogData::get(String& dt, String& tmIn, String& dtOut, String& tmOut, String& dsc) {
+
+  dt = startTime.getDate(); tmIn = startTime.getHHMM();
+
+  dtOut = endTime.getDate();  tmOut = endTime.getHHMM(); dsc = desc;
+  }
+#endif
 

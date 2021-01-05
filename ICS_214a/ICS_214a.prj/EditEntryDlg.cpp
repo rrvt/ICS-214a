@@ -26,19 +26,12 @@ ActyIter iter(activity);
 LogData* ld;
 int      n;
 String   s;
-String   date;
-String   timeIn;
-String   dateOut;
-String   timeOut;
-String   desc;
 
   CDialogEx::OnInitDialog();
 
   for (ld = iter(), n = 0; ld; ld = iter++, n++) {
 
-    ld->get(date, timeIn, dateOut, timeOut, desc);
-
-    s = addTab(date, 10);  s += addTab(timeIn, 8);    s += desc;
+    s = addTab(ld->startTime.getDate(), 10);   s += addTab(ld->startTime.getHHMM(), 8);    s += ld->desc;
 
     entryDescCtrl.AddString(s);
     }
@@ -51,19 +44,12 @@ String   desc;
 void EditEntryDlg::onSelectEntry() {
 int      index = entryDescCtrl.GetCurSel();  if (index < 0) return;
 LogData* ld    = activity.entry(index);      if (!ld)       return;
-String   date;
-String   timeIn;
-String   dateOut;
-String   timeOut;
-String   dsc;
 
-  ld->get(date, timeIn, dateOut, timeOut, dsc);
-
-  logDate = date;    logDateCtrl.SetWindowText(logDate);
-  logTime = timeIn;  logTimeCtrl.SetWindowText(timeIn);
-  endDate = dateOut; endDateCtrl.SetWindowText(endDate);
-  endTime = timeOut; endTimeCtrl.SetWindowText(endTime);
-  desc    = dsc;     descCtrl.SetWindowText(dsc);
+  logDate = ld->startTime.getDate();  logDateCtrl.SetWindowText(logDate);
+  logTime = ld->startTime.getHHMM();  logTimeCtrl.SetWindowText(logTime);
+  endDate = ld->endTime.getDate();    endDateCtrl.SetWindowText(endDate);
+  endTime = ld->endTime.getHHMM();    endTimeCtrl.SetWindowText(endTime);
+  desc    = ld->desc;                 descCtrl.SetWindowText(desc);
   }
 
 

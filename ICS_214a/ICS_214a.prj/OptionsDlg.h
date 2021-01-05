@@ -5,6 +5,10 @@
 #include "Resource.h"
 
 
+extern TCchar* PortraitKey;
+extern TCchar* LandscapeKey;
+
+
 // OptionsDlg dialog
 
 class OptionsDlg : public CDialogEx {
@@ -12,7 +16,10 @@ class OptionsDlg : public CDialogEx {
   DECLARE_DYNAMIC(OptionsDlg)
 
 public:
-BOOL    excelOne;
+BOOL      excelOne;
+CComboBox orientCtrl;
+CString   orient;
+
 CString topMargin;
 CString leftMargin;
 CString rightMargin;
@@ -31,6 +38,8 @@ CEdit   botCtrl;
 #endif
 
 protected:
+
+  virtual BOOL OnInitDialog();
 
   virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 

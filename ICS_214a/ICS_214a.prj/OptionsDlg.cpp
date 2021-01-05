@@ -5,6 +5,12 @@
 #include "OptionsDlg.h"
 
 
+
+TCchar* PortraitKey  = _T("Portrait");
+TCchar* LandscapeKey = _T("Landscape");
+
+
+
 // OptionsDlg dialog
 
 IMPLEMENT_DYNAMIC(OptionsDlg, CDialogEx)
@@ -19,36 +25,42 @@ END_MESSAGE_MAP()
 
 
 OptionsDlg::OptionsDlg(CWnd* pParent) : CDialogEx(IDD_Options, pParent), excelOne(FALSE),
-                        topMargin(_T("")), leftMargin(_T("")), rightMargin(_T("")), botMargin(_T("")) { }
+     topMargin(_T("")), leftMargin(_T("")), rightMargin(_T("")), botMargin(_T("")), orient(_T("")) { }
 
 
 OptionsDlg::~OptionsDlg() { }
 
 
+BOOL OptionsDlg::OnInitDialog() {
+  CDialogEx::OnInitDialog();
+
+  orientCtrl.AddString(PortraitKey);
+  orientCtrl.AddString(LandscapeKey);
+
+  return TRUE;
+  }
+
+
 void OptionsDlg::DoDataExchange(CDataExchange* pDX) {
   CDialogEx::DoDataExchange(pDX);
-  DDX_Check(  pDX, IDC_ExcelOne,    excelOne);
-  DDX_Text(   pDX, IDC_TopMargin,   topMargin);
-  DDX_Text(   pDX, IDC_LeftMargin,  leftMargin);
-  DDX_Text(   pDX, IDC_RightMargin, rightMargin);
-  DDX_Text(   pDX, IDC_BotMargin,   botMargin);
-  DDX_Control(pDX, IDC_TopMargin,   topCtrl);
-  DDX_Control(pDX, IDC_LeftMargin,  leftCtrl);
-  DDX_Control(pDX, IDC_RightMargin, rightCtrl);
-  DDX_Control(pDX, IDC_BotMargin,   botCtrl);
-}
+  DDX_Check(   pDX, IDC_ExcelOne,    excelOne);
+  DDX_Control( pDX, IDC_Orientation, orientCtrl);
+  DDX_CBString(pDX, IDC_Orientation, orient);
+  DDX_Text(    pDX, IDC_TopMargin,   topMargin);
+  DDX_Text(    pDX, IDC_LeftMargin,  leftMargin);
+  DDX_Text(    pDX, IDC_RightMargin, rightMargin);
+  DDX_Text(    pDX, IDC_BotMargin,   botMargin);
+  DDX_Control( pDX, IDC_TopMargin,   topCtrl);
+  DDX_Control( pDX, IDC_LeftMargin,  leftCtrl);
+  DDX_Control( pDX, IDC_RightMargin, rightCtrl);
+  DDX_Control( pDX, IDC_BotMargin,   botCtrl);
+  }
 
 
-void OptionsDlg::OnChangeTop() {floatingOnly(topCtrl);}
-
-
-void OptionsDlg::OnChangeLeft() {floatingOnly(leftCtrl);}
-
-
-void OptionsDlg::OnChangeRight() {floatingOnly(rightCtrl);}
-
-
-void OptionsDlg::OnChangeBot() {floatingOnly(botCtrl);}
+void OptionsDlg::OnChangeTop()      {floatingOnly(topCtrl);}
+void OptionsDlg::OnChangeLeft()     {floatingOnly(leftCtrl);}
+void OptionsDlg::OnChangeRight()    {floatingOnly(rightCtrl);}
+void OptionsDlg::OnChangeBot()      {floatingOnly(botCtrl);}
 
 
 void OptionsDlg::floatingOnly(CEdit& ctrl) {
@@ -69,7 +81,4 @@ bool    periodSeen = false;
 
     Beep(1500, 120);   ctrl.SetSel(i, i+1);   ctrl.ReplaceSel(_T(""));
     }
-
-
   }
-

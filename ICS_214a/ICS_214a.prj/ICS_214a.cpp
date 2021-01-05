@@ -65,7 +65,7 @@ BOOL ICS_214a::InitInstance() {
 
   setAppName(_T("eICS-214a")); setTitle(_T("Event Log"));
 
-  view()->setFont(_T("Arial"), 120);
+  view()->setFont(_T("Arial"), 12.0);
 
   options.load();
 

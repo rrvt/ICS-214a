@@ -5,20 +5,18 @@
 #include "Archive.h"
 #include "CSVrecord.h"
 #include "Date.h"
-#include "Display.h"
+#include "Device.h"
 #include "Expandable.h"
 #include "IterT.h"
 #include "Wrap.h"
 
 
 class LogData {
-String date;
-String timeIn;
-String dateOut;
-String timeOut;
-String desc;
-
 public:
+
+Date      startTime;
+Date      endTime;
+String    desc;
 
 CTimeSpan deltaT;
 Wrap      wrp;
@@ -32,25 +30,21 @@ bool      archived;
 
   void      set(TCchar* dt, TCchar* tmIn, TCchar* dtOut, TCchar* tmOut, TCchar* dsc);
   void      setStop(TCchar* dtOut, TCchar* tmOut);
-  void      get(String& dt, String& tmIn, String& dtOut, String& tmOut, String& dsc);
   void      setDeltaT();
 
   void      store(Archive& ar);
   void      load(CSVrecord& rcd);
 
-  int       wrap(Display& dev, CDC* dc);
+  int       wrap(Device& dev, CDC* dc);
   int       noLines() {return wrp.noLines();}
-  CTimeSpan display(int& noLines);
+  CTimeSpan display(int& noLines, NotePad& np);
 
 private:
 
-//  int  displayDesc();
   int  dateOutTab(bool& dateOutIsPresent);
 
-  void copy(LogData& ld) {
-    date = ld.date; timeIn = ld.timeIn; dateOut = ld.dateOut; timeOut = ld.timeOut;
-    desc = ld.desc;  deltaT = ld.deltaT;  wrp = ld.wrp;   archived = ld.archived;
-    }
+  void copy(LogData& ld);
+
   friend CTimeSpan operator+  (CTimeSpan t, LogData& ld);
   friend CTimeSpan operator+= (CTimeSpan t, LogData& ld);
   };
@@ -91,23 +85,24 @@ String missionNo;
   void     clear();
 
   void     load(Archive& ar);
-  void     setStoreAll()   {storeType = StoreAll;}
-  void     setStoreIncr()  {storeType = StoreIncr;}
-  void     setStoreExcel() {storeType = StoreExcel;}
-  void     store(Archive& ar);
+
+  void     storeAll(  Archive&  ar);
+  void     storeIncr( Archive&  ar);
+  void     storeExcel(Archive&  ar);
+
+  bool     logEntry();
+  bool     stopEntry();
+  bool     editLogEntry();
 
   void     add(TCchar* date, TCchar* timeIn, TCchar* timeOut, TCchar* desc);
   LogData* entry(int i) {return i < log.end() ? &log[i] : 0;}
 
 private:
 
-  void      storeIncr( Archive&  ar);
-  void      storeAll(  Archive&  ar);
-  void      storeExcel(Archive&  ar);
   bool      loadHeader(CSVLex& lex);
-  void      storeHeader(Archive& ar);
+//  void      storeHeader(Archive& ar);
   void      storeLogData(Archive& ar);
-  void      storeIncrLogData(Archive& ar);
+//  void      storeIncrLogData(Archive& ar);
   CTimeSpan getTotalTime();
 
 private:
@@ -126,4 +121,13 @@ private:
 
 extern Activity activity;
 
+
+
+
+#if 0
+  void     setStoreAll()   {storeType = StoreAll;}
+  void     setStoreIncr()  {storeType = StoreIncr;}
+  void     setStoreExcel() {storeType = StoreExcel;}
+//  void     store(Archive& ar);
+#endif
 

@@ -3,21 +3,18 @@
 
 #include "stdafx.h"
 #include "ICS_214aDoc.h"
-#include "ICS_214a.h"
 #include "Activity.h"
 #include "ActvtyNameDlg.h"
+#include "CalibDspPrt.h"
 #include "CopyFile.h"
-#include "EditEntryDlg.h"
-#include "EventLogDlg.h"
 #include "filename.h"
 #include "GetPathDlg.h"
+#include "ICS_214a.h"
 #include "IniFile.h"
 #include "MessageBox.h"
 #include "NotePad.h"
 #include "Options.h"
-#include "OptionsDlg.h"
 #include "Resource.h"
-#include "StopEntryDlg.h"
 #include "Utilities.h"
 
 
@@ -30,15 +27,16 @@ static TCchar* LogPath     = _T("LogPath");
 IMPLEMENT_DYNCREATE(ICS_214aDoc, CDocument)
 
 BEGIN_MESSAGE_MAP(ICS_214aDoc, CDocument)
-  ON_COMMAND(ID_NewLog,        &ICS_214aDoc::OnNewLog)
-  ON_COMMAND(ID_FILE_OPEN,     &ICS_214aDoc::OnFileOpen)
-  ON_COMMAND(ID_FILE_SAVE,     &ICS_214aDoc::onSave214)
-  ON_COMMAND(ID_MakeExcelFile, &ICS_214aDoc::onSaveExcel)
-  ON_COMMAND(ID_EditHeader,    &ICS_214aDoc::OnEditHeader)
-  ON_COMMAND(ID_LogEntry,      &ICS_214aDoc::OnLogEntry)
-  ON_COMMAND(ID_StopEntry,     &ICS_214aDoc::OnStopEntry)
-  ON_COMMAND(ID_EditLogEntry,  &ICS_214aDoc::OnEditLogEntry)
-  ON_COMMAND(ID_Options,       &ICS_214aDoc::OnOptions)
+  ON_COMMAND(ID_EditHeader,    &OnEditHeader)
+  ON_COMMAND(ID_LogEntry,      &OnLogEntry)
+  ON_COMMAND(ID_StopEntry,     &OnStopEntry)
+  ON_COMMAND(ID_EditLogEntry,  &OnEditLogEntry)
+  ON_COMMAND(ID_NewLog,        &OnNewLog)
+  ON_COMMAND(ID_FILE_OPEN,     &OnFileOpen)
+  ON_COMMAND(ID_MakeExcelFile, &onSaveExcel)
+  ON_COMMAND(ID_FILE_SAVE,     &onSave214)
+  ON_COMMAND(ID_Options,       &OnOptions)
+  ON_COMMAND(ID_CalibDspPrt,   &OnCalibDspPrt)
 END_MESSAGE_MAP()
 
 
@@ -50,75 +48,8 @@ ICS_214aDoc::ICS_214aDoc() noexcept {
   }
 
 
-void ICS_214aDoc::OnOptions() {
-OptionsDlg dlg;
-
-  dlg.excelOne    = options.excelOne;
-  dlg.topMargin   = options.topMargin;
-  dlg.leftMargin  = options.leftMargin;
-  dlg.rightMargin = options.rightMargin;
-  dlg.botMargin   = options.botMargin;
-
-  dlg.excelOne = options.excelOne;
-
-  if (dlg.DoModal() == IDOK) {
-    options.excelOne     = dlg.excelOne;
-    options.topMargin    = dlg.topMargin;
-    options.leftMargin   = dlg.leftMargin;
-    options.rightMargin  = dlg.rightMargin;
-    options.botMargin    = dlg.botMargin;
-    options.store();
-    }
-  }
-
-
-void ICS_214aDoc::OnNewLog() {
-String path;
-String title = _T("Specify New Log Name");
-
-  activity.clear();   notePad.clear();   defFileName.clear();   OnNewDocument();
-
-
-  if (!getSaveAsPathDlg(title, defFileName, defExt, defFilePat, path)) return;
-
-  defFileName = getMainName(path);
-
-  activity.setStoreAll();   onSaveDocument(path, true);
-
-  iniFile.writeString(FileSection, LogPath, path);
-
-  OnEditHeader();
-  }
-
-
-
-void ICS_214aDoc::OnFileOpen() {
-String path;
-String title = _T("Specify Existing Log File");
-
-  activity.clear();   notePad.clear();
-
-  iniFile.readString(FileSection, LogPath, defFileName);
-
-  if (!getPathDlg(title, defFileName, defExt, defFilePat, path)) return;
-
-  defFileName = getMainName(path);
-
-  iniFile.writeString(FileSection, LogPath, path);
-
-  notePad.clear();
-
-  if (OnOpenDocument(path)) {backupCopy(path, 10);   invalidate();}
-  }
-
-
-String& ICS_214aDoc::getDefFileName()
-                          {iniFile.readString(FileSection, LogPath, defFileName);  return defFileName;}
-
-
 void ICS_214aDoc::OnEditHeader() {
 ActvtyNameDlg dlg;
-
 
   if (activity.prepDate.isEmpty()) {activity.prepDate = getDateNow();}
   if (activity.prepTime.isEmpty()) {activity.prepTime = getTimeNow();}
@@ -149,59 +80,70 @@ ActvtyNameDlg dlg;
   }
 
 
-void ICS_214aDoc::OnLogEntry() {
-EventLogDlg dlg;
+void ICS_214aDoc::OnLogEntry()
+  {if (activity.logEntry())     {dataSource = IncrActvtySrc; reOpenDocument();   invalidate();}}
 
-  dlg.logDate   = getDateNow();
-  dlg.startTime = getTimeNow();
+void ICS_214aDoc::OnStopEntry()
+  {if (activity.stopEntry())    {dataSource = ActivitySrc;   DoFileSave();        invalidate();}}
 
-  if (dlg.DoModal() == IDOK) {
-    activity.add(dlg.logDate, dlg.startTime, dlg.endTime, dlg.logActivity);
+void ICS_214aDoc::OnEditLogEntry()
+  {if (activity.editLogEntry()) {dataSource = ActivitySrc;   DoFileSave();        invalidate();}}
 
-    activity.setStoreIncr();   reOpenDocument();
 
-    invalidate();
-    }
+void ICS_214aDoc::OnNewLog() {
+String path;
+String title = _T("Specify New Log Name");
+
+  activity.clear();   notePad.clear();   defFileName.clear();   OnNewDocument();
+
+  if (!getSaveAsPathDlg(title, defFileName, defExt, defFilePat, path)) return;
+
+  defFileName = getMainName(path);
+
+  dataSource = ActivitySrc;   onSaveDocument(path, true);
+
+  iniFile.writeString(FileSection, LogPath, path);
+
+  OnEditHeader();   display(ActivitySrc);
   }
 
 
-void ICS_214aDoc::OnStopEntry() {
-StopEntryDlg dlg;
 
-  dlg.stopDate = getDateNow();
-  dlg.stopTime = getTimeNow();
+void ICS_214aDoc::OnFileOpen() {
+String path;
+String title = _T("Specify Existing Log File");
 
-  if (dlg.DoModal() == IDOK) {
+  notePad.clear();   activity.clear();   dataSource = ActivitySrc;
 
-    activity.setStoreAll();   DoFileSave();
+  iniFile.readString(FileSection, LogPath, defFileName);
 
-    invalidate();
-    }
+  if (!getPathDlg(title, defFileName, defExt, defFilePat, path)) return;
+
+  defFileName = getMainName(path);
+
+  iniFile.writeString(FileSection, LogPath, path);
+
+  notePad.clear();
+
+  if (OnOpenDocument(path)) {backupCopy(path, 10);   display(ActivitySrc);}
   }
 
 
-void ICS_214aDoc::OnEditLogEntry() {
-EditEntryDlg dlg;
-
-  if (dlg.DoModal() == IDOK) {
-
-    activity.setStoreAll();   DoFileSave();
-
-    invalidate();
-    }
-  }
+String& ICS_214aDoc::getDefFileName()
+                          {iniFile.readString(FileSection, LogPath, defFileName);  return defFileName;}
 
 
 void ICS_214aDoc::onSave214() {
 String path;
 String title = _T("Save Log Data File");
 
+  dataSource = ActivitySrc;
+
   if (!getSaveAsPathDlg(title, defFileName, defExt, defFilePat, path)) return;
 
   iniFile.writeString(FileSection, LogPath, path);
 
-  activity.setStoreAll();   saveDoc(path);
-
+  saveDoc(path);
   }
 
 
@@ -211,7 +153,7 @@ String title = _T("Save Excel CSV File");
 
   if (!getSaveAsPathDlg(title, defFileName, _T("csv"), _T("*.csv"), path)) return;
 
-  activity.setStoreExcel();   saveDoc(path);
+  dataSource = ExcelSrc;   saveDoc(path);
   }
 
 
@@ -226,13 +168,41 @@ String s;
   }
 
 
+void ICS_214aDoc::OnOptions() {options();}
+
+
+void ICS_214aDoc::OnCalibDspPrt() {CalibDspPrt calib;  calib();  display(NoteSource);}
+
+
+void ICS_214aDoc::display(DataSource ds) {dataSource = ds; invalidate();}
+
+
 // ICS_214aDoc serialization
 
 void ICS_214aDoc::serialize(Archive& ar) {
 
+  switch(ar.isStoring()) {
+    case true:
+      switch(dataSource) {
+        case NoteSource   : notePad.archive(ar);     break;
+        case ActivitySrc  : activity.storeAll(ar);   break;
+        case IncrActvtySrc: activity.storeIncr(ar);  break;
+        case ExcelSrc     : activity.storeExcel(ar); break;
+        default         : return;
+        }
+      break;
+
+    case false:
+      switch(dataSource) {
+        case ActivitySrc: activity.load(ar); break;
+        }
+      break;
+    }
+#if 0
   if (ar.isStoring()) {activity.store(ar); return;}
 
   activity.load(ar);
+#endif
   }
 
 
@@ -249,4 +219,34 @@ void ICS_214aDoc::Dump(CDumpContext& dc) const
   CDocument::Dump(dc);
 }
 #endif //_DEBUG
+
+
+#if 0
+EditEntryDlg dlg;
+
+  if (dlg.DoModal() == IDOK) {
+
+    activity.setStoreAll();
+#endif
+#if 0
+EventLogDlg dlg;
+
+  dlg.logDate   = getDateNow();
+  dlg.startTime = getTimeNow();
+
+  if (dlg.DoModal() == IDOK) {
+    activity.add(dlg.logDate, dlg.startTime, dlg.endTime, dlg.logActivity);
+
+    activity.setStoreIncr();
+#endif
+#if 0
+StopEntryDlg dlg;
+
+  dlg.stopDate = getDateNow();
+  dlg.stopTime = getTimeNow();
+
+  if (dlg.DoModal() == IDOK) {
+
+    activity.setStoreAll();
+#endif
 

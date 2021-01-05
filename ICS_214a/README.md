@@ -79,6 +79,22 @@ Go to the web site and convince yourself that it is legitimate and download the 
 
 ## Updates
 
+### Update 1/4/21
+
+The structure of the library was modified over the last few months which changed the way
+output to the display and printer are performed.
+
+Library Changes:
+  * CApp includes a function to identify the application to Windows.
+  * CApp requires the application's "this" pointer at initialization.
+  * CApp includes inline functions for retrieving a pointer to the document object and view object
+  * The library now contains logic to manage the actual size of fonts on the display and printed page.
+  * Before the font point size was expressed as an integer 10 x font size (e.g. 120).  Now it is
+    expressed as as a decimal number of the actual point size (eg. 12.0).
+  * ManipT used during output was changed to remove a memory leak.
+  * The Options feature was moved to the Extras and Library.  The options include an option to adjust
+    the scale of the displayed and printed output.
+
 ### Update 9/10/20
 Library improvement project.  Changed the Expandable Array classes, added templates for a pointer only
 class in the ExpandableP class definition.  It turned out I was defining this RcdPtr class many times
