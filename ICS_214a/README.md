@@ -79,6 +79,10 @@ Go to the web site and convince yourself that it is legitimate and download the 
 
 ## Updates
 
+### Update 2/6/21
+
+Updated the icons on the Toolbar and the Library has been updated.
+
 ### Update 1/4/21
 
 The structure of the library was modified over the last few months which changed the way

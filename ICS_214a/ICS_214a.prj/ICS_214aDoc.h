@@ -5,7 +5,7 @@
 #include "CDoc.h"
 
 
-enum DataSource {NoteSource, ActivitySrc, IncrActvtySrc, ExcelSrc};
+enum DataSource {NotePadSrc, ActivitySrc, IncrActvtySrc, ExcelSrc};
 
 
 class ICS_214aDoc : public CDoc {

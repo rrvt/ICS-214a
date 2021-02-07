@@ -17,7 +17,7 @@ BEGIN_MESSAGE_MAP(ICS_214aView, CScrView)
 END_MESSAGE_MAP()
 
 
-ICS_214aView::ICS_214aView() noexcept : dspNote( nMgr.getNotePad()),  prtNote( pMgr.getNotePad()),
+ICS_214aView::ICS_214aView() noexcept : dspNote( dMgr.getNotePad()),  prtNote( pMgr.getNotePad()),
                                         dspActvty(dMgr.getNotePad()), prtActvty(pMgr.getNotePad()) {
 ResourceData res;
 String       pn;
@@ -32,43 +32,39 @@ double leftMgn  = options.leftMargin.stod(x);
 double rightMgn = options.rightMargin.stod(x);
 double botMgn   = options.botMargin.stod(x);
 
-  setIsNotePad(!notePad.isEmpty() || doc()->dataSrc() == NoteSource);
-
   setMgns(leftMgn,  topMgn,  rightMgn, botMgn, pDC);   CScrView::OnPrepareDC(pDC, pInfo);
   }
 
 
 // Perpare output (i.e. report) then start the output with the call to SCrView
 
-void ICS_214aView::onPrepareOutput(bool isNotePad, bool printing) {
-DataSource ds = isNotePad ? NoteSource : doc()->dataSrc();
+void ICS_214aView::onPrepareOutput(bool printing) {
+DataSource ds = doc()->dataSrc();
 
-  switch (printing) {
-    case true : switch(ds) {
-                  case NoteSource   : prtNote.print(*this);   break;
-                  case IncrActvtySrc:
-                  case ActivitySrc  : prtActvty.print(*this); break;
-                  case ExcelSrc     : prtActvty.print(*this); break;
-                  }
-                break;
+  if (printing)
+    switch(ds) {
+      case NotePadSrc   : prtNote.print(*this);   break;
+      case IncrActvtySrc:
+      case ActivitySrc  : prtActvty.print(*this); break;
+      case ExcelSrc     : prtActvty.print(*this); break;
+      }
 
-    case false: switch(ds) {
-                  case NoteSource :   dspNote.display(*this);   break;
-                  case ActivitySrc:
-                  case IncrActvtySrc:
-                  case ExcelSrc:      dspActvty.display(*this); break;
-                  }
-                break;
-    }
+  else
+    switch(ds) {
+      case NotePadSrc :   dspNote.display(*this);   break;
+      case ActivitySrc:
+      case IncrActvtySrc:
+      case ExcelSrc:      dspActvty.display(*this); break;
+      }
 
-  CScrView::onPrepareOutput(isNotePad, printing);
+  CScrView::onPrepareOutput(printing);
   }
 
 
 void ICS_214aView::OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo) {
 
   switch(doc()->dataSrc()) {
-    case NoteSource   : setOrientation(options.orient); break;    // Setup separate Orientation?
+    case NotePadSrc   : setOrientation(options.orient); break;    // Setup separate Orientation?
     case IncrActvtySrc:
     case ExcelSrc     :
     case ActivitySrc  : setOrientation(options.orient); break;
@@ -85,7 +81,7 @@ void ICS_214aView::OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo) {
 
 void ICS_214aView::printFooter(Device& dev, int pageNo) {
   switch(doc()->dataSrc()) {
-    case NoteSource   : prtNote.footer(dev, pageNo);   break;
+    case NotePadSrc   : prtNote.footer(dev, pageNo);   break;
     case IncrActvtySrc:
     case ExcelSrc     :
     case ActivitySrc  : prtActvty.footer(dev, pageNo); break;
@@ -98,7 +94,7 @@ void ICS_214aView::OnEndPrinting(CDC* pDC, CPrintInfo* pInfo) {
   CScrView::OnEndPrinting(pDC, pInfo);
 
   switch(doc()->dataSrc()) {
-    case NoteSource : break;
+    case NotePadSrc : break;
     case ActivitySrc: break;
     }
   }

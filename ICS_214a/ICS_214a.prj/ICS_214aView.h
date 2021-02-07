@@ -4,7 +4,7 @@
 #pragma once
 #include "CScrView.h"
 #include "ActvtyRpt.h"
-#include "NoteRptB.h"
+#include "NotePadRpt.h"
 
 
 class ICS_214aDoc;
@@ -12,10 +12,10 @@ class ICS_214aDoc;
 
 class ICS_214aView : public CScrView {
 
-NoteRptB  dspNote;
-NoteRptB  prtNote;
-ActvtyRpt dspActvty;
-ActvtyRpt prtActvty;
+NotePadRpt dspNote;
+NotePadRpt prtNote;
+ActvtyRpt  dspActvty;
+ActvtyRpt  prtActvty;
 
 protected:                                      // create from serialization only
 
@@ -27,7 +27,7 @@ public:
   virtual ~ICS_214aView() { }
 
   virtual void OnPrepareDC(CDC* pDC, CPrintInfo* pInfo = NULL);
-  virtual void onPrepareOutput(bool isNotePad, bool printing);
+  virtual void onPrepareOutput(bool printing);
 
   virtual void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo);
   virtual void printFooter(Device& dev, int pageNo);

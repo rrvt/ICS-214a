@@ -171,7 +171,7 @@ String s;
 void ICS_214aDoc::OnOptions() {options();}
 
 
-void ICS_214aDoc::OnCalibDspPrt() {CalibDspPrt calib;  calib();  display(NoteSource);}
+void ICS_214aDoc::OnCalibDspPrt() {CalibDspPrt calib;  calib();  display(NotePadSrc);}
 
 
 void ICS_214aDoc::display(DataSource ds) {dataSource = ds; invalidate();}
@@ -184,7 +184,7 @@ void ICS_214aDoc::serialize(Archive& ar) {
   switch(ar.isStoring()) {
     case true:
       switch(dataSource) {
-        case NoteSource   : notePad.archive(ar);     break;
+        case NotePadSrc   : notePad.archive(ar);     break;
         case ActivitySrc  : activity.storeAll(ar);   break;
         case IncrActvtySrc: activity.storeIncr(ar);  break;
         case ExcelSrc     : activity.storeExcel(ar); break;
