@@ -23,6 +23,7 @@ public:
           ICS_214aView* view() {return (ICS_214aView*) CApp::getView();}
 
   afx_msg void OnAppAbout();
+  afx_msg void OnFilePrintSetup();
   afx_msg void OnHelp();
 
   DECLARE_MESSAGE_MAP()

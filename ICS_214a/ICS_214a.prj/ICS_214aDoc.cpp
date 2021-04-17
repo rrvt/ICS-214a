@@ -10,6 +10,7 @@
 #include "filename.h"
 #include "GetPathDlg.h"
 #include "ICS_214a.h"
+#include "ICS_214aView.h"
 #include "IniFile.h"
 #include "MessageBox.h"
 #include "NotePad.h"
@@ -168,7 +169,7 @@ String s;
   }
 
 
-void ICS_214aDoc::OnOptions() {options();}
+void ICS_214aDoc::OnOptions() {options();   view()->setOrientation(options.orient);}
 
 
 void ICS_214aDoc::OnCalibDspPrt() {CalibDspPrt calib;  calib();  display(NotePadSrc);}

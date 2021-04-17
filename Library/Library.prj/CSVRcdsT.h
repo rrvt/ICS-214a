@@ -58,6 +58,10 @@ public:
 
   int  count() {return nData();}
 
+// returns either a pointer to data (or datum) at index i in array or zero
+
+  CSVRcd* datum(int i) {return 0 <= i && i < nData() ? data[i].p : 0;}
+
   void display(NotePad& np);            // display as comman separated fields
 
 protected:
@@ -65,10 +69,6 @@ protected:
   virtual CSVRcd* add() {return &data.nextData();}
 
 public:
-
-// returns either a pointer to data (or datum) at index i in array or zero
-
-  CSVRcd* datum(int i) {return 0 <= i && i < nData() ? data[i].p : 0;}
 
   int   nData()      {return data.end();}                       // returns number of data items in array
 
@@ -117,7 +117,7 @@ template<class CSVRcd, class CSVRcdP>
 void CSVRcdsT<CSVRcd, CSVRcdP>::load(Archive& ar) {
 CSVLex lex(ar);
 
-  clear();
+//clear();            In order to merge multiple files together, do clear() explicitly
 
   while (lex.get_token() != EOFToken) {
     if (lex.token.code == EolToken) {lex.accept_token(); continue;}

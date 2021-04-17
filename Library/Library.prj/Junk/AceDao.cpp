@@ -101,8 +101,13 @@ RecordSetP TableDesc::openRecordSet(DaoOptions option) {
 
 
 
-void TableDesc::copy(TableDesc& src)
-              {name = src.name; table = src.table; flds = src.flds; nFlds = src.nFlds; nRcds = src.nRcds;}
+void TableDesc::copy(TableDesc& src) {
+  name  = src.name;
+  table = src.table;
+  flds = src.flds;
+  nFlds = src.nFlds;
+  nRcds = src.nRcds;
+  }
 
 
 
@@ -360,8 +365,7 @@ FieldP field;
 void AceFieldDsc::write(variant_t v) {
   value = v;
 
-  try {if (field) field->Value = value;}
-  catch(ComError& e) {comError(e);}
+  try {if (field) field->Value = value;} catch(ComError& e) {comError(e);}
   }
 
 
@@ -405,4 +409,68 @@ String getDbCppType(DataTypeEnum type) {
   String t = _T("<"); t += type; t += _T(">");  return t;
   }
 
+
+
+
+
+RcdsIter::RcdsIter(TableDesc& tableDsc) : tblDsc(tableDsc), fields(0) { }
+
+
+#if 0
+TableDesc&   tblDsc;
+AceRecordSet rcdSet;
+RecordSetP   curRcd;
+FieldsP      fields;
+#endif
+
+FieldsP RcdsIter::operator() (DaoOptions opt) {
+
+  if (!rcdSet.open(&tblDsc, opt)) return 0;
+
+  if (!rcdSet.startLoop()) return 0;
+
+  curRcd = rcdSet.getCurRcd(); if (curRcd) {fields = curRcd->GetFields(); return fields;}
+
+  return 0;
+  }
+
+
+FieldsP RcdsIter::operator++ (int) {
+
+  if (!rcdSet.nextRecord()) return 0;
+
+  curRcd = rcdSet.getCurRcd(); if (curRcd) {fields = curRcd->GetFields();   return fields;}
+
+  return 0;
+  }
+
+
+
+AceFieldDsc* FieldsIter::operator() () {
+
+  index = 0; return getDatum();
+  }
+
+
+AceFieldDsc* FieldsIter::operator++ (int) {
+
+  if (index >= fields->Count) return 0;
+
+  index++; return getDatum();
+  }
+
+
+AceFieldDsc* FieldsIter::getDatum() {
+FieldP field;
+
+  if (index < 0 || index >= fields->Count) return 0;
+
+  field = fields->GetItem(index);   if (!field) return 0;
+
+  fieldDsc.field = field;
+  fieldDsc.value = field->GetValue();   notNull(fieldDsc.value);
+  fieldDsc.attr  = field->Attributes;
+
+  return &fieldDsc;
+  }
 

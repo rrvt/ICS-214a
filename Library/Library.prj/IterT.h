@@ -17,6 +17,7 @@ last gives a heads up when the last entry is being processed
 The template requires two functions be part of Store:
   int nData() -- returns number of data items in array
   Data* datum(int i) -- returns either a pointer to data (or datum) at index i in array or zero
+
 private:
 
   // returns either a pointer to data (or datum) at index i in array or zero
@@ -45,17 +46,18 @@ enum Dir {Fwd, Rev};
   IterT(IterT& iter)      : iterX(iter.iterX), store(iter.store) { }
 
   Data* operator() (Dir rev = Fwd) {iterX = rev ? store.nData() : 0; return rev ? decr() : current();}
-  Data* operator++ (int) {return iterX < store.nData() ? incr() : 0;}
-  Data* operator-- (int) {return iterX > 0             ? decr() : 0;}
+  Data* operator++ (int)           {return iterX < store.nData() ? incr() : 0;}
+  Data* operator-- (int)           {return iterX > 0             ? decr() : 0;}
 
-  Data* current()        {return store.datum(iterX);}
+  int   index()                    {return iterX;}
+  Data* current()                  {return store.datum(iterX);}
 
-  IterT& operator= (IterT& iter) {iterX = iter.iterX; store = iter.store;}
+  IterT& operator= (IterT& iter)   {iterX = iter.iterX; store = iter.store;}
 
-  bool  isLast()         {return iterX + 1 == store.nData();}
-  bool  isFirst()        {return iterX <= 0;}
+  bool  isLast()                   {return iterX + 1 == store.nData();}
+  bool  isFirst()                  {return iterX <= 0;}
 
-  void  remove(Dir rev = Fwd) {store.removeDatum(rev ? iterX++ : iterX--);}
+  void  remove(Dir rev = Fwd)      {store.removeDatum(rev ? iterX++ : iterX--);}
 
 private:
 

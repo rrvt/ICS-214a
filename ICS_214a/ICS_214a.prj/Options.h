@@ -21,6 +21,8 @@ String     botMargin;
 
   void load();
   void store();
+
+  void setOrient(PrtrOrient v) {orient = v; store();}
   };
 
 extern Options options;

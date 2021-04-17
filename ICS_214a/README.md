@@ -79,6 +79,13 @@ Go to the web site and convince yourself that it is legitimate and download the 
 
 ## Updates
 
+### Update 4/17/21
+
+Library updates which did not cause any changes to the application code.
+
+Added logic to cause both the Options dialog and the Printer Setup dialog to allow viewing and changing
+the printer orientation (i.e. Portrait/Landscape).
+
 ### Update 2/6/21
 
 Updated the icons on the Toolbar and the Library has been updated.

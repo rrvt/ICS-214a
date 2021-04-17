@@ -221,6 +221,7 @@ long      attr;
   void write(variant_t v);
 
   friend class AceFields;
+  friend class FieldsIter;
   };
 
 
@@ -233,15 +234,21 @@ typedef ObjIterT<AceFields, AceFieldDsc> AFIter;
 class AceFields {
 RecordSetP curRcd;
 FieldsP    fields;
-FieldP     field;
+//FieldP     field;
 
-int        i;                     // Loop variable
-int        n;                     // Number of fields in record, used in loop logic
 
 public:
 
-  AceFields(AceRecordSet& currentRcd) : curRcd(currentRcd.getCurRcd()), fields(0), field(0), i(0), n(0)
-                              {if (curRcd) fields = curRcd->GetFields(); if (fields) n = fields->Count;}
+  AceFields() { }
+
+  AceFields(AceRecordSet& currentRcd) : curRcd(currentRcd.getCurRcd()), fields(0)
+                                                              {if (curRcd) fields = curRcd->GetFields();}
+
+  AceFields(AceRecordSet* currentRcd) : curRcd(currentRcd->getCurRcd()), fields(0)
+                                                              {if (curRcd) fields = curRcd->GetFields();}
+
+  void initialize(AceRecordSet& currentRcd)
+                             {curRcd = currentRcd.getCurRcd(); if (curRcd) fields = curRcd->GetFields();}
 
 private:
 
@@ -255,11 +262,45 @@ private:
   };
 
 
-//  bool startLoop(AceFieldDsc& dsc);
-//  bool nextField(AceFieldDsc& dsc);
 
-//  int  noFields() {return n;}
+class RcdsIter {
+TableDesc&   tblDsc;
+AceRecordSet rcdSet;
+RecordSetP   curRcd;
+FieldsP      fields;
 
-//  bool startLoop(AceFldNameDsc& fldDsc);
-//  bool nextDesc( AceFldNameDsc& fldDsc);
+public:
+
+  RcdsIter(TableDesc& tblDsc);
+ ~RcdsIter() { }
+
+  FieldsP operator() (DaoOptions opt = DaoDenyWrite);
+  FieldsP operator++ (int);
+
+private:
+
+  RcdsIter() : tblDsc(*(TableDesc*)0) { }
+  };
+
+
+class FieldsIter {
+
+int         index;
+FieldsP     fields;
+AceFieldDsc fieldDsc;
+
+public:
+
+  FieldsIter(FieldsP fieldsP) : fields(fieldsP) { }
+
+  AceFieldDsc* operator() ();
+  AceFieldDsc* operator++ (int);
+
+private:
+
+  AceFieldDsc* getDatum();
+
+  FieldsIter() : fields(*(FieldsP*)0) { }
+  };
+
 
