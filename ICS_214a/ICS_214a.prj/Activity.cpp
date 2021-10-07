@@ -248,7 +248,7 @@ CTimeSpan total = 0;
 int LogData::wrap(Device& dev, CDC* dc) {
 bool dateOutIsPresent;
 int  tab     = dateOutTab(dateOutIsPresent);
-int  chWidth = dev.chWidth();
+int  chWidth = dev.flChWidth();
 
   dev << dCR << dClrTabs << dSetTab(tab) << dTab;
 

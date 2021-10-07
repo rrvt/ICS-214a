@@ -8,7 +8,7 @@
 
 
 void ActvtyRpt::display(CScrView& vw)
-                  {printing = false; vw.disableWrap(false); detWraps(vw); maxLines = BigNmbr; create();}
+                 {printing = false; vw.disableWrap(false); detWraps(vw); maxLines = BigNmbr; create(vw);}
 
 
 void ActvtyRpt::print(CScrView& vw) {
@@ -17,7 +17,7 @@ void ActvtyRpt::print(CScrView& vw) {
 
   vw.enableWrap(printing);   detWraps(vw);   detNoPages(vw);
 
-  create();
+  create(vw);
   }
 
 
@@ -33,7 +33,7 @@ LogData*  ld;
   }
 
 
-void ActvtyRpt::create() {
+void ActvtyRpt::create(CScrView& vw) {
 ActyIter iter(activity);
 LogData* ld;
 LONGLONG secs;
@@ -110,7 +110,7 @@ void ActvtyRpt::footer(Device& dev, int pageN) {
   dev << _T("9. Mission Number") << dRight << _T("10. Page No.")  << dPrevFont << dCrlf;
 
   dev << _T("RACES") << dTab << activity.preparedBy << dCenter << activity.missionNo;
-  dev << dRight << pageN << _T(" of ") << maxPages << dflushFtr;
+  dev << dRight << pageN << _T(" of ") << maxPages << dFlushFtr;
   }
 
 

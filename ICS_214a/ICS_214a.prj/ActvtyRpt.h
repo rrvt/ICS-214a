@@ -14,11 +14,10 @@ public:
   ActvtyRpt(NotePad& notePad) : ReportBase(notePad) { }
  ~ActvtyRpt() { }
 
-  void ActvtyRpt::display(CScrView& vw);
+  void display(CScrView& vw);
   void print(CScrView& vw);
 
-//  void detWraps(  CScrView& vw);               // Wrap each entity in the report body
-  void detWraps(  CScrView& vw);
+  void detWraps(  CScrView& vw);                 // Wrap each entity in the report body
 
 //  void detNoPages(CScrView& vw);               // Performs a dummy printer output to determine the
                                                   // number of pages that will be produced
@@ -29,7 +28,7 @@ private:
 
   ActvtyRpt() : ReportBase(*(NotePad*)0) { }
 
-  void create();
+  void create(CScrView& vw);
   int  header(NotePad& np, bool printing);
   };
 

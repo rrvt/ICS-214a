@@ -79,6 +79,10 @@ Go to the web site and convince yourself that it is legitimate and download the 
 
 ## Updates
 
+### Update 10/7/21
+
+Library updates.
+
 ### Update 4/17/21
 
 Library updates which did not cause any changes to the application code.
