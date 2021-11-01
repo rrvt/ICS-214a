@@ -3,7 +3,7 @@
 
 #include "stdafx.h"
 #include "ICS_214a.h"
-#include "About.h"
+#include "AboutDlg.h"
 #include "ICS_214aDoc.h"
 #include "ICS_214aView.h"
 #include "IniFile.h"
@@ -97,6 +97,6 @@ String topic = m_pszHelpFilePath; topic += _T(">Introduction");
   }
 
 
-void ICS_214a::OnAppAbout() {CAboutDlg aboutDlg; aboutDlg.DoModal();}
+void ICS_214a::OnAppAbout() {AboutDlg aboutDlg; aboutDlg.DoModal();}
 
 

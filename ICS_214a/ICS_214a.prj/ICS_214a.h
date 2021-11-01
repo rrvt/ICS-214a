@@ -32,7 +32,7 @@ public:
 
 extern ICS_214a theApp;
 
-inline void         invalidate() {theApp.invalidate();}
-inline ICS_214aDoc*  doc()  {return theApp.doc();}
-inline ICS_214aView* view() {return theApp.view();}
+inline void          invalidate() {theApp.invalidate();}
+inline ICS_214aDoc*  doc()        {return theApp.doc();}
+inline ICS_214aView* view()       {return theApp.view();}
 

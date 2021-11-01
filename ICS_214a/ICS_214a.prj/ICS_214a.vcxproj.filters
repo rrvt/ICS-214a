@@ -63,13 +63,13 @@
     <ClInclude Include="ActvtyRpt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Library\Extras\About.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Library\Extras\CalibDspPrtDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Library\Extras\ExtraResource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Library\Extras\AboutDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -116,10 +116,10 @@
     <ClCompile Include="ActvtyRpt.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Library\Extras\About.cpp">
+    <ClCompile Include="..\..\Library\Extras\CalibDspPrtDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Library\Extras\CalibDspPrtDlg.cpp">
+    <ClCompile Include="..\..\Library\Extras\AboutDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -133,13 +133,10 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="..\README.md" />
-    <None Include="res\Toolbar17.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\..\Library\Extras\About.rc2">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="..\..\Library\Extras\CalibDspPrtDlg.rc2">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\..\Library\Extras\AboutDlg.rc2">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
