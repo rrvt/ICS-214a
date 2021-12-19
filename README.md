@@ -79,6 +79,14 @@ Go to the web site and convince yourself that it is legitimate and download the 
 
 ## Updates
 
+### Update 12/18/21
+
+While creating a template for a dialog box only application with a toolbar the Library was added to and
+changed to hopefully simplify toolbar creation.  This version of the toolbar includes buttons, edit boxes,
+combo boxes and drop down menus as well as the traditional 16x15 icons.
+
+ICS-214a is a tradional App, has a traditional 16x15 pixel icon toolbar.
+
 ### Update 11/13/21
 
 The changes are in the library:
