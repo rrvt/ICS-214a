@@ -6,7 +6,7 @@
     <ProductVersion>3.10</ProductVersion>
     <ProjectGuid>2fcdc525-635f-43e5-a418-2d4a9751364c</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>ICS_214a_Installer</OutputName>
+    <OutputName>ICS_214a</OutputName>
     <OutputType>Package</OutputType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -17,6 +17,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>$(SolutionDir)..\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <SuppressPdbOutput>True</SuppressPdbOutput>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Product.wxs" />
@@ -32,14 +33,6 @@
     </WixExtension>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Help\Help.vcxproj">
-      <Name>Help</Name>
-      <Project>{a9ecbc5a-35ed-4ff1-83e6-c34719b56408}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
     <ProjectReference Include="..\ICS_214a.prj\ICS_214a.vcxproj">
       <Name>ICS_214a</Name>
       <Project>{b94d04c7-6697-43fc-bbde-30ef8531d2e1}</Project>

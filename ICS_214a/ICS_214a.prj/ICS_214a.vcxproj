@@ -34,10 +34,8 @@
     <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Label="ExtensionSettings">
-  </ImportGroup>
-  <ImportGroup Label="Shared">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -62,8 +60,9 @@
       <Optimization>MaxSpeed</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)..\..\Library\Library.prj\;$(SolutionDir)..\..\Library\Extras\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>
+        $(ProjectDir);$(SolutionDir)..\..\Library\Library.prj\;$(SolutionDir)..\..\Library\Extras\;%(AdditionalIncludeDirectories)
+      </AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -84,7 +83,9 @@
     <ResourceCompile>
       <Culture>0x0409</Culture>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(IntDir);$(SolutionDir)..\..\Library\Extras\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>
+        $(IntDir);$(SolutionDir)..\..\Library\Extras\;%(AdditionalIncludeDirectories)
+      </AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -96,8 +97,9 @@
       <IntrinsicFunctions>false</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)..\..\Library\Library.prj\;$(SolutionDir)..\..\Library\Extras\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>
+        $(ProjectDir);$(SolutionDir)..\..\Library\Library.prj\;$(SolutionDir)..\..\Library\Extras\;%(AdditionalIncludeDirectories)
+      </AdditionalIncludeDirectories>
       <DebugInformationFormat>None</DebugInformationFormat>
     </ClCompile>
     <Link>
@@ -116,7 +118,9 @@
     <ResourceCompile>
       <Culture>0x0409</Culture>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(IntDir);$(SolutionDir)..\..\Library\Extras\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>
+        $(IntDir);$(SolutionDir)..\..\Library\Extras\;%(AdditionalIncludeDirectories)
+      </AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -158,9 +162,7 @@
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="StopEntryDlg.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="ICS_214a.rc" />
-  </ItemGroup>
+  <ItemGroup><ResourceCompile Include="ICS_214a.rc" /></ItemGroup>
   <ItemGroup>
     <None Include="..\..\Library\Extras\AboutDlg.rc2" />
     <None Include="..\..\Library\Extras\CalibDspPrtDlg.rc2" />
@@ -177,6 +179,5 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets" />
 </Project>
