@@ -79,6 +79,10 @@ Go to the web site and convince yourself that it is legitimate and download the 
 
 ## Updates
 
+### Update 08/03/22
+
+Minor updates.
+
 ### Update 01/31/22
 
 Updates to the library, mostly about the toolbar, but also NewAllocator, and a minor addition to
