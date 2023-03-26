@@ -14,7 +14,6 @@
 #include "IniFile.h"
 #include "MessageBox.h"
 #include "NotePad.h"
-#include "Options.h"
 #include "Resource.h"
 #include "Utilities.h"
 
@@ -28,25 +27,25 @@ static TCchar* LogPath     = _T("LogPath");
 IMPLEMENT_DYNCREATE(ICS_214aDoc, CDocument)
 
 BEGIN_MESSAGE_MAP(ICS_214aDoc, CDocument)
-  ON_COMMAND(ID_EditHeader,    &OnEditHeader)
-  ON_COMMAND(ID_LogEntry,      &OnLogEntry)
-  ON_COMMAND(ID_StopEntry,     &OnStopEntry)
-  ON_COMMAND(ID_EditLogEntry,  &OnEditLogEntry)
-  ON_COMMAND(ID_NewLog,        &OnNewLog)
-  ON_COMMAND(ID_FILE_OPEN,     &OnFileOpen)
-  ON_COMMAND(ID_MakeExcelFile, &onSaveExcel)
-  ON_COMMAND(ID_FILE_SAVE,     &onSave214)
-  ON_COMMAND(ID_Options,       &OnOptions)
-  ON_COMMAND(ID_CalibDspPrt,   &OnCalibDspPrt)
+  ON_COMMAND(ID_EditHeader,     &OnEditHeader)
+  ON_COMMAND(ID_LogEntry,       &OnLogEntry)
+  ON_COMMAND(ID_StopEntry,      &OnStopEntry)
+  ON_COMMAND(ID_EditLogEntry,   &OnEditLogEntry)
+  ON_COMMAND(ID_NewLog,         &OnNewLog)
+  ON_COMMAND(ID_FILE_OPEN,      &OnFileOpen)
+
+  ON_COMMAND(ID_MakeExcelMenu,  &onSaveExcel)
+  ON_COMMAND(ID_MakeExcelFile,  &onSaveExcel)
+  ON_COMMAND(ID_MakeExcelFile2, &onSaveExcel2)
+
+  ON_COMMAND(ID_FILE_SAVE,      &onSave214)
+  ON_COMMAND(ID_CalibDspPrt,    &OnCalibDspPrt)
 END_MESSAGE_MAP()
 
 
 // ICS_214aDoc construction/destruction
 
-ICS_214aDoc::ICS_214aDoc() noexcept {
-//  saveAsTitle = _T("eICS-214a");
-  defExt = _T("214");   defFilePat = _T("*.214");
-  }
+ICS_214aDoc::ICS_214aDoc() noexcept { }
 
 
 void ICS_214aDoc::OnEditHeader() {
@@ -92,16 +91,15 @@ void ICS_214aDoc::OnEditLogEntry()
 
 
 void ICS_214aDoc::OnNewLog() {
-String path;
-String title = _T("Specify New Log Name");
+PathDlgDsc dsc;
 
-  activity.clear();   notePad.clear();   defFileName.clear();   OnNewDocument();
+  activity.clear();   notePad.clear();   OnNewDocument();
 
-  if (!getSaveAsPathDlg(title, defFileName, defExt, defFilePat, path)) return;
+  dsc(_T("Specify New Log Name"), 0, _T("214"), _T("*.214"));
 
-  defFileName = getMainName(path);
+  if (!setSaveAsPath(dsc)) return;
 
-  dataSource = ActivitySrc;   onSaveDocument(path, true);
+  dataSource = ActivitySrc;   onSaveDocument(path);
 
   iniFile.writeString(FileSection, LogPath, path);
 
@@ -111,16 +109,13 @@ String title = _T("Specify New Log Name");
 
 
 void ICS_214aDoc::OnFileOpen() {
-String path;
-String title = _T("Specify Existing Log File");
+PathDlgDsc dsc;
 
   notePad.clear();   activity.clear();   dataSource = ActivitySrc;
 
-  iniFile.readString(FileSection, LogPath, defFileName);
+  iniFile.readString(FileSection, LogPath, path);
 
-  if (!getPathDlg(title, defFileName, defExt, defFilePat, path)) return;
-
-  defFileName = getMainName(path);
+  dsc(_T("Specify Existing Log File"), path, _T("214"), _T("*.214"));   if (!setOpenPath(dsc)) return;
 
   iniFile.writeString(FileSection, LogPath, path);
 
@@ -130,17 +125,12 @@ String title = _T("Specify Existing Log File");
   }
 
 
-String& ICS_214aDoc::getDefFileName()
-                          {iniFile.readString(FileSection, LogPath, defFileName);  return defFileName;}
-
-
 void ICS_214aDoc::onSave214() {
-String path;
-String title = _T("Save Log Data File");
+PathDlgDsc dsc;
 
   dataSource = ActivitySrc;
 
-  if (!getSaveAsPathDlg(title, defFileName, defExt, defFilePat, path)) return;
+  dsc(_T("Save Log Data File"), path, _T("214"), _T("*.214"));   if (!setSaveAsPath(dsc)) return;
 
   iniFile.writeString(FileSection, LogPath, path);
 
@@ -149,12 +139,24 @@ String title = _T("Save Log Data File");
 
 
 void ICS_214aDoc::onSaveExcel() {
-String path;
-String title = _T("Save Excel CSV File");
+PathDlgDsc dsc;
+String     stk = path;
+String     name = getMainName(path);
 
-  if (!getSaveAsPathDlg(title, defFileName, _T("csv"), _T("*.csv"), path)) return;
+  dsc(_T("Save Excel CSV File"), name, _T("csv"), _T("*.csv"));   if (!setSaveAsPath(dsc)) return;
 
-  dataSource = ExcelSrc;   saveDoc(path);
+  dataSource = ExcelSrc;   saveDoc(path);   path = stk;
+  }
+
+
+void ICS_214aDoc::onSaveExcel2() {
+PathDlgDsc dsc;
+String     stk = path;
+String     name = getMainName(path);
+
+  dsc(_T("Save Excel CSV File"), name, _T("csv"), _T("*.csv"));   if (!setSaveAsPath(dsc)) return;
+
+  dataSource = ExcelSrc2;   saveDoc(path);   path = stk;
   }
 
 
@@ -162,14 +164,9 @@ void ICS_214aDoc::saveDoc(String& path) {
 String name;
 String s;
 
-  if (!onSaveDocument(path, true)) {
-    name = removePath(path);   s.format(_T("Unable to Open File: %s"), name.str());
-    messageBox(s);
-    }
+  if (!onSaveDocument(path))
+        {name = removePath(path);   s.format(_T("Unable to Open File: %s"), name.str());   messageBox(s);}
   }
-
-
-void ICS_214aDoc::OnOptions() {options();   view()->setOrientation(options.orient);}
 
 
 void ICS_214aDoc::OnCalibDspPrt() {CalibDspPrt calib;  calib();  display(NotePadSrc);}
@@ -185,11 +182,12 @@ void ICS_214aDoc::serialize(Archive& ar) {
   switch(ar.isStoring()) {
     case true:
       switch(dataSource) {
-        case NotePadSrc   : notePad.archive(ar);     break;
-        case ActivitySrc  : activity.storeAll(ar);   break;
-        case IncrActvtySrc: activity.storeIncr(ar);  break;
-        case ExcelSrc     : activity.storeExcel(ar); break;
-        default         : return;
+        case NotePadSrc   : notePad.archive(ar);            break;
+        case ActivitySrc  : activity.storeAll(ar);          break;
+        case IncrActvtySrc: activity.storeIncr(ar);         break;
+        case ExcelSrc     : activity.storeExcel(ar, false); break;
+        case ExcelSrc2    : activity.storeExcel(ar, true);  break;
+        default           : return;
         }
       break;
 
@@ -199,11 +197,6 @@ void ICS_214aDoc::serialize(Archive& ar) {
         }
       break;
     }
-#if 0
-  if (ar.isStoring()) {activity.store(ar); return;}
-
-  activity.load(ar);
-#endif
   }
 
 
@@ -221,33 +214,4 @@ void ICS_214aDoc::Dump(CDumpContext& dc) const
 }
 #endif //_DEBUG
 
-
-#if 0
-EditEntryDlg dlg;
-
-  if (dlg.DoModal() == IDOK) {
-
-    activity.setStoreAll();
-#endif
-#if 0
-EventLogDlg dlg;
-
-  dlg.logDate   = getDateNow();
-  dlg.startTime = getTimeNow();
-
-  if (dlg.DoModal() == IDOK) {
-    activity.add(dlg.logDate, dlg.startTime, dlg.endTime, dlg.logActivity);
-
-    activity.setStoreIncr();
-#endif
-#if 0
-StopEntryDlg dlg;
-
-  dlg.stopDate = getDateNow();
-  dlg.stopTime = getTimeNow();
-
-  if (dlg.DoModal() == IDOK) {
-
-    activity.setStoreAll();
-#endif
 

@@ -5,8 +5,14 @@
 #include "ICS_214aView.h"
 #include "ICS_214a.h"
 #include "ICS_214aDoc.h"
-#include "Options.h"
+#include "IniFile.h"
+#include "OptionsDlg.h"
+#include "Resource.h"
 #include "Resources.h"
+#include "RptOrietnDlg.h"
+
+
+static TCchar* ActyOrietnKey = _T("Activity");
 
 
 // ICS_214aView
@@ -14,77 +20,127 @@
 IMPLEMENT_DYNCREATE(ICS_214aView, CScrView)
 
 BEGIN_MESSAGE_MAP(ICS_214aView, CScrView)
-END_MESSAGE_MAP()
+  ON_COMMAND(ID_Options,     &onOptions)
+  ON_COMMAND(ID_Orientation, &onRptOrietn)
+  END_MESSAGE_MAP()
 
 
-ICS_214aView::ICS_214aView() noexcept : dspNote( dMgr.getNotePad()),  prtNote( pMgr.getNotePad()),
-                                        dspActvty(dMgr.getNotePad()), prtActvty(pMgr.getNotePad()) {
+ICS_214aView::ICS_214aView() noexcept : dspActvty(dMgr.getNotePad()), prtActvty(pMgr.getNotePad()) {
 ResourceData res;
 String       pn;
   if (res.getProductName(pn)) prtNote.setTitle(pn);
   }
 
 
-void ICS_214aView::OnPrepareDC(CDC* pDC, CPrintInfo* pInfo) {
-uint   x;
-double topMgn   = options.topMargin.stod(x);
-double leftMgn  = options.leftMargin.stod(x);
-double rightMgn = options.rightMargin.stod(x);
-double botMgn   = options.botMargin.stod(x);
+void ICS_214aView::onOptions() {
+OptionsDlg dlg;
 
-  setMgns(leftMgn,  topMgn,  rightMgn, botMgn, pDC);   CScrView::OnPrepareDC(pDC, pInfo);
+  if (printer.name.isEmpty()) printer.load(0);
+
+  initNoteOrietn();
+
+  if (dlg.DoModal() == IDOK) {pMgr.setFontScale(printer.scale);   saveNoteOrietn();}
+  }
+
+
+
+
+void ICS_214aView::initRptOrietn() {
+  dspActvty.prtrOrietn  = prtActvty.prtrOrietn  =
+                                  (PrtrOrient) iniFile.readInt(RptOrietnSect, ActyOrietnKey,  PortOrient);
+  }
+
+
+void ICS_214aView::onRptOrietn() {
+RptOrietnDlg dlg;
+
+  dlg.ntpd = printer.toStg(prtNote.prtrOrietn);
+  dlg.acty = printer.toStg(prtActvty.prtrOrietn);
+
+  if (dlg.DoModal() == IDOK) {
+    dspNote.prtrOrietn    = prtNote.prtrOrietn    = printer.toOrient(dlg.ntpd);
+    dspActvty.prtrOrietn  = prtActvty.prtrOrietn  = printer.toOrient(dlg.acty);
+    saveNoteOrietn();   saveRptOrietn();
+    }
+  }
+
+
+void ICS_214aView::saveRptOrietn()
+                               {iniFile.write(RptOrietnSect, ActyOrietnKey,  (int) prtActvty.prtrOrietn);}
+
+
+void ICS_214aView::onPreparePrinting(CPrintInfo* info) {
+  switch(doc()->dataSrc()) {
+    case NotePadSrc  : prtNote.onPreparePrinting(info);   break;
+    case ActivitySrc : prtActvty.onPreparePrinting(info); break;
+    case ExcelSrc    : prtActvty.onPreparePrinting(info); break;
+    }
   }
 
 
 // Perpare output (i.e. report) then start the output with the call to SCrView
 
-void ICS_214aView::onPrepareOutput(bool printing) {
-DataSource ds = doc()->dataSrc();
-
-  if (printing)
-    switch(ds) {
-      case NotePadSrc   : prtNote.print(*this);   break;
-      case IncrActvtySrc:
-      case ActivitySrc  : prtActvty.print(*this); break;
-      case ExcelSrc     : prtActvty.print(*this); break;
-      }
-
-  else
-    switch(ds) {
-      case NotePadSrc :   dspNote.display(*this);   break;
-      case ActivitySrc:
-      case IncrActvtySrc:
-      case ExcelSrc:      dspActvty.display(*this); break;
-      }
-
-  CScrView::onPrepareOutput(printing);
-  }
-
-
-void ICS_214aView::OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo) {
+void ICS_214aView::onBeginPrinting() {
 
   switch(doc()->dataSrc()) {
-    case NotePadSrc   : setOrientation(options.orient); break;    // Setup separate Orientation?
+    case NotePadSrc   : prtNote.onBeginPrinting(*this);   break;
     case IncrActvtySrc:
-    case ExcelSrc     :
-    case ActivitySrc  : setOrientation(options.orient); break;
+    case ActivitySrc  : prtActvty.onBeginPrinting(*this); break;
+    case ExcelSrc     : prtActvty.onBeginPrinting(*this); break;
     }
-
-  setPrntrOrient(theApp.getDevMode(), pDC);   CScrView::OnBeginPrinting(pDC, pInfo);
   }
 
+
+void ICS_214aView::onDisplayOutput() {
+  switch(doc()->dataSrc()) {
+    case NotePadSrc   : dspNote.display(*this);   break;
+    case ActivitySrc  :
+    case IncrActvtySrc:
+    case ExcelSrc     : dspActvty.display(*this); break;
+    }
+  }
+
+
+void ICS_214aView::displayHeader(DevBase& dev) {
+  switch(doc()->dataSrc()) {
+    case NotePadSrc   : dspNote.dspHeader(dev);   break;
+    case ActivitySrc  :
+    case IncrActvtySrc:
+    case ExcelSrc     : dspActvty.dspHeader(dev); break;
+    }
+  }
+
+
+void ICS_214aView::displayFooter(DevBase& dev) {
+  switch(doc()->dataSrc()) {
+    case NotePadSrc   : dspNote.dspFooter(dev);   break;
+    case ActivitySrc  :
+    case IncrActvtySrc:
+    case ExcelSrc     : dspActvty.dspFooter(dev); break;
+    }
+  }
+
+
+void ICS_214aView::printHeader(DevBase& dev, int pageNo) {
+  switch(doc()->dataSrc()) {
+    case NotePadSrc   : prtNote.prtHeader(dev, pageNo);   break;
+    case IncrActvtySrc:
+    case ExcelSrc     :
+    case ActivitySrc  : prtActvty.prtHeader(dev, pageNo); break;
+    }
+  }
 
 
 // The footer is injected into the printed output, so the output goes directly to the device.
 // The output streaming functions are very similar to NotePad's streaming functions so it should not
 // be a great hardship to construct a footer.
 
-void ICS_214aView::printFooter(Device& dev, int pageNo) {
+void ICS_214aView::printFooter(DevBase& dev, int pageNo) {
   switch(doc()->dataSrc()) {
-    case NotePadSrc   : prtNote.footer(dev, pageNo);   break;
+    case NotePadSrc   : prtNote.prtFooter(dev, pageNo);   break;
     case IncrActvtySrc:
     case ExcelSrc     :
-    case ActivitySrc  : prtActvty.footer(dev, pageNo); break;
+    case ActivitySrc  : prtActvty.prtFooter(dev, pageNo); break;
     }
   }
 

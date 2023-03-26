@@ -79,6 +79,14 @@ Go to the web site and convince yourself that it is legitimate and download the 
 
 ## Updates
 
+### Update 3/25/23
+
+Updates due to changes in the Library.
+
+### Update 10/27/22
+
+Remember position and size from one incarnation to the next.  Update toolbar background.
+
 ### Update 08/03/22
 
 Minor updates.

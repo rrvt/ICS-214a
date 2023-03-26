@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.1000
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ICS_214a", "..\ICS_214a.prj\ICS_214a.vcxproj", "{B94D04C7-6697-43FC-BBDE-30EF8531D2E1}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -18,6 +18,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ICS_214aHlp", "..\ICS_214a.
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "ICS_214aWix", "..\ICS_214a.wix\ICS_214aWix.wixproj", "{2FCDC525-635F-43E5-A418-2D4A9751364C}"
 	ProjectSection(ProjectDependencies) = postProject
+		{A9ECBC5A-35ED-4FF1-83E6-C34719B56408} = {A9ECBC5A-35ED-4FF1-83E6-C34719B56408}
 		{CF57F3EC-D3DB-4469-8519-3F9D73785D9B} = {CF57F3EC-D3DB-4469-8519-3F9D73785D9B}
 	EndProjectSection
 EndProject

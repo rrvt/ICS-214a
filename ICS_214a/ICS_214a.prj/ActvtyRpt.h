@@ -15,20 +15,31 @@ public:
  ~ActvtyRpt() { }
 
   void display(CScrView& vw);
-  void print(CScrView& vw);
 
-  void detWraps(  CScrView& vw);                 // Wrap each entity in the report body
+  void onPreparePrinting(CPrintInfo* info) {printer.set(prtrOrietn);}
+  void onBeginPrinting(CScrView& vw);
 
-//  void detNoPages(CScrView& vw);               // Performs a dummy printer output to determine the
+  void dspHeader(DevBase& dev) {prtHeader(dev, 1);}
+  void dspFooter(DevBase& dev) {prtFooter(dev, 1);}
                                                   // number of pages that will be produced
-  void footer(Device& dev, int pageNo);          // Output page Footer to NotePad
-  void dspFtr();
+  void prtHeader(DevBase& dev, int pageNo);
+  void prtFooter(DevBase& dev, int pageNo);          // Output page Footer to NotePad
 
 private:
 
   ActvtyRpt() : ReportBase(*(NotePad*)0) { }
 
-  void create(CScrView& vw);
-  int  header(NotePad& np, bool printing);
+  void getData(CScrView& vw);
   };
+
+
+
+
+//  void detNoPages(CScrView& vw);                  // Performs a dummy printer output to determine the
+
+//  void clearWraps();
+//  void detWraps(CScrView& vw);                    // Wrap each entity in the report body
+//  int  header(NotePad& np, bool printing);
+//  void dspFtr();
+//bool      needHdr; , needHdr(false)
 

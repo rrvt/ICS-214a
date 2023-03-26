@@ -7,7 +7,6 @@
 #include "ICS_214aDoc.h"
 #include "ICS_214aView.h"
 #include "IniFile.h"
-#include "Options.h"
 #include "NotePad.h"
 #include "MainFrame.h"
 
@@ -67,27 +66,11 @@ BOOL ICS_214a::InitInstance() {
 
   view()->setFont(_T("Arial"), 12.0);
 
-  options.load();
-
-  if (doc()->getDefFileName().isEmpty()) doc()->OnNewLog();
-  else                                   doc()->OnFileOpen();
+  doc()->OnFileOpen();
 
   m_pMainWnd->ShowWindow(SW_SHOW);   m_pMainWnd->UpdateWindow();   return TRUE;
   }
 
-
-
-void ICS_214a::OnFilePrintSetup() {
-PrtrOrient orient;
-
-  view()->setPrntrOrient(getDevMode());
-
-    CWinApp::OnFilePrintSetup();
-
-  orient = view()->getPrntrOrient(getDevMode());
-
-  options.setOrient(orient);   view()->setOrientation(options.orient);
-  }
 
 
 void ICS_214a::OnHelp() {
@@ -99,4 +82,25 @@ String topic = m_pszHelpFilePath; topic += _T(">Introduction");
 
 void ICS_214a::OnAppAbout() {AboutDlg aboutDlg; aboutDlg.DoModal();}
 
+
+
+
+#if 1
+#else
+  if (doc()->getDefFileName().isEmpty()) doc()->OnNewLog();
+  else                                   doc()->OnFileOpen();
+#endif
+#if 0
+void ICS_214a::OnFilePrintSetup() {
+PrtrOrient orient;
+
+  view()->setPrntrOrient(getDevMode());
+
+    CWinApp::OnFilePrintSetup();
+
+  orient = view()->getPrntrOrient(getDevMode());
+
+  options.setOrient(orient);   view()->setOrientation(options.orient);
+  }
+#endif
 

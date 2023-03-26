@@ -7,107 +7,70 @@
 #include "CScrView.h"
 
 
-void ActvtyRpt::display(CScrView& vw)
-                 {printing = false; vw.disableWrap(false); detWraps(vw); maxLines = BigNmbr; create(vw);}
+void ActvtyRpt::display(CScrView& vw) {printing = false;   vw.enableDplWrap();     getData(vw);}
 
 
-void ActvtyRpt::print(CScrView& vw) {
-
-  printing = true;   vw.disableWrap(printing);   maxLines = vw.noLinesPrPg();
-
-  vw.enableWrap(printing);   detWraps(vw);   detNoPages(vw);
-
-  create(vw);
-  }
+void ActvtyRpt::onBeginPrinting(CScrView& vw) {printing = true;   vw.enablePrtWrap();   getPageAttr(vw);}
 
 
-
-void ActvtyRpt::detWraps(CScrView& vw) {
-Device&   dev = vw.getDev(printing);
-CDC*      dc  = dev.getDC();
-ActyIter  iter(activity);
-LogData*  ld;
-
-  for (ld = iter(); ld; ld = iter++)
-    ld->wrap(dev, dc);
-  }
-
-
-void ActvtyRpt::create(CScrView& vw) {
+void ActvtyRpt::getData(CScrView& vw) {
 ActyIter iter(activity);
-LogData* ld;
+Event*   event;
 LONGLONG secs;
 double   ttl;
 int      i;
 String   t;
-int      n;
 
   if (!iter()) return;
 
-  np.clear();   totalTime = 0;    noLines = BigNmbr;
+  np.clear();   totalTime = 0;
 
-  for (i = 0, ld = iter(); ld; i++, ld = iter++) {
-
-    n = ld->noLines();
-
-    if (iter.isLast()) n += 2;
-
-    if (noLines + n > maxLines) {
-      if (i) np << nEndPage;    noLines = header(np, printing);
-      }
-
-    totalTime += ld->display(noLines, np);
-    }
+  for (i = 0, event = iter(); event; i++, event = iter++) totalTime += event->display(np);
 
   secs = totalTime.GetTotalSeconds();   ttl = (double) secs / 3600.0;   t.format(_T("%0.2f"), ttl);
-  np << nCrlf; noLines++;
-  np << _T("   Total Time:") << nTab << t << nTab << _T("hours") << nCrlf; noLines++;
-
-  if (!printing) dspFtr();
+  np << nCrlf;
+  np << _T("   Total Time:") << nTab << t << nTab << _T("hours") << nCrlf;
   }
 
 
-int ActvtyRpt::header(NotePad& np, bool printing) {
 
-  np << nClrTabs << nSetTab(18) << nSetRTab(45);
+void ActvtyRpt::prtHeader(DevBase& dev, int pageNo) {
 
-  np << nBold << nFSize(16.0) << _T("ICS 214a Unit Log") << nFont << nFont;
-  np << nTab << nFSize(9.0) << _T("1. Incident Name");
-  np << nRight << _T("2. Date and 3. Time Prepared") << nFont;   np << nCrlf;
+  dev << dClrTabs << dSetTab(18) << dSetRTab(45);
 
-  np << nBold << _T("SJ RACES") << nFont;
-  np << nTab << activity.name;
-  np << nRight << activity.prepDate << _T(" - ") <<  activity.prepTime;
-  np << nCrlf << nCrlf;
+  dev << dBold << dFSize(16.0) << _T("ICS 214a Unit Log") << dFont << dFont;
+  dev << dTab << dFSize(9.0) << _T("1. Incident Name");
+  dev << dRight << _T("2. Date and 3. Time Prepared") << dFont;   dev << dCrlf;
 
-  np << nClrTabs << nSetTab(14) << nSetRTab(55);
+  dev << dBold  << _T("SJ RACES") << dFont;
+  dev << dTab   << activity.name;
+  dev << dRight << activity.prepDate << _T(" ") <<  activity.prepTime;
+  dev << dCrlf  << dCrlf;
 
-  np << nFSize(9.0) << _T("4. Unit Name Designator") << nTab;
-  np << _T("5. Unit Leader: (Name and Position)") << nRight;
-  np << _T("6. Operational Period") << nFont;   np << nCrlf;
+  dev << dClrTabs << dSetTab(14) << dSetRTab(55);
 
-  np << _T("San Jose RACES");
-  np << nTab << activity.leaderName << _T(" ") << activity.leaderPosition;
-  np << nRight << activity.operationalPeriod;   np << nCrlf << nCrlf;
+  dev << dFSize(9.0) << _T("4. Unit Name Designator");
+  dev << dTab        << _T("5. Unit Leader: (Name and Position)");
+  dev << dRight      << _T("6. Operational Period") << dFont << dCrlf;
 
-  np << nClrTabs << nSetTab(6) << nSetRTab(17) << nSetTab(18);
-  np << nFSize(9.0) << _T("Date") << nTab << _T("Start Time") << nTab << _T("End Time");
-  np << nTab << _T("Activity") << nFont;   np << nCrlf; return 7;
+  dev << _T("San Jose RACES");
+  dev << dTab   << activity.leaderName << _T(" ") << activity.leaderPosition;
+  dev << dRight << activity.operationalPeriod << dCrlf << dCrlf;
+
+  dev << dClrTabs << dSetTab(6) << dSetRTab(17) << dSetTab(18);
+
+  dev << dFSize(9.0) << _T("Date") << dTab << _T("Start Time") << dTab << _T("End Time");
+  dev << dTab << _T("Activity") << dFont << dCrlf;
   }
 
 
-void ActvtyRpt::footer(Device& dev, int pageN) {
-#if 0
-  if (pageN > maxPages) maxPages = pageN;
-
-  dev << dRight << pageN << _T(" of ") << maxPages << dflushFtr;
-#endif
+void ActvtyRpt::prtFooter(DevBase& dev, int pageN) {
 
   if (pageN > maxPages) maxPages = pageN;
 
   dev << dClrTabs << dSetTab(7);
   dev << dFSize(9.0) << _T("ICS 214a") << dTab << _T("8. Prepared By") << dCenter;
-  dev << _T("9. Mission Number") << dRight << _T("10. Page No.")  << dPrevFont << dCrlf;
+  dev << _T("9. Mission Number") << dRight << _T("10. Page No.")  << dFont << dCrlf;
 
   dev << _T("RACES") << dTab << activity.preparedBy << dCenter << activity.missionNo;
   dev << dRight << pageN << _T(" of ") << maxPages << dFlushFtr;
@@ -115,38 +78,4 @@ void ActvtyRpt::footer(Device& dev, int pageN) {
 
 
 
-void ActvtyRpt::dspFtr() {
-
-  np << nCrlf;
-
-  np << nClrTabs << nSetTab(7);
-  np << nFSize(9.0) << _T("ICS 214a") << nTab << _T("8. Prepared By") << nCenter;
-  np << _T("9. Mission Number") << nRight << _T("10. Page No.")  << nFont << nCrlf;
-
-  np << _T("RACES") << nTab << activity.preparedBy << nCenter << activity.missionNo;
-  np << nRight << _T("1") << _T(" of ") << _T("1") << nCrlf;
-  }
-
-
-
-
-#if 0
-DSIter iter(store);
-Data*  datum;
-int    i;
-
-  np.clear();   noLines = BigNmbr;
-
-  for (i = 0, datum = iter(); datum; i++, datum = iter++) {
-
-    if (noLines + 1 > maxLines) {
-
-      if (i) np << nEndPage;
-
-      header();  np << nClrTabs << nSetTab(10);
-      }
-
-    np << datum->get() << nCrlf;   noLines += 1;
-    }
-#endif
 

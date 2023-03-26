@@ -12,26 +12,31 @@ class ICS_214aDoc;
 
 class ICS_214aView : public CScrView {
 
-NotePadRpt dspNote;
-NotePadRpt prtNote;
-ActvtyRpt  dspActvty;
-ActvtyRpt  prtActvty;
+ActvtyRpt dspActvty;
+ActvtyRpt prtActvty;
 
 protected:                                      // create from serialization only
 
-  ICS_214aView() noexcept;
   DECLARE_DYNCREATE(ICS_214aView)
+  ICS_214aView() noexcept;
 
 public:
 
   virtual ~ICS_214aView() { }
 
-  virtual void OnPrepareDC(CDC* pDC, CPrintInfo* pInfo = NULL);
-  virtual void onPrepareOutput(bool printing);
+  virtual void displayHeader(DevBase& dev);
+  virtual void displayFooter(DevBase& dev);
 
-  virtual void OnBeginPrinting(CDC* pDC, CPrintInfo* pInfo);
-  virtual void printFooter(Device& dev, int pageNo);
+  virtual void onPreparePrinting(CPrintInfo* info);
+  virtual void onBeginPrinting();
+  virtual void onDisplayOutput();
+
+  virtual void printHeader(DevBase& dev, int pageNo);
+  virtual void printFooter(DevBase& dev, int pageNo);
   virtual void OnEndPrinting(CDC* pDC, CPrintInfo* pInfo);
+
+          void initRptOrietn();
+          void saveRptOrietn();
 
   ICS_214aDoc* GetDocument() const;
 
@@ -43,6 +48,9 @@ public:
   #endif
 
   DECLARE_MESSAGE_MAP()
+
+  afx_msg void onOptions();
+  afx_msg void onRptOrietn();
 
   afx_msg void OnSetFocus(CWnd* pOldWnd);
   };

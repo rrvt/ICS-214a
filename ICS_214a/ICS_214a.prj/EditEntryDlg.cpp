@@ -23,15 +23,16 @@ EditEntryDlg::~EditEntryDlg() { }
 
 BOOL EditEntryDlg::OnInitDialog() {
 ActyIter iter(activity);
-LogData* ld;
+Event*   event;
 int      n;
 String   s;
 
   CDialogEx::OnInitDialog();
 
-  for (ld = iter(), n = 0; ld; ld = iter++, n++) {
+  for (event = iter(), n = 0; event; event = iter++, n++) {
 
-    s = addTab(ld->startTime.getDate(), 10);   s += addTab(ld->startTime.getHHMM(), 8);    s += ld->desc;
+    s = addTab(event->startTime.getDate(), 10);   s += addTab(event->startTime.getHHMM(), 8);
+    s += event->desc;
 
     entryDescCtrl.AddString(s);
     }
@@ -42,14 +43,14 @@ String   s;
 
 
 void EditEntryDlg::onSelectEntry() {
-int      index = entryDescCtrl.GetCurSel();  if (index < 0) return;
-LogData* ld    = activity.entry(index);      if (!ld)       return;
+int    index = entryDescCtrl.GetCurSel();  if (index < 0) return;
+Event* event = activity.entry(index);      if (!event)       return;
 
-  logDate = ld->startTime.getDate();  logDateCtrl.SetWindowText(logDate);
-  logTime = ld->startTime.getHHMM();  logTimeCtrl.SetWindowText(logTime);
-  endDate = ld->endTime.getDate();    endDateCtrl.SetWindowText(endDate);
-  endTime = ld->endTime.getHHMM();    endTimeCtrl.SetWindowText(endTime);
-  desc    = ld->desc;                 descCtrl.SetWindowText(desc);
+  logDate = event->startTime.getDate();  logDateCtrl.SetWindowText(logDate);
+  logTime = event->startTime.getHHMM();  logTimeCtrl.SetWindowText(logTime);
+  endDate = event->endTime.getDate();    endDateCtrl.SetWindowText(endDate);
+  endTime = event->endTime.getHHMM();    endTimeCtrl.SetWindowText(endTime);
+  desc    = event->desc;                 descCtrl.SetWindowText(desc);
   }
 
 
@@ -100,9 +101,9 @@ void EditEntryDlg::OnOk()               {CDialogEx::OnOK();                  upd
 
 
 void EditEntryDlg::updateRcd() {
-int      index = entryDescCtrl.GetCurSel();  if (index < 0) return;
-LogData* ld    = activity.entry(index);      if (!ld)       return;
+int    index = entryDescCtrl.GetCurSel();  if (index < 0) return;
+Event* event    = activity.entry(index);      if (!event)       return;
 
-  ld->set(logDate, logTime, endDate, endTime, desc);
+  event->set(logDate, logTime, endDate, endTime, desc);
   }
 

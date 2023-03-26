@@ -64,8 +64,13 @@
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="ActivityLogDlg.htm" />
     <None Include="App.css" />
+    <None Include="EditActivityDlg.htm" />
+    <None Include="HeaderFooterDlg.htm" />
     <None Include="helpComp.bat" />
+    <None Include="ICS_214a.hhc" />
+    <None Include="ICS_214a.hhp" />
     <None Include="Introduction.htm">
       <DeploymentContent>true</DeploymentContent>
     </None>
@@ -73,9 +78,8 @@
     <None Include="Operations.htm">
       <DeploymentContent>true</DeploymentContent>
     </None>
+    <None Include="StopActivityDlg.htm" />
     <None Include="Templates\OneColumnPage.dwt" />
-    <None Include="ICS_214a.hhc" />
-    <None Include="ICS_214a.hhp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

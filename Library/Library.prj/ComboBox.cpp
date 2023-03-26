@@ -1,7 +1,7 @@
 // Combo Box that integrates with a Tool Bar
 
 
-#include "stdafx.h"
+#include "pch.h"
 #include "ComboBox.h"
 
 
@@ -15,8 +15,12 @@ void ComboBox::clear() {ResetContent();}
 bool ComboBox::getCurSel(String& s) {return getText(GetCurSel(), s);}
 
 
-bool ComboBox::setCurSel(String& s)
-                {String t = s.isEmpty() ? _T(' ') : s;   return SetCurSel(FindStringExact(-1, t)) >= 0;}
+bool ComboBox::setCurSel(TCchar* tc) {
+String s = tc;
+String t = s.isEmpty() ? _T(' ') : s;
+
+return SetCurSel(FindStringExact(-1, t)) >= 0;
+}
 
 
 bool ComboBox::getText(int i, String& s) {

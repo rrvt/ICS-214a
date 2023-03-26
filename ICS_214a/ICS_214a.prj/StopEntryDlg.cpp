@@ -31,17 +31,17 @@ StopEntryDlg::~StopEntryDlg() { }
 
 BOOL StopEntryDlg::OnInitDialog() {
 ActyIter iter(activity);
-LogData* ld;
+Event*   event;
 int      i;
 String   s;
 
   CDialogEx::OnInitDialog();
 
-  for (ld = iter(), i = 0; ld; ld = iter++, i++) {
-    if (ld->startTime == ld->endTime) {
-      s  = addTab(ld->startTime.getDate(), 10);
-      s += addTab(ld->startTime.getHHMM(), 8);
-      s += ld->desc;
+  for (event = iter(), i = 0; event; event = iter++, i++) {
+    if (event->startTime == event->endTime) {
+      s  = addTab(event->startTime.getDate(), 10);
+      s += addTab(event->startTime.getHHMM(), 8);
+      s += event->desc;
 
       entryDescCtrl.AddString(s);   indexes += i;
       }
@@ -88,10 +88,10 @@ void StopEntryDlg::OnOk()            {CDialogEx::OnOK();                    upda
 
 
 void StopEntryDlg::updateRcd() {
-int      index = entryDescCtrl.GetCurSel();  if (index < 0 || indexes.end() <= index) return;
-int      selX  = indexes[index];
-LogData* ld    = activity.entry(selX);       if (!ld)                                 return;
+int    index = entryDescCtrl.GetCurSel();  if (index < 0 || indexes.end() <= index) return;
+int    selX  = indexes[index];
+Event* event = activity.entry(selX);       if (!event)                                 return;
 
-  ld->setStop(stopDate, stopTime);  ld->archived = false;
+  event->setStop(stopDate, stopTime);  event->archived = false;
   }
 

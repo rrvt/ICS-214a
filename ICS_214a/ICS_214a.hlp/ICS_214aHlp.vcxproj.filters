@@ -31,5 +31,17 @@
     <None Include="Templates\OneColumnPage.dwt">
       <Filter>Help Files</Filter>
     </None>
+    <None Include="ActivityLogDlg.htm">
+      <Filter>Help Files</Filter>
+    </None>
+    <None Include="HeaderFooterDlg.htm">
+      <Filter>Help Files</Filter>
+    </None>
+    <None Include="EditActivityDlg.htm">
+      <Filter>Help Files</Filter>
+    </None>
+    <None Include="StopActivityDlg.htm">
+      <Filter>Help Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
