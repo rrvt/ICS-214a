@@ -18,7 +18,7 @@ IniFile iniFile;
 // ICS_214a
 
 BEGIN_MESSAGE_MAP(ICS_214a, CWinAppEx)
-  ON_COMMAND(ID_APP_ABOUT,        &OnAppAbout)
+  ON_COMMAND(ID_App_About,        &OnAppAbout)
   ON_COMMAND(ID_FILE_PRINT_SETUP, &OnFilePrintSetup)
   ON_COMMAND(ID_Help,             &OnHelp)
 END_MESSAGE_MAP()
