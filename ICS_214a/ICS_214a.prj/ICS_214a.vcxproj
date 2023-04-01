@@ -70,8 +70,8 @@
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <SupportJustMyCode>false</SupportJustMyCode>
-      <PrecompiledHeaderFile />
-      <PrecompiledHeaderOutputFile />
+      <PrecompiledHeaderFile/>
+      <PrecompiledHeaderOutputFile/>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
@@ -106,8 +106,8 @@
       </AdditionalIncludeDirectories>
       <DebugInformationFormat>None</DebugInformationFormat>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <PrecompiledHeaderFile />
-      <PrecompiledHeaderOutputFile />
+      <PrecompiledHeaderFile/>
+      <PrecompiledHeaderOutputFile/>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
     </ClCompile>
     <Link>
@@ -117,7 +117,7 @@
       <AdditionalDependencies>Htmlhelp.lib</AdditionalDependencies>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
-      <ProgramDatabaseFile />
+      <ProgramDatabaseFile/>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -141,16 +141,16 @@
     <ClInclude Include="EditEntryDlg.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventLogDlg.h" />
-    <ClInclude Include="..\..\Library\Extras\ExtraResource.h" />
     <ClInclude Include="ICS_214a.h" />
     <ClInclude Include="ICS_214aDoc.h" />
     <ClInclude Include="ICS_214aView.h" />
     <ClInclude Include="MainFrame.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="RptOrietnDlg.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StopEntryDlg.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="..\..\Library\Extras\ResourceExtra.h" />
+    <ClInclude Include="..\..\Library\Extras\RptOrientDlgTwo.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Library\Extras\AboutDlg.cpp" />
@@ -167,9 +167,9 @@
     <ClCompile Include="ICS_214aDoc.cpp" />
     <ClCompile Include="ICS_214aView.cpp" />
     <ClCompile Include="MainFrame.cpp" />
-    <ClCompile Include="RptOrietnDlg.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="StopEntryDlg.cpp" />
+    <ClCompile Include="..\..\Library\Extras\RptOrientDlgTwo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ICS_214a.rc" />
@@ -181,11 +181,11 @@
     <None Include="res\ICS_214a.rc2" />
     <None Include="..\README.md" />
     <None Include="C:\Users\rrvt\AppData\Roaming\ICS_214a\ICS_214a.ini" />
+    <None Include="..\..\Library\Extras\RptOrientTwo.rc2" />
+    <None Include="res\Toolbar.bmp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\ICS_214a.ico" />
-    <Image Include="res\Toolbar19.bmp" />
-    <Image Include="res\Toolbar45.bmp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Library\Library.prj\Library.vcxproj">

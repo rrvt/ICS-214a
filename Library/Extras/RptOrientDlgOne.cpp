@@ -2,25 +2,24 @@
 //
 
 #include "pch.h"
-#include "RptOrietnDlg.h"
+#include "RptOrientDlgOne.h"
 
 
 IMPLEMENT_DYNAMIC(RptOrietnDlg, CDialogEx)
 
-RptOrietnDlg::RptOrietnDlg(CWnd* pParent) :
-                                       CDialogEx(IDD_Orientation, pParent), ntpd(_T("")), acty(_T("")) { }
+RptOrietnDlg::RptOrietnDlg(CWnd* pParent) : CDialogEx(IDD_Orientation, pParent) { }
 
 RptOrietnDlg::~RptOrietnDlg() { }
 
 
 BOOL RptOrietnDlg::OnInitDialog() {
+CWnd* label;
 
   CDialogEx::OnInitDialog();
 
-  initOrietn(ntpdCtl, ntpd);
-  initOrietn(actyCtl, acty);
+  if (!lbl00.isEmpty()) {label = GetDlgItem(IDC_RptLabel0);   label->SetWindowText(lbl00);}
 
-  return TRUE;
+  initOrietn(ntpdCtl, ntpd);   return TRUE;
   }
 
 
@@ -34,13 +33,12 @@ void RptOrietnDlg::initOrietn(CComboBox& ctl, Cstring& orietn) {
 void RptOrietnDlg::DoDataExchange(CDataExchange* pDX)
 {
   CDialogEx::DoDataExchange(pDX);
-  DDX_Control( pDX, IDC_NtpdOrientn, ntpdCtl);
-  DDX_CBString(pDX, IDC_NtpdOrientn, ntpd);
-  DDX_Control( pDX, IDC_ActyOrientn, actyCtl);
-  DDX_CBString(pDX, IDC_ActyOrientn, acty);
+  DDX_Control( pDX, IDC_NtpdOrietn, ntpdCtl);
+  DDX_CBString(pDX, IDC_NtpdOrietn, ntpd);
   }
 
 
 BEGIN_MESSAGE_MAP(RptOrietnDlg, CDialogEx)
 END_MESSAGE_MAP()
+
 

@@ -9,7 +9,7 @@
 #include "OptionsDlg.h"
 #include "Resource.h"
 #include "Resources.h"
-#include "RptOrietnDlg.h"
+#include "RptOrientDlgTwo.h"
 
 
 static TCchar* ActyOrietnKey = _T("Activity");
@@ -54,12 +54,13 @@ void ICS_214aView::initRptOrietn() {
 void ICS_214aView::onRptOrietn() {
 RptOrietnDlg dlg;
 
-  dlg.ntpd = printer.toStg(prtNote.prtrOrietn);
-  dlg.acty = printer.toStg(prtActvty.prtrOrietn);
+  dlg.lbl01 = _T("Activity:");
+  dlg.ntpd  = printer.toStg(prtNote.prtrOrietn);
+  dlg.rpt1  = printer.toStg(prtActvty.prtrOrietn);
 
   if (dlg.DoModal() == IDOK) {
     dspNote.prtrOrietn    = prtNote.prtrOrietn    = printer.toOrient(dlg.ntpd);
-    dspActvty.prtrOrietn  = prtActvty.prtrOrietn  = printer.toOrient(dlg.acty);
+    dspActvty.prtrOrietn  = prtActvty.prtrOrietn  = printer.toOrient(dlg.rpt1);
     saveNoteOrietn();   saveRptOrietn();
     }
   }

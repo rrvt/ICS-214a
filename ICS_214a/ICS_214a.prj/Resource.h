@@ -2,7 +2,6 @@
 // Microsoft Visual C++ generated include file.
 // Used by ICS_214a.rc
 
-//#include "ExtraResource.h"
 
 #define IDR_MAINFRAME                   101
 #define IDD_ActvtyName                  102
@@ -10,7 +9,7 @@
 #define IDD_StopEntry                   104
 #define IDD_EditEntry                   105
 #define IDR_MakeExcelMenu               106
-#define IDD_Orientation                 107
+
 
 
 #define IDC_IncidentName                200
@@ -32,8 +31,6 @@
 #define IDC_Ugly                        216
 #define IDC_ExcelOne                    217
 #define IDC_EDIT2                       218
-#define IDC_NtpdOrientn                 219
-#define IDC_ActyOrientn                 220
 
 #define ID_Help                         400
 #define ID_EditHeader                   401
@@ -47,7 +44,6 @@
 #define ID_Options                      409
 #define ID_App_About                    410
 #define ID_CalibDspPrt                  411
-#define ID_Orientation                  412
 
 // Next default values for new objects
 //
