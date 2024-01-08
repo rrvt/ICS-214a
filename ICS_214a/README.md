@@ -79,6 +79,10 @@ Go to the web site and convince yourself that it is legitimate and download the 
 
 ## Updates
 
+### Update 1/7/24
+
+Library and other changes.
+
 ### Update 6/30/23
 
 Library Updates.
