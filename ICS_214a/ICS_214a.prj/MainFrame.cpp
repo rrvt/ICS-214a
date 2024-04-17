@@ -26,11 +26,10 @@ static UINT indicators[] = {
   ID_INDICATOR_SCRL,
   };
 
-// MainFrame construction/destruction
 
 MainFrame::MainFrame() noexcept : isInitialized(false) { }
 
-MainFrame::~MainFrame() { }
+MainFrame::~MainFrame() {winPos.~WinPos();}
 
 
 BOOL MainFrame::PreCreateWindow(CREATESTRUCT& cs) {
@@ -46,19 +45,19 @@ CRect winRect;
 
   if (CFrameWndEx::OnCreate(lpCreateStruct) == -1) return -1;
 
-  if (!m_wndMenuBar.Create(this)) {TRACE0("Failed to create menubar\n"); return -1;}
+  if (!menuBar.Create(this)) {TRACE0("Failed to create menubar\n"); return -1;}
 
   CMFCPopupMenu::SetForceMenuFocus(FALSE);
 
-  if (!toolBar.create(this, IDR_MAINFRAME)) {TRACE0("Failed to create status bar\n"); return -1;}
+  if (!toolBar.create(this, IDR_MAINFRAME)) {TRACE0("Failed to create toolbar\n"); return -1;}
 
-  if (!m_wndStatusBar.Create(this)) {TRACE0("Failed to create status bar\n"); return -1;}
+  if (!statusBar.Create(this)) {TRACE0("Failed to create status bar\n"); return -1;}
 
-  m_wndStatusBar.SetIndicators(indicators, noElements(indicators));  //sizeof(indicators)/sizeof(UINT)
+  statusBar.SetIndicators(indicators, noElements(indicators));  //sizeof(indicators)/sizeof(UINT)
 
   GetWindowRect(&winRect);   winPos.initialPos(this, winRect);
 
-  DockPane(&m_wndMenuBar);   DockPane(&toolBar);
+  DockPane(&menuBar);   DockPane(&toolBar);
 
   CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerWindows7));
                                                                          // Affects look of toolbar, etc.
@@ -71,35 +70,30 @@ void MainFrame::OnMove(int x, int y)
 
 
 void MainFrame::OnSize(UINT nType, int cx, int cy) {
-CRect winRect;
-
-  CFrameWndEx::OnSize(nType, cx, cy);
 
   if (!isInitialized) return;
 
-  GetWindowRect(&winRect);   winPos.set(winRect);
+  winPos.set(cx, cy);   CFrameWndEx::OnSize(nType, cx, cy);
   }
 
+
+// MainFrame message handlers
 
 afx_msg LRESULT MainFrame::OnResetToolBar(WPARAM wParam, LPARAM lParam) {setupToolBar();  return 0;}
 
 
 void MainFrame::setupToolBar() {
 
-CRect winRect;   GetWindowRect(&winRect);   toolBar.initialize(winRect);
+CRect winRect;   GetWindowRect(&winRect);   toolBar.set(winRect);
 
-  toolBar.installMenu(ID_MakeExcelMenu, IDR_MakeExcelMenu, _T("Make Excel File"));
+  toolBar.addMenu(ID_MakeExcelMenu, IDR_MakeExcelMenu, _T("Make Excel File"));
   }
 
 
 // MainFrame diagnostics
 
 #ifdef _DEBUG
-void MainFrame::AssertValid() const {CFrameWndEx::AssertValid();}
-
+void MainFrame::AssertValid() const          {CFrameWndEx::AssertValid();}
 void MainFrame::Dump(CDumpContext& dc) const {CFrameWndEx::Dump(dc);}
 #endif //_DEBUG
-
-
-// MainFrame message handlers
 

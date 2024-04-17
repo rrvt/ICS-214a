@@ -5,7 +5,10 @@
   <SatelliteDlls />
   <NonRecipeFileRefs>
     <NonRecipeFileRef>
-      <FullPath>D:\Sources\Library\curl-8.5.0\LibCurl\LibCurl.vcxproj</FullPath>
+      <FullPath>D:\Sources\AddrBookMerge\AddrBookMerge.hlp\AddrBookMerge.hlp.vcxproj</FullPath>
+    </NonRecipeFileRef>
+    <NonRecipeFileRef>
+      <FullPath>D:\Sources\AddrBookMerge\BuildData.hlp\BuildData.hlp.vcxproj</FullPath>
     </NonRecipeFileRef>
   </NonRecipeFileRefs>
 </Project>
