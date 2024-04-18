@@ -4,14 +4,16 @@
 #include "pch.h"
 #include "WinPos.h"
 #include "IniFile.h"
+#include "NotePad.h"
 
-#include "MessageBox.h"
+
+static const double MinFactor = 3.0;
 
 WinPos winPos;
 
 
-WinPos::WinPos() : hDLUtoPxls(1), vDLUtoPxls(1), defWidth(100), defDepth(100) {
-RECT rsys;
+WinPos::WinPos() : wnd(0), hDLUtoPxls(1), vDLUtoPxls(1), defWidth(100), defDepth(100) {
+CRect rsys;
 
   SystemParametersInfo(SPI_GETWORKAREA, 0, &rsys, 0);
 
@@ -19,7 +21,7 @@ RECT rsys;
   }
 
 
-void WinPos::setDLUToPxls(RECT& rect, int hDLU, int vDLU) {
+void WinPos::setDLUToPxls(CRect& rect, int hDLU, int vDLU) {
 double dlu;
 
   dlu = hDLU;  hDLUtoPxls = (rect.right - rect.left) / dlu;
@@ -32,12 +34,13 @@ double t = dlu;   return int(t * (horiz ? hDLUtoPxls : vDLUtoPxls) + 0.5);
 }
 
 
-void WinPos::initialPos(CWnd* wnd, RECT& defaultRect) {
+void WinPos::initialPos(CWnd* cWnd, CRect& defaultRect)
+          {wnd = cWnd;   data.load(defaultRect);   data.normalize(screenWidth, screenHeight);   setPos();}
 
-  data.load(defaultRect);   data.normalize(screenWidth, screenHeight);
 
-  wnd->SetWindowPos(0, data.left, data.top, data.width, data.depth, SWP_NOCOPYBITS);   // | SWP_NOACTIVATE
-  }
+
+
+
 
 
 static TCchar* WindowPosData = _T("Window Position Data");
@@ -45,6 +48,10 @@ static TCchar* Left          = _T("Left");
 static TCchar* Top           = _T("Top");
 static TCchar* Width         = _T("Width");
 static TCchar* Depth         = _T("Depth");
+
+
+WinPosData::WinPosData() : left(0), top(0), width(0), depth(0),
+                                                 invXbdr(0), invYbdr(0),  minWidth(200), minDepth(200) { }
 
 
 void WinPosData::save() {
@@ -55,55 +62,66 @@ void WinPosData::save() {
   }
 
 
-void WinPosData::load(RECT& defaultRect) {
+void WinPosData::load(CRect& defaultRect) {
   left   = iniFile.readInt(WindowPosData, Left,  defaultRect.left);
   top    = iniFile.readInt(WindowPosData, Top,   defaultRect.top);
   width  = iniFile.readInt(WindowPosData, Width, defaultRect.right  - defaultRect.left);
   depth  = iniFile.readInt(WindowPosData, Depth, defaultRect.bottom - defaultRect.top);
 
-  defWidth = width;              defDepth = depth;
-  minWidth = int(width / 4.0);   minDepth = int(depth / 4.0);
+  defWidth = width;                    defDepth = depth;
+  minWidth = int(width / MinFactor);   minDepth = int(depth / MinFactor);
 
   rationalize();
   }
 
 
 
-WinPosData& WinPosData::operator= (RECT& r) {
-int w = r.right - r.left;
+WinPosData& WinPosData::set(CWnd* wnd, CRect& r) {
+int w = r.right  - r.left;
 int d = r.bottom - r.top;
 
-  left = r.left; top = r.top;
-
-  if      (w >  width)   {width = w; minWidth = int (width / 3.0);}
-  else if (w >= minWidth) width = w;
-  else                    width = minWidth;
-
-  if      (d > depth)    {depth = d; minDepth = int(depth / 3.0);}
-  else if (d >= minDepth) depth = d;
-  else                    depth = minDepth;
-
-  return *this;
+  left = r.left; top = r.top;   getWidthDepth(wnd, w, d);   return *this;
   }
 
 
-void WinPosData::set(int& cx, int& cy) {
+void WinPosData::set(CWnd* wnd, int& cx, int& cy) {
+int w = cx + invXbdr;
+int d = cy + invYbdr;
 
-  if      (cx >  defWidth) {width = defWidth = cx;   minWidth = int (width / 3.0);}
-  else if (cx >= minWidth)  width = cx;
-  else                     {display(_T("<: "), cx); width = cx = minWidth;}
-
-  if      (cy >  defDepth) {depth = defDepth = cy;   minDepth = int(depth / 3.0);}
-  else if (cy >= minDepth)  depth = cy;
-  else                      depth = cy = minDepth;
+  getWidthDepth(wnd, w, d);    cx = width - invXbdr;    cy = depth - invYbdr;
   }
+
+
+// width and depth in pixels including invisible boarders
+
+void WinPosData::getWidthDepth(CWnd* wnd, int w, int d) {
+  if      (w >  defWidth) {width = defWidth = w;   minWidth = int (width / MinFactor);}
+  else if (w >= minWidth)  width = w;
+  else                    {width = minWidth;   setPos(wnd);}
+
+  if      (d >  defDepth) {depth = defDepth = d;   minDepth = int(depth / MinFactor);}
+  else if (d >= minDepth)  depth = d;
+  else                    {depth = minDepth;   setPos(wnd);}
+  }
+
+
+void WinPosData::setInvBdrs(CRect& winRect, int cx, int cy) {
+int w = winRect.right  - winRect.left;
+int d = winRect.bottom - winRect.top;
+
+  invXbdr = w - cx;
+  invYbdr = d - cy;
+  }
+
+
+bool WinPosData::setPos(CWnd* wnd) {return wnd->SetWindowPos(0, left, top, width, depth, SWP_NOCOPYBITS);}
 
 
 void WinPosData::display(TCchar* tgt, int d) {
 String s;
 
   s.format(_T("%s: %i, %i, %i, %i"), tgt, d, width, defWidth, minWidth);
-  messageBox(s);
+  notePad << s << nCrlf;
   }
 
 
@@ -125,13 +143,4 @@ void WinPosData::rationalize() {
   if (depth  < minDepth) depth = minDepth;
   }
 
-
-
-
-#if 0
-//  data.setMin(int(hDLU * hDLUtoPxls / 4.0), int(vDLU * vDLUtoPxls / 4.0));
-void WinPos::setMin(RECT& rect) {
-  data.setMin(int((rect.right - rect.left) / 4.0), int((rect.bottom - rect.top) / 4.0));
-  }
-#endif
 

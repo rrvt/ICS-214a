@@ -79,7 +79,7 @@ Go to the web site and convince yourself that it is legitimate and download the 
 
 ## Updates
 
-### Update 4/16/24
+### Update 4/16/24 & 4/18/24
 
 Improved the way Toolbars and Window Position and size are handled.
 

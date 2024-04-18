@@ -88,14 +88,15 @@ void TBCboBx::setWidth() {
 void TBCboBx::setHeight() {
 int count;
 int pixels;
+int maxHeight = (toolBarDim.height/25 - 3) * 25;
 
   if (!getActual()) return;
 
   count = ((TBCboBx*)actual)->GetCount();   if (!count) return;
 
-  pixels = count * 25;
+  pixels = count * 25;   pixels = pixels < 150 ? 150 : pixels > maxHeight ? maxHeight : pixels;
 
-  if (150 < pixels && pixels < 1000) ((TBCboBx*)actual)->SetDropDownHeight(pixels);
+  ((TBCboBx*)actual)->SetDropDownHeight(pixels);
   }
 
 
@@ -138,29 +139,3 @@ TBCboBx* TBCboBx::finInstall(TCchar* caption) {
   }
 
 
-
-
-
-
-#if 0
-bool TBCboBx::getCurSel(uint id, String& s, int& data) {
-TBCboBx* cbx = TBCboBx::get(id);    if (!cbx) return false;
-
-  return cbx->getSel(s, data);
-  }
-
-
-TBCboBx* TBCboBx::get(uint id) {
-  try {return (TBCboBx*) GetByCmd((uint) id);}
-  catch (...) {return 0;}
-  }
-
-
-// Returns current selection of if none fail
-
-bool TBCboBx::getSel(String& s, int& data) {
-int i = GetCurSel();    if (i < 0) return false;
-
-  s = GetItem(i);  data = GetItemData(i);  return true;
-  }
-#endif

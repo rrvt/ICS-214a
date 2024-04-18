@@ -3,12 +3,5 @@
   <ProjectOutputs />
   <ContentFiles />
   <SatelliteDlls />
-  <NonRecipeFileRefs>
-    <NonRecipeFileRef>
-      <FullPath>D:\Sources\AddrBookMerge\AddrBookMerge.hlp\AddrBookMerge.hlp.vcxproj</FullPath>
-    </NonRecipeFileRef>
-    <NonRecipeFileRef>
-      <FullPath>D:\Sources\AddrBookMerge\BuildData.hlp\BuildData.hlp.vcxproj</FullPath>
-    </NonRecipeFileRef>
-  </NonRecipeFileRefs>
+  <NonRecipeFileRefs />
 </Project>

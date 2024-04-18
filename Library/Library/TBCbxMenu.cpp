@@ -6,8 +6,6 @@
 #include "CbxItem.h"
 #include "ToolBarDim.h"
 
-#include "MessageBox.h"
-
 
 TBCbxMenu& TBCbxMenu::install(int idr, TCchar* caption) {
 CMenu      menu;
@@ -82,53 +80,4 @@ int i = cbxBtn->GetCurSel();
 bool TBCbxMenu::getActual() {if (!actual) actual = GetByCmd(id);   return actual != 0;}
 
 
-
-#if 0
-bool TBCbxMenu::setCaption(uint id, TCchar* txt, TBBtnCtx& ctx) {
-TBCbxMenu* cbx = TBCbxMenu::get(id);   if (!cbx) return false;
-
-  ctx.setMaxChars(txt);
-
-  cbx->setCaption(txt);   cbx->setDim(ctx);   return true;
-  }
-#endif
-#if 1
-#else
-    m_dwStyle = CBS_DROPDOWN | WS_VSCROLL | BS_FLAT | BS_VCENTER | BS_NOTIFY;
-
-    this->caption = caption;   t = _tcslen(caption);    if (t > maxChars) maxChars = t;
-
-    m_iWidth = toolBarDim.getHoriz(maxChars) + 20;
-
-  menu.DestroyMenu();  return *this;
-#endif
-#if 1
-#else
-  int t;
-  t = _tcslen(txt);   if (t > maxChars) maxChars = t;
-#endif
-#if 1
-#else
-  int t;
-  t = _tcslen(caption);    if (t > maxChars) maxChars = t;
-#endif
-#if 1
-#else
-      uint       itemId;
-      int        t;
-      itemId = menu.GetMenuItemID(i);   menu.GetMenuString(i, name, MF_BYPOSITION);
-
-      t = name.length();   if (t > maxChars) maxChars = t;
-
-      if (find(name) < 0) AddItem(name, itemId);
-#endif
-#if 1
-#else
-    int     t;
-    String& txt = cbxItem[i].txt;
-
-    t = txt.length();   if (t > maxChars) maxChars = t;
-
-    if (find(txt) < 0) AddItem(txt, cbxItem[i].data);
-#endif
 

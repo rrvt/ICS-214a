@@ -20,7 +20,7 @@ int height;
 struct ToolBarDim {
 int      nBtns;
 int      nIcns;
-int      width;
+int      width;                   // Window width & height
 int      height;
 int      maxBtnWidth;
 FontDim  fontDim;

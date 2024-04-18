@@ -70,8 +70,11 @@ void MainFrame::OnMove(int x, int y)
 
 
 void MainFrame::OnSize(UINT nType, int cx, int cy) {
+CRect r;
 
-  if (!isInitialized) return;
+  GetWindowRect(&r);
+
+  if (!isInitialized) {winPos.setInvBdrs(r, cx, cy);   return;}
 
   winPos.set(cx, cy);   CFrameWndEx::OnSize(nType, cx, cy);
   }
