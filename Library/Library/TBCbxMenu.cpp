@@ -16,7 +16,7 @@ Cstring    txt;
   if (!menu.LoadMenu(idr)) return *(TBCbxMenu*)0;
 
     for (i = 0, maxChars = 0, n = menu.GetMenuItemCount(); i < n; i++)
-                       {menu.GetMenuString(i, txt, MF_BYPOSITION);   addItem(txt, menu.GetMenuItemID(i));}
+                {menu.GetMenuString(i, txt, MF_BYPOSITION);   addItem(txt, menu.GetMenuItemID(i));}
 
   menu.DestroyMenu();   return finInstall(caption);
   }
@@ -26,7 +26,7 @@ TBCbxMenu& TBCbxMenu::install(const CbxItem cbxItem[], int n, TCchar* caption) {
 int     i;
 
   for (i = 0, maxChars = 0; i < n; i++)
-                                       {const CbxItem& item = cbxItem[i];   addItem(item.txt, item.data);}
+                                {const CbxItem& item = cbxItem[i];   addItem(item.txt, item.data);}
 
   return finInstall(caption);
   }

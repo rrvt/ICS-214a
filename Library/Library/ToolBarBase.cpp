@@ -36,9 +36,9 @@ int   vDelta = winPos.dluToScreen(10, false);
 
   GetWindowRect(&rect);
 
-  rect.bottom = rect.top  + vDelta;
+  rect.bottom  = rect.top  + vDelta;
   rect.left   += hDelta;
-  rect.right  = rect.left + winRect.right - winRect.left - 2*hDelta;
+  rect.right   = rect.left + winRect.right - winRect.left - 2*hDelta;
 
   ScreenToClient(rect);   MoveWindow(&rect);
   }
@@ -67,7 +67,7 @@ TEXTMETRIC metric;
   }
 
 
-bool ToolBarBase::add(TBButton&  button, uint id, TCchar* caption) {
+bool ToolBarBase::add(TBButton& button, uint id, TCchar* caption) {
   button.install(caption);   return ReplaceButton(id, button) > 0;
   }
 

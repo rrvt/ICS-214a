@@ -31,15 +31,14 @@ public:
   ToolBarBase() : window(0) { }
  ~ToolBarBase() {  }
 
-  bool           create(CWnd* wnd, uint id, DWORD style = 0);     // Create toolbar with flyby tooltips.
+  bool           create(CWnd* wnd, uint id, DWORD style = 0);
+                                                          // Create toolbar with flyby tooltips.
 
-  void           move(CRect& rect);                               // Useful in Dialog Apps only
+  void           move(CRect& rect);                       // Useful in Dialog Apps only
 
   void           set(CRect& dlgRect) {toolBarDim.set(dlgRect, this);}
 
-//  bool           getCbxSel(uint id, String& s, int& data) {return TBCboBx::getCurSel(id, s, data);}
-                                                                // Get current selection or fail
-  bool           OnTtnNeedText(NMHDR* pNMHDR);                  // ToolTips -- See definition for details
+  bool           OnTtnNeedText(NMHDR* pNMHDR);            // ToolTips -- See definition for details
 
 protected:
 
@@ -64,13 +63,15 @@ protected:
   bool           add(TBCboBx& button, uint id, int           idr,              TCchar* caption);
   bool           add(TBCboBx& button, uint id, const CbxItem cbxItem[], int n, TCchar* caption);
 
-  bool           addItem(      TBCboBx& button, TCchar* txt, int data) {return button.addItem(txt, data);}
+  bool           addItem(      TBCboBx& button, TCchar* txt, int data)
+                                                         {return button.addItem(txt, data);}
   bool           addItemSorted(TBCboBx& button, TCchar* txt, int data)
-                                                                 {return button.addItemSorted(txt, data);}
+                                                         {return button.addItemSorted(txt, data);}
   void           setCaption(TBCboBx& button, TCchar* caption) {button.setCaption(caption);}
   void           setWidth(  TBCboBx& button) {button.setWidth();   AdjustLayout();}
   void           setHeight( TBCboBx& button) {button.setHeight();}
-  bool           getCurSel(TBCboBx& button, String& s, int& data) {return button.getCurSel(s, data);}
+  bool           getCurSel(TBCboBx& button, String& s, int& data)
+                                                                {return button.getCurSel(s, data);}
 
 private:
   void           OnFillBackground(CDC* pDC);

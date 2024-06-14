@@ -34,13 +34,10 @@ double t = dlu;   return int(t * (horiz ? hDLUtoPxls : vDLUtoPxls) + 0.5);
 }
 
 
-void WinPos::initialPos(CWnd* cWnd, CRect& defaultRect)
-          {wnd = cWnd;   data.load(defaultRect);   data.normalize(screenWidth, screenHeight);   setPos();}
-
-
-
-
-
+void WinPos::initialPos(CWnd* cWnd, CRect& defaultRect) {
+  wnd = cWnd;   data.load(defaultRect);   data.normalize(screenWidth, screenHeight);   setPos();
+  data.get(defaultRect);
+  }
 
 
 static TCchar* WindowPosData = _T("Window Position Data");
@@ -51,7 +48,7 @@ static TCchar* Depth         = _T("Depth");
 
 
 WinPosData::WinPosData() : left(0), top(0), width(0), depth(0),
-                                                 invXbdr(0), invYbdr(0),  minWidth(200), minDepth(200) { }
+                                          invXbdr(0), invYbdr(0),  minWidth(200), minDepth(200) { }
 
 
 void WinPosData::save() {
@@ -67,6 +64,13 @@ void WinPosData::load(CRect& defaultRect) {
   top    = iniFile.readInt(WindowPosData, Top,   defaultRect.top);
   width  = iniFile.readInt(WindowPosData, Width, defaultRect.right  - defaultRect.left);
   depth  = iniFile.readInt(WindowPosData, Depth, defaultRect.bottom - defaultRect.top);
+
+  if (!width || !depth) {
+    left   = defaultRect.left;
+    top    = defaultRect.top;
+    width  = defaultRect.right  - defaultRect.left;
+    depth  = defaultRect.bottom - defaultRect.top;
+    }
 
   defWidth = width;                    defDepth = depth;
   minWidth = int(width / MinFactor);   minDepth = int(depth / MinFactor);
@@ -114,7 +118,8 @@ int d = winRect.bottom - winRect.top;
   }
 
 
-bool WinPosData::setPos(CWnd* wnd) {return wnd->SetWindowPos(0, left, top, width, depth, SWP_NOCOPYBITS);}
+bool WinPosData::setPos(CWnd* wnd)
+                            {return wnd->SetWindowPos(0, left, top, width, depth, SWP_NOCOPYBITS);}
 
 
 void WinPosData::display(TCchar* tgt, int d) {
