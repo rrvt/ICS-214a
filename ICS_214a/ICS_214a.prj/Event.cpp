@@ -5,7 +5,7 @@
 #include "Event.h"
 #include "CSVOut.h"
 #include "CSVrecord.h"
-#include "DevBase.h"
+#include "DevStream.h"
 #include "Utilities.h"
 
 
@@ -120,7 +120,7 @@ CTimeSpan operator+= (CTimeSpan t, Event& event) {return t += event.deltaT;}
 
 
 #if 0
-int Event::wrapIt(DevBase& dev, CDC* dc) {
+int Event::wrapIt(DevStream& dev, CDC* dc) {
 bool dateOutIsPresent;
 int  tab     = dateOutTab(dateOutIsPresent);
 int  chWidth = dev.flChWidth();

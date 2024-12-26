@@ -7,13 +7,14 @@
 #include "CScrView.h"
 
 
-void ActvtyRpt::display(CScrView& vw) {printing = false;   vw.enableDplWrap();     getData(vw);}
+void ActvtyRpt::display(CScrView& vw) {printing = false;   vw.enableDplWrap();     getData();}
 
 
-void ActvtyRpt::onBeginPrinting(CScrView& vw) {printing = true;   vw.enablePrtWrap();   getPageAttr(vw);}
+void ActvtyRpt::onBeginPrinting(CScrView& vw)
+                                        {printing = true;   vw.enablePrtWrap();   getPageAttr(vw);}
 
 
-void ActvtyRpt::getData(CScrView& vw) {
+void ActvtyRpt::getData() {
 ActyIter iter(activity);
 Event*   event;
 LONGLONG secs;
@@ -34,7 +35,7 @@ String   t;
 
 
 
-void ActvtyRpt::prtHeader(DevBase& dev, int pageNo) {
+void ActvtyRpt::prtHeader(DevStream& dev, int pageNo) {
 
   dev << dClrTabs << dSetTab(18) << dSetRTab(45);
 
@@ -64,7 +65,7 @@ void ActvtyRpt::prtHeader(DevBase& dev, int pageNo) {
   }
 
 
-void ActvtyRpt::prtFooter(DevBase& dev, int pageN) {
+void ActvtyRpt::prtFooter(DevStream& dev, int pageN) {
 
   if (pageN > maxPages) maxPages = pageN;
 

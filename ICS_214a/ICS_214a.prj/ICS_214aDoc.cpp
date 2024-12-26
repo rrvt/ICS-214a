@@ -182,7 +182,7 @@ void ICS_214aDoc::serialize(Archive& ar) {
   switch(ar.isStoring()) {
     case true:
       switch(dataSource) {
-        case NotePadSrc   : notePad.archive(ar);            break;
+        case NotePadSrc   : ar << notePad;                  break;
         case ActivitySrc  : activity.storeAll(ar);          break;
         case IncrActvtySrc: activity.storeIncr(ar);         break;
         case ExcelSrc     : activity.storeExcel(ar, false); break;

@@ -7,7 +7,7 @@
 
 class Archive;
 class CSVrecord;
-class DevBase;
+class DevStream;
 class NotePad;
 
 
@@ -38,7 +38,7 @@ bool      archived;
   void      load(CSVrecord& rcd);
 
 //  void      clearWrap() {wrap.clear();}
-//  int       wrapIt(DevBase& dev, CDC* dc);
+//  int       wrapIt(DevStream& dev, CDC* dc);
 //  int       noLines() {return wrap.noLines();}     int& noLines,
   CTimeSpan display(NotePad& np);
 

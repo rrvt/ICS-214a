@@ -8,7 +8,7 @@
 #include "IniFile.h"
 #include "OptionsDlg.h"
 #include "Resource.h"
-#include "Resources.h"
+#include "ResourceData.h"
 #include "RptOrientDlgTwo.h"
 
 
@@ -102,7 +102,7 @@ void ICS_214aView::onDisplayOutput() {
   }
 
 
-void ICS_214aView::displayHeader(DevBase& dev) {
+void ICS_214aView::displayHeader(DevStream& dev) {
   switch(doc()->dataSrc()) {
     case NotePadSrc   : dspNote.dspHeader(dev);   break;
     case ActivitySrc  :
@@ -112,7 +112,7 @@ void ICS_214aView::displayHeader(DevBase& dev) {
   }
 
 
-void ICS_214aView::displayFooter(DevBase& dev) {
+void ICS_214aView::displayFooter(DevStream& dev) {
   switch(doc()->dataSrc()) {
     case NotePadSrc   : dspNote.dspFooter(dev);   break;
     case ActivitySrc  :
@@ -122,7 +122,7 @@ void ICS_214aView::displayFooter(DevBase& dev) {
   }
 
 
-void ICS_214aView::printHeader(DevBase& dev, int pageNo) {
+void ICS_214aView::printHeader(DevStream& dev, int pageNo) {
   switch(doc()->dataSrc()) {
     case NotePadSrc   : prtNote.prtHeader(dev, pageNo);   break;
     case IncrActvtySrc:
@@ -136,7 +136,7 @@ void ICS_214aView::printHeader(DevBase& dev, int pageNo) {
 // The output streaming functions are very similar to NotePad's streaming functions so it should not
 // be a great hardship to construct a footer.
 
-void ICS_214aView::printFooter(DevBase& dev, int pageNo) {
+void ICS_214aView::printFooter(DevStream& dev, int pageNo) {
   switch(doc()->dataSrc()) {
     case NotePadSrc   : prtNote.prtFooter(dev, pageNo);   break;
     case IncrActvtySrc:

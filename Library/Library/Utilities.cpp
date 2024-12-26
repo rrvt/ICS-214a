@@ -5,9 +5,12 @@
 #include "Utilities.h"
 #include "Date.h"
 #include "NotePad.h"
+#include "Random.h"
 
 
-static String blks = _T("                                                                         ");
+static String blks = _T("                                                                       ")
+                     _T("                                                                       ")
+                     _T("                                                                       ");
 
 
 String addSepTab(String& s, int max) {
@@ -59,6 +62,7 @@ Date   dt = s;
   s = dt.format(_T("%D"));  return s;
   }
 
+
 String normalizeTime(TCchar* time) {
 String s  = time ? time : _T("");   if (s.isEmpty()) return s;
 Date   dt = s;
@@ -73,8 +77,7 @@ String getTimeNow() {Date dt;   dt.getToday();   return dt.format(_T("%R"));}
 
 
 time_t getDiff(Date& dtUpper, Date& dtLower)
-                                   {CTimeSpan delta = dtUpper - dtLower; return delta.GetTotalSeconds();}
-
+                             {CTimeSpan delta = dtUpper - dtLower; return delta.GetTotalSeconds();}
 
 
 void floatingOnly(CEdit& ctrl) {
@@ -145,12 +148,45 @@ String* p;
 
   if (s->size() != 0) return false;
 
-  for (va_start(args, s);  (p = va_arg(args, String*)) && p != 0;) if (p->size() != 0) return false;
+  for (va_start(args, s); (p = va_arg(args, String*)) && p != 0;) if (p->size() != 0) return false;
 
   return true;
   }
 
 
+void expunge(String& s) {
+int    i;
+int    n = s.length();
+Random rnd;
+
+  for (i = 0; i < n; i++) s[i] = (Byte) (256 * rnd.next());
+  }
+
+
+void expunge(Cstring& cs) {
+int    i;
+int    n = cs.length();
+Random rnd;
+
+  for (i = 0; i < n; i++) {
+    cs.Delete(i);
+
+    cs.Insert(i, (Byte) (256 * rnd.next()));
+    }
+  }
+
+
+void expunge(ToAnsi& ansi) {
+int    i;
+int    n = ansi.length();     if (!n) return;
+char*  p = ansi();            if (!p) return;
+Random rnd;
+
+  for (i = 0; i < n; i++) {
+
+    *p++ = (Byte) (256 * rnd.next());
+    }
+  }
 
 
 
