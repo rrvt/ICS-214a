@@ -52,20 +52,39 @@ MbrSet* set = &rcd;
   }
 
 
-bool MbrSet::edit()
-  {if (!opened) return false;  try {Edit(); return true;} catch(...) {return false;}}
+bool MbrSet::edit() {
+  if (!opened) return false;
+
+  try {Edit(); return true;}
+  catch(CException* e) {e->ReportError();   e->Delete();   return false;}
+  }
 
 
-bool MbrSet::addNew()
-  {if (!opened) return false;  try {AddNew(); return true;} catch(...) {return false;}}
+bool MbrSet::addNew() {
+  if (!opened) return false;
+
+  try {AddNew(); return true;}
+  catch(CException* e) {e->ReportError();   e->Delete();   return false;}
+  }
 
 
-bool MbrSet::update()
-  {if (!opened) return false;  try {Update(); movePrev(); return true;} catch(...) {return false;}}
+bool MbrSet::update() {
+
+  if (!opened) return false;
+
+  try {if (!Update()) return false;   movePrev();}
+  catch(CException* e) {e->ReportError();   e->Delete();   return false;}
+
+  return true;
+  }
 
 
 bool MbrSet::remove()
-  {if (!opened) return false;  try {Delete(); movePrev(); return true;} catch(...) {return false;}}
+  {if (!opened) return false;
+
+  try {Delete(); movePrev(); return true;}
+  catch(CException* e) {e->ReportError();   e->Delete();   return false;}
+  }
 
 
 void MbrSet::DoFieldExchange(CFieldExchange* pFX) {

@@ -56,7 +56,7 @@ VertMgmt vert;                    // Manage vertical movement in window or page
   void     setStrikeOut()        {fontMgr.setStrikeOut();   setMetric();}
   void     popFont()             {fontMgr.pop();            setMetric();}
 
-  void     restoreFontCtx()      {fontMgr.restoreContext(); setMetric();}
+  void     restoreFontCtx()      {fontMgr.restore(); setMetric();}
 
   COLORREF getBkColor()  {return dc->GetBkColor();}                     // Background color
   COLORREF getTxtColor() {return dc->GetTextColor();}                   // Text Color
@@ -100,52 +100,4 @@ private:
 
 
 ////--------------------------------
-
-#if 0
-// Device Context Backup
-
-struct DevCtxBkp {
-bool    suppress;
-FontMgr fontMgr;
-double  scale;
-
-int     pgWidth;
-double  leftMgn;
-double  rightMgn;
-
-int     pgHeight;
-double  topMgn;
-double  botMgn;
-
-double  avgFlChWidth;
-double  avgLgChWidth;                     // Character Width
-double  charWidth;                        // Character Width
-
-int     chHeight;                         // Text height
-int     uLineDelta;                       // Y delta from y for the line option
-
-  DevCtxBkp() { }
- ~DevCtxBkp();
-  };
-#endif
-
-
-//  void     saveDvx(   DevCtxBkp& bkp);
-//  void     restoreDvx(DevCtxBkp& bkp);
-
-//int     pgWidth;
-//double  leftMgn;
-//double  rightMgn;
-
-//int       pgHeight;
-//double    topMgn;
-//double    botMgn;
-
-//int     chHeight;                         // Text height
-//int     uLineDelta;                       // Y delta from y for the line option
-#if 0
-  bool     getLogFont(TCchar* face, double sz, LOGFONT& logFont);
-  bool     createFont(LOGFONT& logFont, CFont& fontMgr);
-  bool     select(CFont& fontMgr);
-#endif
 

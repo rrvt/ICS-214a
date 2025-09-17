@@ -6,13 +6,13 @@
 #include "AboutDlg.h"
 #include "ICS_214aDoc.h"
 #include "ICS_214aView.h"
-#include "IniFile.h"
+#include "IniFileEx.h"
 #include "NotePad.h"
 #include "MainFrame.h"
 
 
-ICS_214a theApp;                       // The one and only ICS_214a object
-IniFile iniFile;
+ICS_214a  theApp;                         // The one and only ICS_214a object
+IniFileEx iniFile(theApp);
 
 
 // ICS_214a
@@ -30,7 +30,7 @@ BOOL ICS_214a::InitInstance() {
 
   CWinAppEx::InitInstance();
 
-  iniFile.setAppDataPath(m_pszHelpFilePath, *this);
+  iniFile.setAppDataPath(m_pszHelpFilePath);
 
   notePad.clear();
 

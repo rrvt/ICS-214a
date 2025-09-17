@@ -5,7 +5,7 @@
 #include "ICS_214aView.h"
 #include "ICS_214a.h"
 #include "ICS_214aDoc.h"
-#include "IniFile.h"
+#include "IniFileEx.h"
 #include "OptionsDlg.h"
 #include "Resource.h"
 #include "ResourceData.h"

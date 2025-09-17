@@ -79,6 +79,10 @@ Go to the web site and convince yourself that it is legitimate and download the 
 
 ## Updates
 
+### Update 9/7/25
+
+Changes to accomodate Library changes.
+
 ### Update 12/25/24
 
 Split the library into DocLib and Library where DocLib supports the MFC Document/Library App

@@ -11,7 +11,7 @@
 #include "GetPathDlg.h"
 #include "ICS_214a.h"
 #include "ICS_214aView.h"
-#include "IniFile.h"
+#include "IniFileEx.h"
 #include "MessageBox.h"
 #include "NotePad.h"
 #include "Resource.h"
